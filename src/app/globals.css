@@ -11,6 +11,7 @@
   --text-highlight: #e8dcc8;
   --br-primary: #d4a574;
   --bg-secondary: #2c5f5d;
+  --toastify-color-success: #d4a574;
 }
 
 @theme inline {

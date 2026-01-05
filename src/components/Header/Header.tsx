@@ -5,7 +5,7 @@ import logo from "@/assets/img/logo-1.png";
 import { useModal } from "@/context/ModalContext";
 
 const Header = () => {
-  const { openLogin } = useModal();
+  const { openLogin, openRegister } = useModal();
 
   return (
     <header className="bg-secondary">
@@ -29,12 +29,12 @@ const Header = () => {
             Login
           </button>
 
-          {/* Sign Up - Filled */}
-          <Link
-            href="/signup"
+          {/* Register - Filled */}
+          <button
+            onClick={openRegister}
             className="px-4 h-7 inline-flex items-center justify-center text-sm text-gray-800 bg-primary rounded-full hover:opacity-90 transition">
-            Sign Up
-          </Link>
+            Register
+          </button>
         </div>
       </nav>
     </header>

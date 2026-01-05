@@ -80,11 +80,11 @@ const LoginContainer = ({ handleClose }: LoginContainerProps) => {
       <div className="mt-4 w-full max-w-lg md:flex md:gap-6">
         {/* form */}
         <div className="w-full mx-auto">
-          <h2 className="text-3xl font-extrabold text-[#d4a574] text-center mb-4">
+          <h2 className="text-2xl font-extrabold text-[#d4a574] text-center">
             Login
           </h2>
 
-          <form onSubmit={handleSubmit(handleLogin)} className="space-y-5">
+          <form onSubmit={handleSubmit(handleLogin)} className="space-y-5 mt-5">
             {/* Username */}
             <FormInput
               name="username"
@@ -137,7 +137,7 @@ const LoginContainer = ({ handleClose }: LoginContainerProps) => {
             <span
               //   onClick={openRegister}
               className="text-orange-500 font-bold cursor-pointer">
-              Sign up now
+              Register
             </span>
           </p>
         </div>
