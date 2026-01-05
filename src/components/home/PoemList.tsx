@@ -16,17 +16,17 @@ type Poem = {
   comments?: Comment[];
 };
 
-type PoemCommentsListProps = {
+type PoemListProps = {
   poems: Poem[];
   onSelectPoem: (poem: Poem) => void;
   selectedPoem?: Poem;
 };
 
-export default function PoemCommentsList({
+export default function PoemList({
   poems,
   onSelectPoem,
   selectedPoem,
-}: PoemCommentsListProps) {
+}: PoemListProps) {
   const [commentsVisible, setCommentsVisible] = useState(false);
 
   return (

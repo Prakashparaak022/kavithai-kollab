@@ -2,14 +2,12 @@
 
 import { useState } from "react";
 import PoemCard from "@/components/home/PoemCard";
-import PoemCommentsList from "@/components/home/PoemCommentsList";
+import PoemList from "@/components/home/PoemList";
 import Notifications from "@/components/home/Notifications";
 import PoemDetails from "@/components/home/PoemDetails";
 import { AnimatePresence, motion } from "framer-motion";
 import InviteModal from "@/components/home/InviteModal";
 import Layout from "@/components/layouts/Layout";
-import { PoemCommentSection } from "@/components/home/PoemCommentSection";
-import { CommentsList } from "@/components/home/CommentsList";
 
 type Poem = {
   title: string;
@@ -109,7 +107,7 @@ const poems: Poem[] = [
 ];
 
 export default function Home() {
-  const [selectedComment, setSelectedComment] = useState(poems[0]);
+  const [selectedPoem, setSelectedPoem] = useState(poems[0]);
   const [showNotification, setShowNotification] = useState(true);
 
   return (
@@ -122,18 +120,18 @@ export default function Home() {
               <div className="col-span-12 lg:col-span-4 space-y-4">
                 {/* Dynamic Poem Card */}
                 <AnimatePresence mode="wait">
-                  {selectedComment && (
+                  {selectedPoem && (
                     <motion.div
-                      key={selectedComment.author}
+                      key={selectedPoem.author}
                       initial={{ opacity: 0, y: 20 }}
                       animate={{ opacity: 1, y: 0 }}
                       exit={{ opacity: 0, y: -20 }}
                       transition={{ duration: 0.3 }}>
                       <PoemCard
-                        title={selectedComment.title}
-                        username={selectedComment.author}
+                        title={selectedPoem.title}
+                        username={selectedPoem.author}
                         content={
-                          selectedComment.content || "No content available"
+                          selectedPoem.content || "No content available"
                         }
                       />
                     </motion.div>
@@ -141,10 +139,10 @@ export default function Home() {
                 </AnimatePresence>
 
                 {/* Comments List */}
-                <PoemCommentsList
+                <PoemList
                   poems={poems}
-                  selectedPoem={selectedComment}
-                  onSelectPoem={(poem) => setSelectedComment(poem)}
+                  selectedPoem={selectedPoem}
+                  onSelectPoem={(poem) => setSelectedPoem(poem)}
                 />
               </div>
 
