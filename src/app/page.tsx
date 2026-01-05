@@ -8,6 +8,8 @@ import PoemDetails from "@/components/home/PoemDetails";
 import { AnimatePresence, motion } from "framer-motion";
 import InviteModal from "@/components/home/InviteModal";
 import Layout from "@/components/layouts/Layout";
+import { PoemCommentSection } from "@/components/home/PoemCommentSection";
+import { CommentsList } from "@/components/home/CommentsList";
 
 type Poem = {
   title: string;
@@ -20,6 +22,7 @@ type Poem = {
 type Comment = {
   name: string;
   text: string;
+  image: string;
 };
 
 const poems: Poem[] = [
@@ -30,43 +33,77 @@ const poems: Poem[] = [
     image:
       "https://images.unsplash.com/photo-1506744038136-46273834b3fb?w=100&h=100&fit=crop",
     comments: [
-      { name: "@user1", text: "அற்புதம்!" },
-      { name: "@poetrylover", text: "சுகமான வரிகள்!" },
-      { name: "@rainyfan", text: "மழை நினைவுகளைத் தூண்டியது" },
+      {
+        name: "@user1",
+        text: "அற்புதம்!",
+        image: "https://randomuser.me/api/portraits/men/11.jpg",
+      },
+      {
+        name: "@poetrylover",
+        text: "சுகமான வரிகள்!",
+        image: "https://randomuser.me/api/portraits/women/21.jpg",
+      },
+      {
+        name: "@rainyfan",
+        text: "மழை நினைவுகளைத் தூண்டியது",
+        image: "https://randomuser.me/api/portraits/men/31.jpg",
+      },
     ],
   },
   {
-    title: "நட்சத்திரம்",
-    content: "நட்சத்திரங்கள் கண்ணில் விழும் பொழுது, நினைவுகள் சிரித்தன",
-    author: "@kaviirathi",
-    image:
-      "https://images.unsplash.com/photo-1472099645785-5658abf4ff4e?w=100&h=100&fit=crop",
+    title: "பார்வை துளிகள்",
+    content:
+      "கண்ணில் விழும் துளிகளுக்கு, நாங்கள் மறந்த பந்தங்களை மீண்டும் சுவாசிக்கிறோம்.",
+    author: "@kavivisionary",
+    image: "https://randomuser.me/api/portraits/men/1.jpg",
     comments: [
-      { name: "@stargazer", text: "இனிமையான கவிதை!" },
-      { name: "@dreamer", text: "நட்சத்திரங்கள் உண்மையில் அழகானவை" },
+      {
+        name: "@poetess",
+        text: "உயர்ந்த கவிதை!",
+        image: "https://randomuser.me/api/portraits/women/7.jpg",
+      },
+      {
+        name: "@wordsmith",
+        text: "அழகான காட்சிகள்!",
+        image: "https://randomuser.me/api/portraits/men/5.jpg",
+      },
     ],
   },
   {
-    title: "காற்றின் கதை",
-    content: "காற்றின் தென் வாசல் எங்கள் கதையை சொன்னது",
-    author: "@herondhi",
-    image:
-      "https://images.unsplash.com/photo-1438761681033-6461ffad8d80?w=100&h=100&fit=crop",
+    title: "உயிரின் ஓசை",
+    content:
+      "உயிரின் ஓசை, உயிரின் செவிகளுக்குக் கேட்டும், சுவாசத்தைத் திரும்பப் பெறுகிறது.",
+    author: "@soul_poet",
+    image: "https://randomuser.me/api/portraits/men/4.jpg",
     comments: [
-      { name: "@breezy", text: "அற்புதமான உவமை!" },
-      { name: "@listener", text: "காற்றின் குரல் உணர்வூட்டும்" },
-      { name: "@naturefan", text: "இது என் மனதுக்கு ஓர் அமைதி" },
+      {
+        name: "@soulsearcher",
+        text: "என்றும் உணர்ச்சி மிகுந்த கவிதை!",
+        image: "https://randomuser.me/api/portraits/men/19.jpg",
+      },
+      {
+        name: "@heartfelt",
+        text: "மிக அழகான சொற்கள்!",
+        image: "https://randomuser.me/api/portraits/women/24.jpg",
+      },
     ],
   },
   {
-    title: "மௌன சூரியன்",
-    content: "அழகான சூரியன் மறைந்து போகும் போது, மனசே ஆழ்ந்து மூழ்கும்",
-    author: "@user13",
-    image:
-      "https://images.unsplash.com/photo-1519345182560-3f2917c472ef?w=100&h=100&fit=crop",
+    title: "எழுதாத நவில்கள்",
+    content: "எழுதாத கவிதைகள், மனசின் அடிப்படையில் பதிந்து நிற்கின்றன.",
+    author: "@unwritten_poet",
+    image: "https://randomuser.me/api/portraits/men/6.jpg",
     comments: [
-      { name: "@sunsetlover", text: "மிக அழகான காட்சி!" },
-      { name: "@poetfriend", text: "சில வார்த்தைகள் மனம் நிமிர்த்தின" },
+      {
+        name: "@writer",
+        text: "மனதில் எத்தனை எழுத்துகள்!",
+        image: "https://randomuser.me/api/portraits/men/3.jpg",
+      },
+      {
+        name: "@scribbler",
+        text: "சில வார்த்தைகள் மனதில் ஊசலாடுகிறது!",
+        image: "https://randomuser.me/api/portraits/women/19.jpg",
+      },
     ],
   },
 ];
@@ -106,6 +143,7 @@ export default function Home() {
                 {/* Comments List */}
                 <PoemCommentsList
                   poems={poems}
+                  selectedPoem={selectedComment}
                   onSelectPoem={(poem) => setSelectedComment(poem)}
                 />
               </div>
