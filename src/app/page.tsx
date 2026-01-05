@@ -4,7 +4,7 @@ import Notifications from "@/components/home/Notifications";
 import PoemCard from "@/components/home/PoemCard";
 import PoemCommentsList from "@/components/home/PoemCommentsList";
 import PoemDetails from "@/components/home/PoemDetails";
-import Layout from "@/components/Layouts/Layout";
+import Layout from "@/components/layouts/Layout";
 import { useState } from "react";
 
 export default function Home() {

@@ -5,9 +5,12 @@
   --foreground: #171717;
   --bg-primary: #dcd4c3;
   --bg-secondary: #2c5f5d;
+  --bg-highlight: #d4a574;
   --text-primary: #171717;
   --text-secondary: #ffffff;
   --text-highlight: #e8dcc8;
+  --br-primary: #d4a574;
+  --bg-secondary: #2c5f5d;
 }
 
 @theme inline {
@@ -38,6 +41,10 @@ body {
   background: var(--bg-secondary);
 }
 
+.bg-highlight {
+  background: var(--bg-highlight);
+}
+
 .text-primary {
   color: var(--text-primary);
 }
@@ -48,6 +55,23 @@ body {
 
 .text-highlight {
   color: var(--text-highlight);
+}
+
+.border-primary {
+  border: 1px solid var(--br-primary);
+}
+
+.border-secondary {
+  border: 1px solid var(--br-secondary);
+}
+
+.btn {
+  background-color: var(--bg-highlight);
+}
+.btn:hover {
+  background-color: var(--bg-primary);
+  cursor: pointer;
+  transition: background-color 0.2s ease-in-out, color 0.2s ease-in-out;
 }
 
 .logo {
