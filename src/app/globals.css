@@ -9,6 +9,7 @@
   --text-primary: #171717;
   --text-secondary: #ffffff;
   --text-highlight: #e8dcc8;
+  --text-green: #2c5f5d;
   --br-primary: #d4a574;
   --bg-secondary: #2c5f5d;
   --toastify-color-success: #d4a574;
@@ -56,6 +57,10 @@ body {
 
 .text-highlight {
   color: var(--text-highlight);
+}
+
+.text-green {
+  color: var(--text-green);
 }
 
 .border-primary {
