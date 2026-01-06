@@ -56,7 +56,7 @@ export const usePlayerDetails = (): {
   const [playerDetails, setPlayerDetails] = useState<PlayerDetails | null>(
     null
   );
-  const [loading, setLoading] = useState<boolean>(true);
+  const [loading, setLoading] = useState<boolean>(false);
 
   useEffect(() => {
     if (playerDetailsStr) {
@@ -72,12 +72,11 @@ export const usePlayerDetails = (): {
       } catch (err) {
         console.error("Failed to parse playerDetails:", err);
         setPlayerDetails(null);
-      } finally {
-        setLoading(false);
       }
     } else {
       setPlayerDetails(null);
     }
+    setLoading(false);
   }, [playerDetailsStr]);
 
   return { playerDetails, loading, accessToken };
