@@ -39,33 +39,50 @@ const LoginContainer = ({ handleClose }: LoginContainerProps) => {
     defaultValues: { username: "", password: "" },
   });
 
+  // const handleLogin = async (data: LoginForm) => {
+  //   try {
+  //     setLoading(true);
+
+  //     const username = data.username.trim().replace(/\s+/g, "");
+
+  //     const response = await fetch(API_URLS.LOGIN, {
+  //       method: "POST",
+  //       headers: {
+  //         "Content-Type": "application/json",
+  //         userName: username,
+  //         password: data.password,
+  //         brandName: API_URLS.BRAND,
+  //       } as HeadersInit,
+  //       body: JSON.stringify(deviceDetails ?? {}),
+  //     });
+
+  //     if (response.status === 200) {
+  //       const res = await response.json();
+  //       login(res);
+  //       reset();
+  //       handleClose?.();
+  //       toast.success("Login successful");
+  //     } else {
+  //       const err = await response.text();
+  //       toast.error(formatErrorMessage(err) || "Login failed");
+  //     }
+  //   } catch {
+  //     toast.error("Unexpected error occurred");
+  //   } finally {
+  //     setLoading(false);
+  //   }
+  // };
+
   const handleLogin = async (data: LoginForm) => {
     try {
       setLoading(true);
 
       const username = data.username.trim().replace(/\s+/g, "");
 
-      const response = await fetch(API_URLS.LOGIN, {
-        method: "POST",
-        headers: {
-          "Content-Type": "application/json",
-          userName: username,
-          password: data.password,
-          brandName: API_URLS.BRAND,
-        } as HeadersInit,
-        body: JSON.stringify(deviceDetails ?? {}),
-      });
-
-      if (response.status === 200) {
-        const res = await response.json();
-        login(res);
-        reset();
-        handleClose?.();
-        toast.success("Login successful");
-      } else {
-        const err = await response.text();
-        toast.error(formatErrorMessage(err) || "Login failed");
-      }
+      login({ userName: username });
+      reset();
+      handleClose?.();
+      toast.success("Login successful");
     } catch {
       toast.error("Unexpected error occurred");
     } finally {

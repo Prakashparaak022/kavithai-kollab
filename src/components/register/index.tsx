@@ -54,62 +54,86 @@ const Register = ({ handleClose }: RegisterProps) => {
   const { login, brandId, deviceDetails } = useAuth();
   const { data: isdCodeDetails, loading: isdCodeLoading } = useISDCode();
 
-  const onSubmit = useCallback(
-    async (data: RegisterFormValues) => {
-      try {
-        setLoading(true);
+  // const onSubmit = useCallback(
+  //   async (data: RegisterFormValues) => {
+  //     try {
+  //       setLoading(true);
 
-        const username = data.username.trim().replace(/\s+/g, "");
+  //       const username = data.username.trim().replace(/\s+/g, "");
 
-        const profile = {
-          brandName: BRAND,
-          userName: username,
-          actionUserName: username,
-          password: data.password,
-          userAccountTypeId: 7,
-          phone: Number(data.mobileNumber),
-          phoneCountryIsdcodeId: Number(data.countryId),
-          isPlayerAge18Plus: data.is18Plus ? 1 : 0,
-          isPlayerAcceptTAndC: data.isTermsAndConditions ? 1 : 0,
-          activeStatus: 1,
-          realPlayer: 1,
-          demoPlayer: 0,
-          playerRegistrationDate: new Date().toISOString().split(".")[0],
-          reportingHirearchyUserId: brandId,
-          promoCode: data.promoCode,
-          deviceInfoRequest: deviceDetails,
-        };
+  //       const profile = {
+  //         brandName: BRAND,
+  //         userName: username,
+  //         actionUserName: username,
+  //         password: data.password,
+  //         userAccountTypeId: 7,
+  //         phone: Number(data.mobileNumber),
+  //         phoneCountryIsdcodeId: Number(data.countryId),
+  //         isPlayerAge18Plus: data.is18Plus ? 1 : 0,
+  //         isPlayerAcceptTAndC: data.isTermsAndConditions ? 1 : 0,
+  //         activeStatus: 1,
+  //         realPlayer: 1,
+  //         demoPlayer: 0,
+  //         playerRegistrationDate: new Date().toISOString().split(".")[0],
+  //         reportingHirearchyUserId: brandId,
+  //         promoCode: data.promoCode,
+  //         deviceInfoRequest: deviceDetails,
+  //       };
 
-        const response = await fetch(REGISTER, {
-          method: "POST",
-          headers: {
-            "Content-Type": "application/json",
-          },
-          body: JSON.stringify(profile),
-        });
+  //       const response = await fetch(REGISTER, {
+  //         method: "POST",
+  //         headers: {
+  //           "Content-Type": "application/json",
+  //         },
+  //         body: JSON.stringify(profile),
+  //       });
 
-        if (response.status === 201) {
-          const result = await response.json();
-          login(result);
-          toast.success("Registered Successfully");
-          handleClose?.();
-        } else {
-          const errorData = await response.json();
-          toast.error(
-            errorData?.errors?.[0]?.defaultMessage ||
-              Object.values(errorData?.data || {})[0] ||
-              formatErrorMessage(errorData) ||
-              "Registration failed"
-          );
-        }
-      } catch {
-        toast.error("Unexpected error occurred during registration.");
-      } finally {
-        setLoading(false);
-      }
-    },
-    [BRAND, REGISTER, brandId, deviceDetails, login, handleClose]
-  );
+  //       if (response.status === 201) {
+  //         const result = await response.json();
+  //         login(result);
+  //         toast.success("Registered Successfully");
+  //         handleClose?.();
+  //       } else {
+  //         const errorData = await response.json();
+  //         toast.error(
+  //           errorData?.errors?.[0]?.defaultMessage ||
+  //             Object.values(errorData?.data || {})[0] ||
+  //             formatErrorMessage(errorData) ||
+  //             "Registration failed"
+  //         );
+  //       }
+  //     } catch {
+  //       toast.error("Unexpected error occurred during registration.");
+  //     } finally {
+  //       setLoading(false);
+  //     }
+  //   },
+  //   [BRAND, REGISTER, brandId, deviceDetails, login, handleClose]
+  // );
+
+  const onSubmit = async (data: RegisterFormValues) => {
+    try {
+      setLoading(true);
+
+      const username = data.username.trim().replace(/\s+/g, "");
+      const profile = {
+        userName: username,
+        phone: Number(data.mobileNumber),
+        phoneCountryIsdcodeId: Number(data.countryId),
+        isPlayerAge18Plus: data.is18Plus ? 1 : 0,
+        playerRegistrationDate: new Date().toISOString().split(".")[0],
+        deviceInfoRequest: deviceDetails,
+      };
+
+      login(profile);
+      toast.success("Registered Successfully");
+      handleClose?.();
+    } catch {
+      toast.error("Unexpected error occurred");
+    } finally {
+      setLoading(false);
+    }
+  };
 
   return (
     <div className="flex flex-col items-center p-8 bg-secondary">
