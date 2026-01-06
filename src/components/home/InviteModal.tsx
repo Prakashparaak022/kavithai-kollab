@@ -1,31 +1,45 @@
 "use client";
 import { Check, Copy, Search } from "lucide-react";
 import { useState } from "react";
+import { toast } from "react-toastify";
 
 const InviteModal = ({ showInviteModal = true }) => {
   const [searchQuery, setSearchQuery] = useState("");
   const [copiedLink, setCopiedLink] = useState(false);
+  const [invitedUsers, setInvitedUsers] = useState<Set<string>>(new Set());
+
+  const handleInvite = (handle: string) => {
+    if (invitedUsers.has(handle)) return;
+
+    setInvitedUsers((prev) => {
+      const next = new Set(prev);
+      next.add(handle);
+      return next;
+    });
+
+    toast.success(`Invite sent to ${handle}`);
+  };
 
   const users = [
     {
       username: "@Bharathi",
-      handle: "@Bhronohi",
+      author: "@Bhronohi",
       badge: "Top Poet",
-      avatar:
+      image:
         "https://images.unsplash.com/photo-1507003211169-0a1dd7228f2d?w=100&h=100&fit=crop",
     },
     {
       username: "@heronohi",
-      handle: "@herovithi",
+      author: "@herovithi",
       badge: "Top Poet",
-      avatar:
+      image:
         "https://images.unsplash.com/photo-1494790108377-be9c29b29330?w=100&h=100&fit=crop",
     },
     {
       username: "@user12",
-      handle: "@kaviarishi",
+      author: "@kaviarishi",
       badge: "Top Poet",
-      avatar:
+      image:
         "https://images.unsplash.com/photo-1500648767791-00dcc994a43e?w=100&h=100&fit=crop",
     },
   ];
@@ -60,42 +74,51 @@ const InviteModal = ({ showInviteModal = true }) => {
 
             {/* User List */}
             <div className="space-y-3 mb-6">
-              {users.map((user, idx) => (
-                <div
-                  key={idx}
-                  className="flex flex-wrap gap-2 items-center justify-between bg-[#f8f5e4] p-4 rounded-xl shadow-sm">
-                  {/* Left section */}
-                  <div className="flex items-center gap-3">
-                    <img
-                      src={user.avatar}
-                      alt={user.username}
-                      className="w-11 h-11 rounded-full object-cover"
-                    />
+              {users.map((user, idx) => {
+                const isInvited = invitedUsers.has(user.author);
 
-                    <div className="flex flex-col">
-                      <div className="flex items-center gap-2">
-                        <span className="font-semibold text-gray-600">
-                          {user.username}
-                        </span>
+                return (
+                  <div
+                    key={idx}
+                    className="flex flex-wrap gap-2 items-center justify-between bg-[#f8f5e4] p-4 rounded-xl shadow-sm">
+                    {/* Left section */}
+                    <div className="flex items-center gap-3">
+                      <img
+                        src={user.image}
+                        alt={user.username}
+                        className="w-11 h-11 rounded-full object-cover"
+                      />
 
-                        {/* Badge */}
-                        <span className="text-xs font-medium px-2 py-[2px] rounded-full bg-[#f5c16c] text-[#7a4b00]">
-                          Top Post
+                      <div className="flex flex-col">
+                        <div className="flex items-center gap-2">
+                          <span className="font-semibold text-gray-600">
+                            {user.username}
+                          </span>
+
+                          {/* Badge */}
+                          <span className="text-xs font-medium px-2 py-[2px] rounded-full bg-[#f5c16c] text-[#7a4b00]">
+                            {user.badge}
+                          </span>
+                        </div>
+
+                        <span className="text-[#6a7a78] text-xs">
+                          {user.author}
                         </span>
                       </div>
-
-                      <span className="text-[#6a7a78] text-xs">
-                        {user.handle}
-                      </span>
                     </div>
-                  </div>
 
-                  {/* Invite Button */}
-                  <button className="px-4 h-8 rounded-full bg-[#355f66] text-white text-sm font-medium hover:bg-[#2c4f55] transition">
-                    Invite
-                  </button>
-                </div>
-              ))}
+                    {/* Invite Button */}
+                    <button
+                      onClick={() => handleInvite(user.author)}
+                      disabled={isInvited}
+                      className={`px-4 h-8 rounded-full ${
+                        isInvited ? "bg-highlight" : "bg-secondary"
+                      } text-white text-sm font-medium transition`}>
+                      {isInvited ? "Invited" : "Invite"}
+                    </button>
+                  </div>
+                );
+              })}
             </div>
 
             {/* Copy Invite Link */}
