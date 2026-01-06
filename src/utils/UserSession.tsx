@@ -4,7 +4,14 @@ import { useEffect, useState } from "react";
 
 export type PlayerDetails = {
   userName?: string;
-  [key: string]: unknown;
+  accessToken?: string;
+  [key: string]:
+    | string
+    | number
+    | boolean
+    | null
+    | undefined
+    | Record<string, unknown>;
 };
 
 export function useSessionStorage<T = string | null>(key: string): T | null {
@@ -92,15 +99,13 @@ export const usePlayerDetails = (): {
 /**
  * Utility function to update sessionStorage reactively
  */
-export function setSessionStorage<T>(key: string, value: T): void {
+export function setSessionStorage(key: string, value: string): void {
   if (typeof window === "undefined") return;
 
   try {
-    sessionStorage.setItem(key, JSON.stringify(value));
+    sessionStorage.setItem(key, value);
     window.dispatchEvent(
-      new CustomEvent("sessionStorageUpdated", {
-        detail: { key },
-      })
+      new CustomEvent("sessionStorageUpdated", { detail: { key } })
     );
   } catch (error) {
     console.error(`Error setting sessionStorage for key "${key}":`, error);
