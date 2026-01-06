@@ -1,0 +1,86 @@
+@import "tailwindcss";
+
+:root {
+  --background: #dcd4c3;
+  --foreground: #171717;
+  --bg-primary: #dcd4c3;
+  --bg-secondary: #2c5f5d;
+  --bg-highlight: #d4a574;
+  --text-primary: #171717;
+  --text-secondary: #ffffff;
+  --text-highlight: #e8dcc8;
+  --text-green: #2c5f5d;
+  --br-primary: #d4a574;
+  --bg-secondary: #2c5f5d;
+  --toastify-color-success: #d4a574;
+}
+
+@theme inline {
+  --color-background: var(--background);
+  --color-foreground: var(--foreground);
+  --font-sans: var(--font-geist-sans);
+  --font-mono: var(--font-geist-mono);
+}
+
+@media (prefers-color-scheme: dark) {
+  :root {
+    --background: #dcd4c3;
+    --foreground: #ededed;
+  }
+}
+
+body {
+  background: var(--background);
+  color: var(--foreground);
+  font-family: Arial, Helvetica, sans-serif;
+}
+
+.bg-primary {
+  background: var(--bg-primary);
+}
+
+.bg-secondary {
+  background: var(--bg-secondary);
+}
+
+.bg-highlight {
+  background: var(--bg-highlight);
+}
+
+.text-primary {
+  color: var(--text-primary);
+}
+
+.text-secondary {
+  color: var(--text-secondary);
+}
+
+.text-highlight {
+  color: var(--text-highlight);
+}
+
+.text-green {
+  color: var(--text-green);
+}
+
+.border-primary {
+  border: 1px solid var(--br-primary);
+}
+
+.border-secondary {
+  border: 1px solid var(--br-secondary);
+}
+
+.btn {
+  background-color: var(--bg-highlight);
+}
+.btn:hover {
+  background-color: var(--bg-primary);
+  cursor: pointer;
+  transition: background-color 0.2s ease-in-out, color 0.2s ease-in-out;
+}
+
+.logo {
+  filter: brightness(0) saturate(100%) invert(77%) sepia(12%) saturate(357%)
+    hue-rotate(16deg) brightness(93%) contrast(89%);
+}
