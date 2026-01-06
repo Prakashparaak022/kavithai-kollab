@@ -28,10 +28,7 @@ export function useSessionStorage<T = string | null>(key: string): T | null {
     };
 
     window.addEventListener("storage", handleStorageChange);
-    window.addEventListener(
-      "sessionStorageUpdated",
-      handleCustomStorageEvent
-    );
+    window.addEventListener("sessionStorageUpdated", handleCustomStorageEvent);
 
     return () => {
       window.removeEventListener("storage", handleStorageChange);
@@ -56,14 +53,14 @@ export const usePlayerDetails = (): {
   const playerDetailsStr = useSessionStorage<string>("playerDetails");
   const accessToken = useSessionStorage<string>("accessToken");
 
-  const [playerDetails, setPlayerDetails] =
-    useState<PlayerDetails | null>(null);
+  const [playerDetails, setPlayerDetails] = useState<PlayerDetails | null>(
+    null
+  );
   const [loading, setLoading] = useState<boolean>(true);
 
   useEffect(() => {
-    setLoading(true);
-
     if (playerDetailsStr) {
+      setLoading(true);
       try {
         const parsed: unknown = JSON.parse(playerDetailsStr);
 
@@ -75,12 +72,12 @@ export const usePlayerDetails = (): {
       } catch (err) {
         console.error("Failed to parse playerDetails:", err);
         setPlayerDetails(null);
+      } finally {
+        setLoading(false);
       }
     } else {
       setPlayerDetails(null);
     }
-
-    setLoading(false);
   }, [playerDetailsStr]);
 
   return { playerDetails, loading, accessToken };
@@ -100,9 +97,6 @@ export function setSessionStorage<T>(key: string, value: T): void {
       })
     );
   } catch (error) {
-    console.error(
-      `Error setting sessionStorage for key "${key}":`,
-      error
-    );
+    console.error(`Error setting sessionStorage for key "${key}":`, error);
   }
 }

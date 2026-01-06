@@ -112,8 +112,10 @@ const LoginContainer = ({ handleClose }: LoginContainerProps) => {
                 required: "Username is required",
                 minLength: { value: 3, message: "Min 3 characters" },
                 maxLength: { value: 12, message: "Max 12 characters" },
-                validate: (v: string) =>
-                  !/\s/.test(v) || "Spaces are not allowed",
+                validate: (v) =>
+                  typeof v === "string"
+                    ? !/\s/.test(v) || "Spaces are not allowed"
+                    : true,
               }}
             />
 

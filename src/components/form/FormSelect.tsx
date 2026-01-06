@@ -1,35 +1,48 @@
 "use client";
 
-import { Controller, Control, FieldErrors } from "react-hook-form";
+import {
+  Controller,
+  Control,
+  FieldErrors,
+  RegisterOptions,
+  FieldValues,
+  Path,
+} from "react-hook-form";
 import LoadingSpinner from "../ui/LoadingSpinner";
 
-type FormSelectProps<T = any> = {
-  name: string;
-  control: Control<any>;
-  errors: FieldErrors;
-  options: T[];
+type FormSelectProps<
+  TForm extends FieldValues,
+  TOption extends Record<string, unknown>
+> = {
+  name: Path<TForm>;
+  control: Control<TForm>;
+  errors: FieldErrors<TForm>;
+  options: TOption[];
   placeholder?: string;
-  rules?: any;
-  labelKey?: keyof T;
-  valueKey?: keyof T;
+  rules?: RegisterOptions<TForm, Path<TForm>>;
+  labelKey: keyof TOption;
+  valueKey: keyof TOption;
   prefix?: string;
   loading?: boolean;
   loaderColor?: string;
 };
 
-const FormSelect = <T,>({
+function FormSelect<
+  TForm extends FieldValues,
+  TOption extends Record<string, unknown>
+>({
   name,
   control,
   errors,
   options,
   placeholder = "Select an option",
   rules,
-  labelKey = "label" as keyof T,
-  valueKey = "value" as keyof T,
+  labelKey,
+  valueKey,
   prefix,
   loading = false,
   loaderColor = "#E5E7EB",
-}: FormSelectProps<T>) => {
+}: FormSelectProps<TForm, TOption>) {
   const error = errors[name];
 
   return (
@@ -39,7 +52,6 @@ const FormSelect = <T,>({
       rules={rules}
       render={({ field }) => (
         <div className="relative">
-          {/* Optional prefix on the left */}
           {prefix && (
             <span className="absolute left-3 top-1/2 -translate-y-1/2 text-gray-400 pointer-events-none">
               {prefix}
@@ -66,7 +78,7 @@ const FormSelect = <T,>({
                 {options.map((opt) => (
                   <option
                     key={String(opt[valueKey])}
-                    value={opt[valueKey] as any}>
+                    value={String(opt[valueKey])}>
                     {String(opt[labelKey])}
                   </option>
                 ))}
@@ -90,6 +102,6 @@ const FormSelect = <T,>({
       )}
     />
   );
-};
+}
 
 export default FormSelect;

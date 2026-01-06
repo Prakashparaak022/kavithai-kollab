@@ -19,6 +19,7 @@ type RegisterProps = {
 
 type RegisterFormValues = {
   username: string;
+  email: string;
   password: string;
   confirmPassword: string;
   promoCode?: string;
@@ -157,8 +158,10 @@ const Register = ({ handleClose }: RegisterProps) => {
               required: "Username is required",
               minLength: { value: 3, message: "Min 3 characters" },
               maxLength: { value: 12, message: "Max 12 characters" },
-              validate: (v: string) =>
-                !/\s/.test(v) || "Spaces are not allowed",
+              validate: (v) =>
+                typeof v === "string"
+                  ? !/\s/.test(v) || "Spaces are not allowed"
+                  : true,
             }}
           />
 
@@ -204,7 +207,7 @@ const Register = ({ handleClose }: RegisterProps) => {
             type="password"
             rules={{
               required: "Confirm Password is required",
-              validate: (value: any) =>
+              validate: (value: unknown) =>
                 value === watch("password") || "Passwords do not match",
             }}
           />
