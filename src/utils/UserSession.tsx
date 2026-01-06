@@ -56,14 +56,20 @@ export const usePlayerDetails = (): {
   const [playerDetails, setPlayerDetails] = useState<PlayerDetails | null>(
     null
   );
-  const [loading, setLoading] = useState<boolean>(false);
+  const [loading, setLoading] = useState<boolean>(true);
 
   useEffect(() => {
-    if (playerDetailsStr) {
-      setLoading(true);
+    setLoading(true);
+
+    const loadPlayerDetails = async () => {
+      if (!playerDetailsStr) {
+        setPlayerDetails(null);
+        setLoading(false);
+        return;
+      }
+
       try {
         const parsed: unknown = JSON.parse(playerDetailsStr);
-
         if (typeof parsed === "object" && parsed !== null) {
           setPlayerDetails(parsed as PlayerDetails);
         } else {
@@ -72,11 +78,12 @@ export const usePlayerDetails = (): {
       } catch (err) {
         console.error("Failed to parse playerDetails:", err);
         setPlayerDetails(null);
+      } finally {
+        setLoading(false);
       }
-    } else {
-      setPlayerDetails(null);
-    }
-    setLoading(false);
+    };
+
+    loadPlayerDetails();
   }, [playerDetailsStr]);
 
   return { playerDetails, loading, accessToken };
