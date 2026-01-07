@@ -1,12 +1,14 @@
+"use client";
 import Layout from "@/components/layouts";
 import Collaborations from "@/components/poem/Collaborations";
-import PoemCollaborationList from "@/components/poem/Collaborations";
+import InviteModal from "@/components/poem/InviteModal";
 import PoemDetailCard from "@/components/poem/PoemDetailCard";
 import PoemMotion from "@/components/poem/PoemMotion";
 import AboutPoem from "@/components/poemDetails/AboutPoem";
 import Notifications from "@/components/poemDetails/Notifications";
 import { poems } from "@/data/poem";
 import { notFound } from "next/navigation";
+import { useState } from "react";
 
 type Props = {
   params: { slug: string };
@@ -14,6 +16,7 @@ type Props = {
 
 const PoemDetailPage = ({ params }: Props) => {
   const poem = poems.find((p) => p.slug === params.slug);
+  const [showInviteModal, setShowInviteModal] = useState(false);
 
   if (!poem) notFound();
 
@@ -28,6 +31,7 @@ const PoemDetailPage = ({ params }: Props) => {
               title={poem.title}
               username={poem.author}
               content={poem.content || "No content available"}
+              onInvite={() => setShowInviteModal(true)}
             />
           </PoemMotion>
           {/* Collaboration List */}
@@ -40,6 +44,9 @@ const PoemDetailPage = ({ params }: Props) => {
           <AboutPoem />
         </div>
       </div>
+      {showInviteModal && (
+        <InviteModal onClose={() => setShowInviteModal(false)} />
+      )}
     </Layout>
   );
 };

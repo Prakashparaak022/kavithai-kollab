@@ -5,16 +5,20 @@ type PoemCardProps = {
   title: string;
   username: string;
   content: string;
+  onInvite: () => void;
 };
 
 const PoemDetailCard: React.FC<PoemCardProps> = ({
   title,
   username,
   content,
+  onInvite,
 }) => {
   return (
     <div className="relative rounded-lg border-4 border-[#d4a574] bg-[#2c5f5d] p-6 overflow-hidden">
-      <button className="absolute right-6 flex items-center gap-1 px-3 h-8 bg-highlight rounded-full cursor-pointer outline-none">
+      <button
+        onClick={onInvite}
+        className="absolute right-6 flex items-center gap-1 px-3 h-8 bg-highlight rounded-full cursor-pointer outline-none">
         Invite <UserRoundPlusIcon size={15} />
       </button>
       {/* border design */}
