@@ -1,5 +1,5 @@
-import { CurvedDots } from "@/components/CurvedDots";
-import { FrameLine } from "@/components/FrameLine";
+import { CurvedDots } from "@/components/ui/CurvedDots";
+import { FrameLine } from "@/components/ui/FrameLine";
 
 type PoemCardProps = {
   title: string;
@@ -19,8 +19,14 @@ const PoemCard: React.FC<PoemCardProps> = ({ title, username, content }) => {
       {/* Edge connectors */}
       <FrameLine className="absolute top-[16px] left-10 right-10 h-[1px]" />
       <FrameLine className="absolute bottom-[16px] left-10 right-10 h-[1px]" />
-      <FrameLine className="absolute left-[16px] top-10 bottom-10 w-[1px]" orientation="vertical" />
-      <FrameLine className="absolute right-[16px] top-10 bottom-10 w-[1px]" orientation="vertical" />
+      <FrameLine
+        className="absolute left-[16px] top-10 bottom-10 w-[1px]"
+        orientation="vertical"
+      />
+      <FrameLine
+        className="absolute right-[16px] top-10 bottom-10 w-[1px]"
+        orientation="vertical"
+      />
 
       {/* Content */}
       <div className="pt-2 text-center">

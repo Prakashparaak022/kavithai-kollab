@@ -1,6 +1,7 @@
+"use client"
 import { useState } from "react";
 
-const PoemDetails = () => {
+const AboutPoem = () => {
   const [requireApproval, setRequireApproval] = useState(true);
   return (
     <div>
@@ -39,4 +40,4 @@ const PoemDetails = () => {
   );
 };
 
-export default PoemDetails;
+export default AboutPoem;

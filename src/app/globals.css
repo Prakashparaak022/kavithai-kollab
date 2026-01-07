@@ -1,27 +1,40 @@
 @import "tailwindcss";
 
+/* ================================
+   Root Theme Variables
+================================ */
 :root {
   --background: #dcd4c3;
   --foreground: #171717;
+
   --bg-primary: #dcd4c3;
   --bg-secondary: #2c5f5d;
   --bg-highlight: #d4a574;
+
   --text-primary: #171717;
   --text-secondary: #ffffff;
   --text-highlight: #e8dcc8;
   --text-green: #2c5f5d;
-  --br-primary: #d4a574;
-  --bg-secondary: #2c5f5d;
+
+  --border-primary: #d4a574;
+
   --toastify-color-success: #d4a574;
 }
 
+/* ================================
+   Tailwind Theme Bindings
+================================ */
 @theme inline {
   --color-background: var(--background);
   --color-foreground: var(--foreground);
-  --font-sans: var(--font-geist-sans);
-  --font-mono: var(--font-geist-mono);
+
+  --font-sans: var(--font-inter);
+  --font-heading: var(--font-playfair);
 }
 
+/* ================================
+   Dark Mode (optional)
+================================ */
 @media (prefers-color-scheme: dark) {
   :root {
     --background: #dcd4c3;
@@ -29,12 +42,39 @@
   }
 }
 
+/* ================================
+   Base Styles
+================================ */
+html {
+  scroll-behavior: smooth;
+}
+
 body {
   background: var(--background);
   color: var(--foreground);
-  font-family: Arial, Helvetica, sans-serif;
+  font-family: var(--font-inter);
 }
 
+/* ================================
+   Typography
+================================ */
+h1,
+h2,
+h3,
+h4,
+h5,
+h6 {
+  font-family: var(--font-inter);
+  letter-spacing: -0.02em;
+}
+
+p {
+  line-height: 1.7;
+}
+
+/* ================================
+   Background Utilities
+================================ */
 .bg-primary {
   background: var(--bg-primary);
 }
@@ -47,6 +87,9 @@ body {
   background: var(--bg-highlight);
 }
 
+/* ================================
+   Text Utilities
+================================ */
 .text-primary {
   color: var(--text-primary);
 }
@@ -63,24 +106,30 @@ body {
   color: var(--text-green);
 }
 
+/* ================================
+   Border Utilities
+================================ */
 .border-primary {
-  border: 1px solid var(--br-primary);
+  border: 1px solid var(--border-primary);
 }
 
-.border-secondary {
-  border: 1px solid var(--br-secondary);
-}
-
+/* ================================
+   Buttons
+================================ */
 .btn {
   background-color: var(--bg-highlight);
 }
+
 .btn:hover {
   background-color: var(--bg-primary);
   cursor: pointer;
   transition: background-color 0.2s ease-in-out, color 0.2s ease-in-out;
 }
 
+/* ================================
+   Logo Color Adjustment
+================================ */
 .logo {
-  filter: brightness(0) saturate(100%) invert(77%) sepia(12%) saturate(357%)
-    hue-rotate(16deg) brightness(93%) contrast(89%);
+  filter: brightness(0) saturate(100%) invert(75%) sepia(18%) saturate(600%)
+    hue-rotate(22deg) brightness(96%) contrast(92%);
 }

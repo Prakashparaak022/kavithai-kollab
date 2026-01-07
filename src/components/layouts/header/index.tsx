@@ -3,11 +3,11 @@
 import Image from "next/image";
 import Link from "next/link";
 import { useState } from "react";
-import logo from "@/assets/img/logo-1.png";
+import logo from "@/assets/img/logo.png";
 import { useModal } from "@/context/ModalContext";
 import { useAuth } from "@/context/AuthContext";
 import { ChevronDown, LogOut, User, LogIn, UserPlus } from "lucide-react";
-import LoadingSpinner from "../ui/LoadingSpinner";
+import LoadingSpinner from "../../ui/LoadingSpinner";
 import { usePlayerDetails } from "@/utils/UserSession";
 
 const Header = () => {
@@ -15,18 +15,20 @@ const Header = () => {
   const { playerDetails, loading } = usePlayerDetails();
   const { logout } = useAuth();
   const [dropdownOpen, setDropdownOpen] = useState(false);
-  
+
   return (
     <header className="bg-secondary shadow-sm">
-      <nav className="mx-auto max-w-7xl px-4 py-3 flex items-center justify-between">
+      <nav className="px-4 py-3 flex items-center justify-between">
         {/* Logo */}
-        <Link href="/">
+        {/* Logo */}
+        <Link href="/" className="flex items-center">
           <Image
             src={logo}
-            alt="Kavithai Collab Logo"
-            className="logo h-15 w-auto"
+            alt="Kavithai Kollab Logo"
+            className="logo h-10 w-auto"
             priority
           />
+          <span className="text-highlight mt-4">Kavithai&nbsp;Kollab</span>
         </Link>
 
         {/* Right Section */}

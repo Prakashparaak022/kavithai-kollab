@@ -3,8 +3,8 @@
 import LoginContainer from "@/components/login";
 import { createContext, useContext, useState, ReactNode } from "react";
 import { X } from "lucide-react";
-import { CurvedDots } from "@/components/CurvedDots";
-import { FrameLine } from "@/components/FrameLine";
+import { CurvedDots } from "@/components/ui/CurvedDots";
+import { FrameLine } from "@/components/ui/FrameLine";
 import Register from "@/components/register";
 
 type ModalType = "login" | "register" | null;
