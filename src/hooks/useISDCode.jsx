@@ -1,8 +1,8 @@
+"use client"
 import { toast } from "react-toastify";
 import { API_URLS } from "@/services/apiUrls";
 import { formatErrorMessage } from "@/utils/errorMessage";
-
-const { useEffect, useState } = require("react");
+import { useEffect, useState } from "react";
 
 export const useISDCode = (dependencies = []) => {
   const [data, setData] = useState(null);

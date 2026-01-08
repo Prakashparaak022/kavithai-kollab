@@ -19,6 +19,7 @@ type RegisterProps = {
 
 type RegisterFormValues = {
   username: string;
+  email: string;
   password: string;
   confirmPassword: string;
   promoCode?: string;
@@ -50,7 +51,7 @@ const Register = ({ handleClose }: RegisterProps) => {
 
   const [loading, setLoading] = useState(false);
 
-  const { BRAND, REGISTER } = API_URLS;
+  const { REGISTER } = API_URLS;
   const { login, brandId, deviceDetails } = useAuth();
   const { data: isdCodeDetails, loading: isdCodeLoading } = useISDCode();
 
@@ -62,22 +63,12 @@ const Register = ({ handleClose }: RegisterProps) => {
   //       const username = data.username.trim().replace(/\s+/g, "");
 
   //       const profile = {
-  //         brandName: BRAND,
   //         userName: username,
-  //         actionUserName: username,
   //         password: data.password,
-  //         userAccountTypeId: 7,
-  //         phone: Number(data.mobileNumber),
+  //         email: data.email,
+  //         phoneNo: Number(data.mobileNumber),
   //         phoneCountryIsdcodeId: Number(data.countryId),
-  //         isPlayerAge18Plus: data.is18Plus ? 1 : 0,
-  //         isPlayerAcceptTAndC: data.isTermsAndConditions ? 1 : 0,
-  //         activeStatus: 1,
-  //         realPlayer: 1,
-  //         demoPlayer: 0,
-  //         playerRegistrationDate: new Date().toISOString().split(".")[0],
-  //         reportingHirearchyUserId: brandId,
-  //         promoCode: data.promoCode,
-  //         deviceInfoRequest: deviceDetails,
+  //         // deviceInfoRequest: deviceDetails,
   //       };
 
   //       const response = await fetch(REGISTER, {
@@ -108,7 +99,7 @@ const Register = ({ handleClose }: RegisterProps) => {
   //       setLoading(false);
   //     }
   //   },
-  //   [BRAND, REGISTER, brandId, deviceDetails, login, handleClose]
+  //   [REGISTER, brandId, deviceDetails, login, handleClose]
   // );
 
   const onSubmit = async (data: RegisterFormValues) => {
@@ -118,11 +109,10 @@ const Register = ({ handleClose }: RegisterProps) => {
       const username = data.username.trim().replace(/\s+/g, "");
       const profile = {
         userName: username,
-        phone: Number(data.mobileNumber),
+        password: data.password,
+        email: data.email,
+        phoneNo: Number(data.mobileNumber),
         phoneCountryIsdcodeId: Number(data.countryId),
-        isPlayerAge18Plus: data.is18Plus ? 1 : 0,
-        playerRegistrationDate: new Date().toISOString().split(".")[0],
-        deviceInfoRequest: deviceDetails,
       };
 
       login(profile);
@@ -157,8 +147,10 @@ const Register = ({ handleClose }: RegisterProps) => {
               required: "Username is required",
               minLength: { value: 3, message: "Min 3 characters" },
               maxLength: { value: 12, message: "Max 12 characters" },
-              validate: (v: string) =>
-                !/\s/.test(v) || "Spaces are not allowed",
+              validate: (v) =>
+                typeof v === "string"
+                  ? !/\s/.test(v) || "Spaces are not allowed"
+                  : true,
             }}
           />
 
@@ -204,7 +196,7 @@ const Register = ({ handleClose }: RegisterProps) => {
             type="password"
             rules={{
               required: "Confirm Password is required",
-              validate: (value: any) =>
+              validate: (value: unknown) =>
                 value === watch("password") || "Passwords do not match",
             }}
           />

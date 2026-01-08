@@ -1,22 +1,29 @@
 "use client";
 
-import { Controller, Control, FieldErrors } from "react-hook-form";
+import {
+  Controller,
+  Control,
+  FieldErrors,
+  RegisterOptions,
+  FieldValues,
+  Path,
+} from "react-hook-form";
 import { Eye, EyeOff } from "lucide-react";
 import { useState } from "react";
 import LoadingSpinner from "../ui/LoadingSpinner";
 
-type FormInputProps = {
-  name: string;
-  control: Control<any>;
-  errors: FieldErrors;
+type FormInputProps<T extends FieldValues> = {
+  name: Path<T>;
+  control: Control<T>;
+  errors: FieldErrors<T>;
   placeholder: string;
-  rules?: any;
+  rules?: RegisterOptions<T, Path<T>>;
   type?: "text" | "password";
   loading?: boolean;
   loaderColor?: string;
 };
 
-const FormInput = ({
+function FormInput<T extends FieldValues>({
   name,
   control,
   errors,
@@ -25,7 +32,7 @@ const FormInput = ({
   type = "text",
   loading = false,
   loaderColor = "#E5E7EB",
-}: FormInputProps) => {
+}: FormInputProps<T>) {
   const [showPassword, setShowPassword] = useState(false);
   const isPassword = type === "password";
   const error = errors[name];
@@ -74,6 +81,6 @@ const FormInput = ({
       )}
     />
   );
-};
+}
 
 export default FormInput;

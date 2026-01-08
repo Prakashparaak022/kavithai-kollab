@@ -24,7 +24,7 @@ const Notifications = ({ showNotification = true }: NotificationProps) => {
                 className="w-10 h-10 rounded-full object-cover"
               />
               <p className="text-gray-600 text-sm">
-                You've invited to collaborate on "Eternal Echoes by @Bharnohi.
+                {`You've invited to collaborate on "Eternal Echoes by @Bharnohi."`}
               </p>
             </div>
             <div className="flex gap-2">

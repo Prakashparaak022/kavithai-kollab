@@ -12,7 +12,11 @@ import { toast } from "react-toastify";
 
 import { fetchBrandID } from "@/lib/fetchBrandId";
 import { getDeviceDetails } from "@/utils/getDeviceDetails";
-import { setSessionStorage, usePlayerDetails } from "@/utils/UserSession";
+import {
+  PlayerDetails,
+  setSessionStorage,
+  usePlayerDetails,
+} from "@/utils/UserSession";
 
 /* ------------------------------
    Types
@@ -21,8 +25,8 @@ import { setSessionStorage, usePlayerDetails } from "@/utils/UserSession";
 type AuthContextType = {
   brandId: string | null;
   deviceDetails: Record<string, unknown> | null;
-  playerDetails: any;
-  login: (userData: any) => void;
+  playerDetails: PlayerDetails | null;
+  login: (userData: PlayerDetails) => void;
   logout: () => void;
 };
 
@@ -53,10 +57,11 @@ export const AuthProvider = ({ children }: AuthProviderProps) => {
      Login / Logout
   --------------------------------*/
 
-  const login = (userData: any) => {
+  const login = (userData: PlayerDetails) => {
     if (!userData) return;
     setSessionStorage("playerDetails", JSON.stringify(userData));
-    setSessionStorage("accessToken", userData?.accessToken);
+    if (userData?.accessToken)
+      setSessionStorage("accessToken", userData?.accessToken);
   };
 
   const logout = () => {
