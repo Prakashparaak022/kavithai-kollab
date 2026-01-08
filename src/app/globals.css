@@ -133,3 +133,29 @@ p {
   filter: brightness(0) saturate(100%) invert(75%) sepia(18%) saturate(600%)
     hue-rotate(22deg) brightness(96%) contrast(92%);
 }
+
+/* ================================
+   Animations
+================================ */
+@keyframes slideIn {
+  from {
+    transform: translateX(80px);
+    opacity: 0;
+  }
+  to {
+    transform: translateX(0);
+    opacity: 1;
+  }
+}
+
+@keyframes pulseGlow {
+  0% {
+    box-shadow: 0 0 0 0 rgba(245, 193, 108, 0.6);
+  }
+  70% {
+    box-shadow: 0 0 0 6px rgba(245, 193, 108, 0);
+  }
+  100% {
+    box-shadow: 0 0 0 0 rgba(245, 193, 108, 0);
+  }
+}
