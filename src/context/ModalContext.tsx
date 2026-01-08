@@ -3,9 +3,8 @@
 import LoginContainer from "@/components/login";
 import { createContext, useContext, useState, ReactNode } from "react";
 import { X } from "lucide-react";
-import { CurvedDots } from "@/components/ui/CurvedDots";
-import { FrameLine } from "@/components/ui/FrameLine";
 import Register from "@/components/register";
+import BorderDots from "@/components/ui/BorderDots";
 
 type ModalType = "login" | "register" | null;
 
@@ -31,28 +30,13 @@ export const ModalProvider = ({ children }: { children: ReactNode }) => {
 
       {activeModal && (
         <div
-          className="fixed inset-0 z-50 flex items-center justify-center bg-black/60 overflow-y-auto py-10"
+          className="fixed inset-0 z-50 flex items-center justify-center bg-black/25 backdrop-blur-sm overflow-y-auto py-10"
           onClick={closeModal}>
           <div
             className="relative w-full max-w-lg rounded-xl overflow-hidden"
             onClick={(e) => e.stopPropagation()}>
-            {/* Corner dots */}
-            <CurvedDots className="absolute top-0 left-0" rotate={0} />
-            <CurvedDots className="absolute top-0 right-0" rotate={90} />
-            <CurvedDots className="absolute bottom-0 right-0" rotate={180} />
-            <CurvedDots className="absolute bottom-0 left-0" rotate={270} />
-
-            {/* Edge connectors */}
-            <FrameLine className="absolute top-[16px] left-10 right-10 h-[1px]" />
-            <FrameLine className="absolute bottom-[16px] left-10 right-10 h-[1px]" />
-            <FrameLine
-              className="absolute left-[16px] top-10 bottom-10 w-[1px]"
-              orientation="vertical"
-            />
-            <FrameLine
-              className="absolute right-[16px] top-10 bottom-10 w-[1px]"
-              orientation="vertical"
-            />
+            {/* Border dots */}
+            <BorderDots />
 
             {/* Close Button */}
             <button
