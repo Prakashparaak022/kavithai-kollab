@@ -44,16 +44,11 @@ const LoginContainer = ({ handleClose }: LoginContainerProps) => {
   //     setLoading(true);
 
   //     const username = data.username.trim().replace(/\s+/g, "");
+  //     const reqPayload = { identifier: username, password: data.password };
 
   //     const response = await fetch(API_URLS.LOGIN, {
   //       method: "POST",
-  //       headers: {
-  //         "Content-Type": "application/json",
-  //         userName: username,
-  //         password: data.password,
-  //         brandName: API_URLS.BRAND,
-  //       } as HeadersInit,
-  //       body: JSON.stringify(deviceDetails ?? {}),
+  //       body: JSON.stringify(reqPayload),
   //     });
 
   //     if (response.status === 200) {
@@ -73,7 +68,7 @@ const LoginContainer = ({ handleClose }: LoginContainerProps) => {
   //   }
   // };
 
-  const handleLogin = async (data: LoginForm) => {
+    const handleLogin = async (data: LoginForm) => {
     try {
       setLoading(true);
 
