@@ -16,10 +16,16 @@ const Header = () => {
   const { logout } = useAuth();
   const [dropdownOpen, setDropdownOpen] = useState(false);
 
+  const loggedInNav = [
+    { name: "Home", href: "/" },
+    { name: "Discover", href: "/discover" },
+    { name: "My Collaborations", href: "/collaborations" },
+    { name: "Post", href: "/post" },
+  ];
+
   return (
     <header className="bg-secondary shadow-sm">
       <nav className="px-4 py-3 flex items-center justify-between">
-        {/* Logo */}
         {/* Logo */}
         <Link href="/" className="flex items-center">
           <Image
@@ -36,33 +42,48 @@ const Header = () => {
           {loading ? (
             <LoadingSpinner />
           ) : playerDetails ? (
-            <div className="relative">
-              <button
-                onClick={() => setDropdownOpen((v) => !v)}
-                className="flex items-center gap-2 px-4 h-9 text-sm text-green bg-primary rounded-full hover:opacity-90 transition">
-                <User size={16} />
-                {playerDetails?.userName}
-                <ChevronDown size={16} />
-              </button>
-
-              {/* Dropdown Menu */}
-              {dropdownOpen && (
-                <div className="absolute right-0 mt-2 w-44 bg-secondary border border-primary rounded-lg shadow-lg z-50">
-                  <Link
-                    href=""
-                    className="flex items-center gap-2 px-4 py-2 text-sm text-gray-200 hover:bg-primary transition rounded-t-lg"
-                    onClick={() => setDropdownOpen(false)}>
-                    <User size={16} />
-                    Profile
-                  </Link>
-                  <button
-                    onClick={logout}
-                    className="flex items-center gap-2 w-full text-left px-4 py-2 text-sm text-gray-200 hover:bg-primary transition rounded-b-lg">
-                    <LogOut size={16} />
-                    Logout
-                  </button>
+            <div className="flex gap-8 items-center">
+              {playerDetails && (
+                <div className="hidden md:flex items-center gap-8">
+                  {loggedInNav.map((item) => (
+                    <Link
+                      key={item.name}
+                      href={item.href}
+                      className="text-sm text-highlight hover:text-green transition">
+                      {item.name}
+                    </Link>
+                  ))}
                 </div>
               )}
+
+              <div className="relative">
+                <button
+                  onClick={() => setDropdownOpen((v) => !v)}
+                  className="flex items-center gap-2 px-4 h-9 text-sm text-green bg-primary rounded-full hover:opacity-90 transition">
+                  <User size={16} />
+                  {playerDetails?.userName}
+                  <ChevronDown size={16} />
+                </button>
+
+                {/* Dropdown Menu */}
+                {dropdownOpen && (
+                  <div className="absolute right-0 mt-2 w-44 bg-secondary border border-primary rounded-lg shadow-lg z-50">
+                    <Link
+                      href=""
+                      className="flex items-center gap-2 px-4 py-2 text-sm text-gray-200 hover:bg-primary transition rounded-t-lg"
+                      onClick={() => setDropdownOpen(false)}>
+                      <User size={16} />
+                      Profile
+                    </Link>
+                    <button
+                      onClick={logout}
+                      className="flex items-center gap-2 w-full text-left px-4 py-2 text-sm text-gray-200 hover:bg-primary transition rounded-b-lg">
+                      <LogOut size={16} />
+                      Logout
+                    </button>
+                  </div>
+                )}
+              </div>
             </div>
           ) : (
             // Login/Register Buttons with icons
