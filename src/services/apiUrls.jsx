@@ -8,5 +8,8 @@ export const API_URLS = {
   BRAND,
   LOGIN: `${BASE_URL}/api/v1/user-profile/login`,
   REGISTER: `${BASE_URL}/api/v1/user-profile/createUserProfile`,
-  ISD_CODE: `${BASE_URL}/api/v1/user-profile/isd/retrieveAll`
+  ISD_CODE: `${BASE_URL}/api/v1/user-profile/isd/retrieveAll`,
+  BRAND_DETAILS:
+    `${BASE_URL}/main-api-gateway/user-management-gateway/user-management/api/v1/user-profiles/getCurrencyDetailsByBrandName/` +
+    BRAND,
 };

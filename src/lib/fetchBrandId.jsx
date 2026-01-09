@@ -2,7 +2,7 @@ import { API_URLS } from "@/services/apiUrls";
 
 export async function fetchBrandID() {
   const timestamp = new Date().getTime();
-  let url = `${API_URLS.CURRENCY_DETAILS}?timestamp=${timestamp}`;
+  let url = `${API_URLS.BRAND_DETAILS}?timestamp=${timestamp}`;
   try {
     const response = await fetch(url);
     if (!response.ok) {

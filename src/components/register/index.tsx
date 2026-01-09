@@ -79,7 +79,7 @@ const Register = ({ handleClose }: RegisterProps) => {
           body: JSON.stringify(profile),
         });
 
-        if (response.status === 201) {
+        if (response.ok) {
           const result = await response.json();
           login(result);
           toast.success("Registered Successfully");
@@ -101,29 +101,6 @@ const Register = ({ handleClose }: RegisterProps) => {
     },
     [REGISTER, brandId, deviceDetails, login, handleClose]
   );
-
-  // const onSubmit = async (data: RegisterFormValues) => {
-  //   try {
-  //     setLoading(true);
-
-  //     const username = data.username.trim().replace(/\s+/g, "");
-  //     const profile = {
-  //       userName: username,
-  //       password: data.password,
-  //       email: data.email,
-  //       phoneNo: Number(data.mobileNumber),
-  //       phoneCountryIsdcodeId: Number(data.countryId),
-  //     };
-
-  //     login(profile);
-  //     toast.success("Registered Successfully");
-  //     handleClose?.();
-  //   } catch {
-  //     toast.error("Unexpected error occurred");
-  //   } finally {
-  //     setLoading(false);
-  //   }
-  // };
 
   return (
     <div className="flex flex-col items-center p-8 bg-secondary">

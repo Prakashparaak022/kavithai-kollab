@@ -48,10 +48,13 @@ const LoginContainer = ({ handleClose }: LoginContainerProps) => {
 
       const response = await fetch(API_URLS.LOGIN, {
         method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+        },
         body: JSON.stringify(reqPayload),
       });
 
-      if (response.status === 200) {
+      if (response.ok) {
         const res = await response.json();
         login(res);
         reset();
@@ -67,24 +70,7 @@ const LoginContainer = ({ handleClose }: LoginContainerProps) => {
       setLoading(false);
     }
   };
-
-  // const handleLogin = async (data: LoginForm) => {
-  //   try {
-  //     setLoading(true);
-
-  //     const username = data.username.trim().replace(/\s+/g, "");
-
-  //     login({ userName: username });
-  //     reset();
-  //     handleClose?.();
-  //     toast.success("Login successful");
-  //   } catch {
-  //     toast.error("Unexpected error occurred");
-  //   } finally {
-  //     setLoading(false);
-  //   }
-  // };
-
+  
   return (
     <div className="flex flex-col items-center p-8 bg-secondary">
       <Image src={Logo} className="logo h-20 w-auto" alt="logo" />
