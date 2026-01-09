@@ -55,75 +55,75 @@ const Register = ({ handleClose }: RegisterProps) => {
   const { login, brandId, deviceDetails } = useAuth();
   const { data: isdCodeDetails, loading: isdCodeLoading } = useISDCode();
 
-  // const onSubmit = useCallback(
-  //   async (data: RegisterFormValues) => {
-  //     try {
-  //       setLoading(true);
+  const onSubmit = useCallback(
+    async (data: RegisterFormValues) => {
+      try {
+        setLoading(true);
 
-  //       const username = data.username.trim().replace(/\s+/g, "");
+        const username = data.username.trim().replace(/\s+/g, "");
 
-  //       const profile = {
-  //         userName: username,
-  //         password: data.password,
-  //         email: data.email,
-  //         phoneNo: Number(data.mobileNumber),
-  //         phoneCountryIsdcodeId: Number(data.countryId),
-  //         // deviceInfoRequest: deviceDetails,
-  //       };
+        const profile = {
+          userName: username,
+          password: data.password,
+          email: data.email,
+          phoneNo: Number(data.mobileNumber),
+          phoneCountryIsdcodeId: Number(data.countryId),
+          // deviceInfoRequest: deviceDetails,
+        };
 
-  //       const response = await fetch(REGISTER, {
-  //         method: "POST",
-  //         headers: {
-  //           "Content-Type": "application/json",
-  //         },
-  //         body: JSON.stringify(profile),
-  //       });
+        const response = await fetch(REGISTER, {
+          method: "POST",
+          headers: {
+            "Content-Type": "application/json",
+          },
+          body: JSON.stringify(profile),
+        });
 
-  //       if (response.status === 201) {
-  //         const result = await response.json();
-  //         login(result);
-  //         toast.success("Registered Successfully");
-  //         handleClose?.();
-  //       } else {
-  //         const errorData = await response.json();
-  //         toast.error(
-  //           errorData?.errors?.[0]?.defaultMessage ||
-  //             Object.values(errorData?.data || {})[0] ||
-  //             formatErrorMessage(errorData) ||
-  //             "Registration failed"
-  //         );
-  //       }
-  //     } catch {
-  //       toast.error("Unexpected error occurred during registration.");
-  //     } finally {
-  //       setLoading(false);
-  //     }
-  //   },
-  //   [REGISTER, brandId, deviceDetails, login, handleClose]
-  // );
+        if (response.status === 201) {
+          const result = await response.json();
+          login(result);
+          toast.success("Registered Successfully");
+          handleClose?.();
+        } else {
+          const errorData = await response.json();
+          toast.error(
+            errorData?.errors?.[0]?.defaultMessage ||
+              Object.values(errorData?.data || {})[0] ||
+              formatErrorMessage(errorData) ||
+              "Registration failed"
+          );
+        }
+      } catch {
+        toast.error("Unexpected error occurred during registration.");
+      } finally {
+        setLoading(false);
+      }
+    },
+    [REGISTER, brandId, deviceDetails, login, handleClose]
+  );
 
-  const onSubmit = async (data: RegisterFormValues) => {
-    try {
-      setLoading(true);
+  // const onSubmit = async (data: RegisterFormValues) => {
+  //   try {
+  //     setLoading(true);
 
-      const username = data.username.trim().replace(/\s+/g, "");
-      const profile = {
-        userName: username,
-        password: data.password,
-        email: data.email,
-        phoneNo: Number(data.mobileNumber),
-        phoneCountryIsdcodeId: Number(data.countryId),
-      };
+  //     const username = data.username.trim().replace(/\s+/g, "");
+  //     const profile = {
+  //       userName: username,
+  //       password: data.password,
+  //       email: data.email,
+  //       phoneNo: Number(data.mobileNumber),
+  //       phoneCountryIsdcodeId: Number(data.countryId),
+  //     };
 
-      login(profile);
-      toast.success("Registered Successfully");
-      handleClose?.();
-    } catch {
-      toast.error("Unexpected error occurred");
-    } finally {
-      setLoading(false);
-    }
-  };
+  //     login(profile);
+  //     toast.success("Registered Successfully");
+  //     handleClose?.();
+  //   } catch {
+  //     toast.error("Unexpected error occurred");
+  //   } finally {
+  //     setLoading(false);
+  //   }
+  // };
 
   return (
     <div className="flex flex-col items-center p-8 bg-secondary">

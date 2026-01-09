@@ -47,7 +47,7 @@ const Collaborations = ({ collaborations }: Props) => {
 
   return (
     <div className="space-y-2">
-      <h3 className="text-lg font-semibold text-green">Community Lines</h3>
+      <h3 className="text-lg font-semibold text-green">Pending Contibutions</h3>
 
       <div className="space-y-3">
         {collaborationsList.map((collab) => {
@@ -94,50 +94,39 @@ const Collaborations = ({ collaborations }: Props) => {
                   <ChevronDown className="w-3.5 h-3.5 text-gray-600" />
                 </motion.div>
               </div>
+
+              {isOpen && playerDetails && (
+                <div className="mt-3 flex gap-2">
+                  <button
+                    type="button"
+                    onClick={(e) => {
+                      e.stopPropagation();
+                      setSelectedCollab(null);
+                    }}
+                    className="flex items-center gap-1 px-3 h-6 text-xs rounded-full
+                    bg-green-700 text-white
+                    hover:bg-green-800 transition">
+                    <Check size={18} />
+                    Approve
+                  </button>
+
+                  <button
+                    type="button"
+                    onClick={(e) => {
+                      e.stopPropagation();
+                      handleReject(collab.id);
+                    }}
+                    className="flex items-center gap-1 px-3 h-6 text-xs rounded-full
+                    bg-red-700 text-white
+                    hover:bg-red-800 transition">
+                    <X size={18} />
+                    Dismiss
+                  </button>
+                </div>
+              )}
             </div>
           );
         })}
-        <div
-          className="p-3 rounded-lg bg-[#f8f5e4] cursor-pointer
-                 hover:shadow-md transition-shadow">
-          {!showInput ? (
-            <button
-              onClick={() => setShowInput(true)}
-              className="text-sm text-blue-500 hover:underline">
-              + Add your line to this poem
-            </button>
-          ) : (
-            <div className="space-y-3">
-              <textarea
-                value={newLine}
-                onChange={(e) => setNewLine(e.target.value)}
-                rows={3}
-                placeholder="Write your line..."
-                className="w-full text-sm text-gray-700 p-3 rounded-md border-primary
-                   focus:outline-none focus:ring-1 focus:ring-green-700"
-              />
-
-              <div className="flex gap-2">
-                <button
-                  onClick={handleAddCollaboration}
-                  className="px-4 py-1.5 text-sm rounded-md
-                     bg-secondary text-white">
-                  Submit
-                </button>
-
-                <button
-                  onClick={() => {
-                    setShowInput(false);
-                    setNewLine("");
-                  }}
-                  className="px-4 py-1.5 text-sm rounded-md
-                     bg-highlight text-white">
-                  Cancel
-                </button>
-              </div>
-            </div>
-          )}
-        </div>
       </div>
     </div>
   );

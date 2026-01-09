@@ -5,10 +5,10 @@ import InviteModal from "@/components/poem/InviteModal";
 import Notifications from "@/components/poem/Notifications";
 import PoemDetailCard from "@/components/poem/PoemDetailCard";
 import PoemMotion from "@/components/poem/PoemMotion";
-import AboutPoem from "@/components/poemDetails/AboutPoem";
 import { Notification } from "@/types/notification";
 import type { Poem } from "@/types/poem";
 import { useState } from "react";
+import AboutPoem from "./AboutPoem";
 
 type Props = {
   poem: Poem;
@@ -65,8 +65,3 @@ const Poem = ({ poem }: Props) => {
 };
 
 export default Poem;
-// feature: home, poem
-// home: cards, filters
-// poem: collaborations list ui, add line, approve & reject, invite button
-// feature: invite modal
-// notifications

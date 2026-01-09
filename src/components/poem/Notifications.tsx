@@ -33,8 +33,9 @@ const Notifications = ({ notifications, setNotifications }: Props) => {
 
   return (
     <>
-      {notifications.map((n) => (
+      {notifications.map((n, idx) => (
         <div
+          key={idx}
           className={`rounded-xl p-4 shadow-lg cursor-pointer
           transition-all duration-300
           animate-[slideIn_0.5s_ease-out]
