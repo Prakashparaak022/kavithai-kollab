@@ -39,51 +39,51 @@ const LoginContainer = ({ handleClose }: LoginContainerProps) => {
     defaultValues: { username: "", password: "" },
   });
 
-  // const handleLogin = async (data: LoginForm) => {
-  //   try {
-  //     setLoading(true);
-
-  //     const username = data.username.trim().replace(/\s+/g, "");
-  //     const reqPayload = { identifier: username, password: data.password };
-
-  //     const response = await fetch(API_URLS.LOGIN, {
-  //       method: "POST",
-  //       body: JSON.stringify(reqPayload),
-  //     });
-
-  //     if (response.status === 200) {
-  //       const res = await response.json();
-  //       login(res);
-  //       reset();
-  //       handleClose?.();
-  //       toast.success("Login successful");
-  //     } else {
-  //       const err = await response.text();
-  //       toast.error(formatErrorMessage(err) || "Login failed");
-  //     }
-  //   } catch {
-  //     toast.error("Unexpected error occurred");
-  //   } finally {
-  //     setLoading(false);
-  //   }
-  // };
-
   const handleLogin = async (data: LoginForm) => {
     try {
       setLoading(true);
 
       const username = data.username.trim().replace(/\s+/g, "");
+      const reqPayload = { identifier: username, password: data.password };
 
-      login({ userName: username });
-      reset();
-      handleClose?.();
-      toast.success("Login successful");
+      const response = await fetch(API_URLS.LOGIN, {
+        method: "POST",
+        body: JSON.stringify(reqPayload),
+      });
+
+      if (response.status === 200) {
+        const res = await response.json();
+        login(res);
+        reset();
+        handleClose?.();
+        toast.success("Login successful");
+      } else {
+        const err = await response.text();
+        toast.error(formatErrorMessage(err) || "Login failed");
+      }
     } catch {
       toast.error("Unexpected error occurred");
     } finally {
       setLoading(false);
     }
   };
+
+  // const handleLogin = async (data: LoginForm) => {
+  //   try {
+  //     setLoading(true);
+
+  //     const username = data.username.trim().replace(/\s+/g, "");
+
+  //     login({ userName: username });
+  //     reset();
+  //     handleClose?.();
+  //     toast.success("Login successful");
+  //   } catch {
+  //     toast.error("Unexpected error occurred");
+  //   } finally {
+  //     setLoading(false);
+  //   }
+  // };
 
   return (
     <div className="flex flex-col items-center p-8 bg-secondary">
