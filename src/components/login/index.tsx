@@ -68,7 +68,7 @@ const LoginContainer = ({ handleClose }: LoginContainerProps) => {
   //   }
   // };
 
-    const handleLogin = async (data: LoginForm) => {
+  const handleLogin = async (data: LoginForm) => {
     try {
       setLoading(true);
 
