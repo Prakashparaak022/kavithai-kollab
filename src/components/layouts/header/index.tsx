@@ -22,7 +22,7 @@ const Header = () => {
     { name: "Home", href: "/" },
     { name: "Discover", href: "/" },
     { name: "My Collaborations", href: "/my-collaborations" },
-    { name: "Post", href: "/" },
+    { name: "Post", href: "/post" },
   ];
 
   return (

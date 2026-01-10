@@ -1,11 +1,18 @@
-"use client";
-import { useState } from "react";
 import { CustomSwitch } from "../ui/CustomSwitch";
 
-const PostSettings = () => {
-  const [allowCollab, setAllowCollab] = useState(true);
-  const [isPrivate, setIsPrivate] = useState(true);
+type Props = {
+  allowCollab: boolean;
+  setAllowCollab: React.Dispatch<React.SetStateAction<boolean>>;
+  isPrivate: boolean;
+  setIsPrivate: React.Dispatch<React.SetStateAction<boolean>>;
+};
 
+const PostSettings = ({
+  allowCollab,
+  setAllowCollab,
+  isPrivate,
+  setIsPrivate,
+}: Props) => {
   return (
     <div className="space-y-2">
       <h3 className="text-lg font-semibold text-green">Post Settings</h3>
@@ -16,7 +23,7 @@ const PostSettings = () => {
           <p className="text-[#6a7a78] text-sm">Allow Collaboration</p>
           <CustomSwitch
             checked={allowCollab}
-            onChange={() => setAllowCollab((prev) => !prev)}
+            onChange={() => setAllowCollab((p) => !p)}
           />
         </div>
 
@@ -24,7 +31,7 @@ const PostSettings = () => {
           <p className="text-[#6a7a78] text-sm">Make Private</p>
           <CustomSwitch
             checked={isPrivate}
-            onChange={() => setIsPrivate((prev) => !prev)}
+            onChange={() => setIsPrivate((p) => !p)}
           />
         </div>
       </div>

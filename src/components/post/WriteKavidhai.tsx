@@ -7,6 +7,11 @@ import { Camera, X } from "lucide-react";
 const categories = ["Love", "Nature", "Fantasy", "Existential", "Freestyle"];
 const TAG_REGEX = /^#[a-z0-9]+$/;
 
+type Props = {
+  allowCollab: boolean;
+  isPrivate: boolean;
+};
+
 type FormValues = {
   title: string;
   content: string;
@@ -14,7 +19,7 @@ type FormValues = {
   image: File | null;
 };
 
-export default function WriteKavidhai() {
+export default function WriteKavidhai({ allowCollab, isPrivate }: Props) {
   const fileRef = useRef<HTMLInputElement | null>(null);
 
   const { register, handleSubmit, setValue, watch } = useForm<FormValues>({
@@ -22,10 +27,11 @@ export default function WriteKavidhai() {
       title: "",
       content: "",
       category: "Nature",
+      image: null,
     },
   });
-  // image upload
-  register("image");
+
+  const isSaveMode = allowCollab || isPrivate;
 
   const [tags, setTags] = useState<string[]>([]);
   const [tagInput, setTagInput] = useState("");
@@ -55,13 +61,30 @@ export default function WriteKavidhai() {
     const payload = {
       ...data,
       tags,
+      allowCollab,
+      isPrivate,
     };
 
     console.log(payload);
-  };
+   };
 
   return (
     <form onSubmit={handleSubmit(onSubmit)} className="w-full p-4 space-y-2">
+      <input
+        type="file"
+        accept="image/*"
+        ref={fileRef}
+        hidden
+        onChange={(e) => {
+          const file = e.target.files?.[0] || null;
+          setValue("image", file);
+
+          if (file) {
+            setImagePreview(URL.createObjectURL(file));
+          }
+        }}
+      />
+
       <div className="flex items-center gap-2">
         <button
           type="button"
@@ -80,45 +103,28 @@ export default function WriteKavidhai() {
             placeholder="Title (Optional)"
             className="flex-1 bg-transparent outline-none text-sm text-primary"
           />
-          <label htmlFor="file-upload" className="cursor-pointer">
+          <button type="button" onClick={() => fileRef.current?.click()}>
             <Camera className="text-green" fill="currentColor" stroke="white" />
-          </label>
-
-          <input
-            type="file"
-            accept="image/*"
-            id="file-upload"
-            hidden
-            onChange={(e) => {
-              const file = e.target.files?.[0] || null;
-              setValue("image", file);
-
-              if (file) {
-                const url = URL.createObjectURL(file);
-                setImagePreview(url);
-              }
-            }}
-          />
+          </button>
         </div>
 
         {imagePreview && (
-          <div className="flex justify-center">
-            <div className="relative w-full rounded-xl bg-[#f8f5e4] p-2">
-              <img
-                src={imagePreview}
-                alt="preview"
-                className="max-h-80 w-auto mx-auto object-contain rounded-lg"
-              />
-              <button
-                type="button"
-                onClick={() => {
-                  setImagePreview(null);
-                  setValue("image", null);
-                }}
-                className="absolute right-2 top-2 rounded-full bg-black/60 p-1 text-white">
-                <X size={14} />
-              </button>
-            </div>
+          <div className="relative w-full rounded-xl bg-[#f8f5e4] p-2">
+            <img
+              src={imagePreview}
+              alt="preview"
+              className="max-h-80 w-auto mx-auto object-contain rounded-lg"
+            />
+            <button
+              type="button"
+              onClick={() => {
+                setImagePreview(null);
+                setValue("image", null);
+                if (fileRef.current) fileRef.current.value = "";
+              }}
+              className="absolute right-2 top-2 rounded-full bg-black/60 p-1 text-white">
+              <X size={14} />
+            </button>
           </div>
         )}
 
@@ -204,7 +210,7 @@ export default function WriteKavidhai() {
         <button
           type="submit"
           className="flex-1 rounded-xl bg-[#1e4f4f] py-2 text-sm text-white">
-          Publish
+          {isSaveMode ? "Save" : "Publish"}
         </button>
       </div>
     </form>
