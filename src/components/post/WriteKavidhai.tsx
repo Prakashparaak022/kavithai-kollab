@@ -64,37 +64,9 @@ export default function WriteKavidhai({ allowCollab, isPrivate }: Props) {
     setTagInput("");
   };
 
-  const convertImageToBinary = (): Promise<Blob> => {
-    return new Promise<Blob>((resolve, reject) => {
-      if (!imageFile) {
-        toast.error("Please select a valid file first.");
-        reject(new Error("No file selected"));
-        return;
-      }
-
-      const reader = new FileReader();
-      reader.readAsArrayBuffer(imageFile);
-
-      reader.onloadend = () => {
-        if (!reader.result) {
-          reject(new Error("Failed to read file"));
-          return;
-        }
-
-        resolve(new Blob([reader.result], { type: imageFile.type }));
-      };
-
-      reader.onerror = () => {
-        reject(new Error("File reading error"));
-      };
-    });
-  };
-
   const onSubmit = async (data: FormValues) => {
     try {
       setLoading(true);
-      const blob = await convertImageToBinary();
-
       if (!playerDetails?.id) {
         toast.error("Player not found");
         return;
@@ -212,7 +184,7 @@ export default function WriteKavidhai({ allowCollab, isPrivate }: Props) {
             {...register("content")}
             placeholder="Write your thoughts..."
             onInput={(e) => autoGrow(e.currentTarget)}
-            className="w-full resize-none bg-transparent outline-none text-sm text-primary"
+            className="w-full  h-36 resize-none bg-transparent outline-none text-sm text-primary"
           />
 
           <div>
