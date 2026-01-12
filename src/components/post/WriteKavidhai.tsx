@@ -48,6 +48,7 @@ export default function WriteKavidhai({ allowCollab, isPrivate }: Props) {
 
   const autoGrow = (el: HTMLTextAreaElement) => {
     el.style.height = "auto";
+    el.style.minHeight = "9rem";
     el.style.height = `${el.scrollHeight}px`;
   };
 
@@ -184,7 +185,7 @@ export default function WriteKavidhai({ allowCollab, isPrivate }: Props) {
             {...register("content")}
             placeholder="Write your thoughts..."
             onInput={(e) => autoGrow(e.currentTarget)}
-            className="w-full  h-36 resize-none bg-transparent outline-none text-sm text-primary"
+            className="w-full h-36 resize-none bg-transparent outline-none text-sm text-primary"
           />
 
           <div>
