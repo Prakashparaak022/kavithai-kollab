@@ -24,7 +24,10 @@ const FeedCardList = ({ filter }: { filter: FilterType }) => {
     return poemsList;
   }, [filter, poemsList]);
 
-  const handleLike = (id: number) => {
+  const handleLike = (e: React.MouseEvent, id: number) => {
+    e.preventDefault();
+    e.stopPropagation();
+
     setPoemsList((prev) =>
       prev.map((poem) =>
         poem.id === id
@@ -72,7 +75,7 @@ const FeedCardList = ({ filter }: { filter: FilterType }) => {
 
             <div className="mt-auto flex items-center justify-between text-gray-500">
               <button
-                onClick={() => handleLike(poem.id)}
+                onClick={(e) => handleLike(e, poem.id)}
                 className={`flex items-center gap-1 text-xs transition ${
                   poem.isLiked
                     ? "text-red-500"
