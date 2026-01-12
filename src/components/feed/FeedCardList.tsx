@@ -1,10 +1,12 @@
 "use client";
+
 import { Heart, MessageCircle } from "lucide-react";
 import { useMemo, useState } from "react";
 import { FilterType } from "./index";
 import { poems } from "@/data/poem";
 import { Poem } from "@/types/poem";
 import Link from "next/link";
+import Image from "next/image";
 
 const FeedCardList = ({ filter }: { filter: FilterType }) => {
   const [poemsList, setPoemsList] = useState<Poem[]>(
@@ -40,13 +42,20 @@ const FeedCardList = ({ filter }: { filter: FilterType }) => {
       {filteredPoems.map((poem, index) => (
         <Link
           href={`/poem/${poem.slug}`}
-          key={index}
+          key={poem.id}
           className="col-span-12 sm:col-span-6 md:col-span-4 lg:col-span-3 bg-[#f8f5e4] rounded-2xl shadow-md hover:shadow-xl transition-shadow duration-300 flex flex-col">
-          <img
-            src={poem.imageUrl}
-            alt={poem.title}
-            className="h-44 w-full object-cover rounded-2xl p-2"
-          />
+          <div className="relative h-44 w-full">
+            <Image
+              src={poem.imageUrl}
+              alt={poem.title}
+              fill
+              sizes="(max-width: 640px) 100vw,
+                     (max-width: 1024px) 50vw,
+                     25vw"
+              className="p-2 object-cover rounded-2xl"
+              priority={index === 0}
+            />
+          </div>
 
           <div className="p-4 flex flex-col h-40">
             <div className="flex items-center justify-between">
