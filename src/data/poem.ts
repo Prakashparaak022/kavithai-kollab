@@ -49,6 +49,7 @@ export const poems: Poem[] = [
         imageUrl: "https://randomuser.me/api/portraits/men/13.jpg",
       },
     ],
+    isPublish: false,
   },
 
   {
@@ -93,6 +94,7 @@ export const poems: Poem[] = [
         imageUrl: "https://randomuser.me/api/portraits/men/16.jpg",
       },
     ],
+    isPublish: false,
   },
 
   {
@@ -136,6 +138,7 @@ export const poems: Poem[] = [
         imageUrl: "https://randomuser.me/api/portraits/men/19.jpg",
       },
     ],
+    isPublish: true,
   },
 
   {
@@ -178,6 +181,7 @@ export const poems: Poem[] = [
         imageUrl: "https://randomuser.me/api/portraits/men/22.jpg",
       },
     ],
+    isPublish: true,
   },
 
   {
@@ -225,6 +229,7 @@ export const poems: Poem[] = [
         imageUrl: "https://randomuser.me/api/portraits/men/25.jpg",
       },
     ],
+    isPublish: true,
   },
 
   {
@@ -265,6 +270,7 @@ export const poems: Poem[] = [
         imageUrl: "https://randomuser.me/api/portraits/men/28.jpg",
       },
     ],
+    isPublish: true,
   },
 
   {
@@ -304,6 +310,7 @@ export const poems: Poem[] = [
         imageUrl: "https://randomuser.me/api/portraits/men/31.jpg",
       },
     ],
+    isPublish: true,
   },
 
   {
@@ -344,6 +351,7 @@ export const poems: Poem[] = [
         imageUrl: "https://randomuser.me/api/portraits/men/36.jpg",
       },
     ],
+    isPublish: true,
   },
 
   {
@@ -386,5 +394,6 @@ export const poems: Poem[] = [
         imageUrl: "https://randomuser.me/api/portraits/men/34.jpg",
       },
     ],
+    isPublish: true,
   },
 ];
