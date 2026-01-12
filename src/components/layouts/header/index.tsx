@@ -7,7 +7,7 @@ import { usePathname } from "next/navigation";
 import logo from "@/assets/img/logo.png";
 import { useModal } from "@/context/ModalContext";
 import { useAuth } from "@/context/AuthContext";
-import { ChevronDown, LogOut, User } from "lucide-react";
+import { ChevronDown, LogOut, User, Menu, X } from "lucide-react";
 import LoadingSpinner from "../../ui/LoadingSpinner";
 import { usePlayerDetails } from "@/utils/UserSession";
 
@@ -16,7 +16,9 @@ const Header = () => {
   const { openLogin, openRegister } = useModal();
   const { playerDetails, loading } = usePlayerDetails();
   const { logout } = useAuth();
+
   const [dropdownOpen, setDropdownOpen] = useState(false);
+  const [mobileOpen, setMobileOpen] = useState(false);
 
   const loggedInNav = [
     { name: "Home", href: "/" },
@@ -26,7 +28,7 @@ const Header = () => {
   ];
 
   return (
-    <header className="bg-secondary shadow-sm">
+    <header className="bg-secondary relative z-50">
       <nav className="px-4 py-3 flex items-center justify-between">
         <Link href="/" className="flex items-center">
           <Image
@@ -37,12 +39,51 @@ const Header = () => {
           <span className="text-highlight mt-4">Kavithai&nbsp;Kollab</span>
         </Link>
 
-        <div className="flex items-center gap-2 relative">
+        {/* Right Section */}
+        <div className="flex items-center gap-2">
+          {/* Mobile Menu Button */}
+          <div className="relative lg:hidden">
+            {playerDetails && (
+              <button
+                onClick={() => setMobileOpen((v) => !v)}
+                className="p-2 text-highlight">
+                {mobileOpen ? <X size={20} /> : <Menu size={20} />}
+              </button>
+            )}
+
+            {/* Mobile Menu */}
+            {mobileOpen && playerDetails && (
+              <div className="absolute right-0  w-44 bg-secondary border border-primary rounded-lg shadow-lg z-50">
+                {loggedInNav.map((item) => {
+                  const isActive =
+                    pathname === item.href &&
+                    (pathname !== "/" || item.name === "Home");
+
+                  return (
+                    <Link
+                      key={item.name}
+                      href={item.href}
+                      onClick={() => setMobileOpen(false)}
+                      className={`block px-4 py-1 m-1 rounded-lg text-sm
+                  ${
+                    isActive
+                      ? "bg-primary text-gray-600"
+                      : "text-highlight hover:bg-primary hover:text-secondary"
+                  }`}>
+                      {item.name}
+                    </Link>
+                  );
+                })}
+              </div>
+            )}
+          </div>
+
           {loading ? (
             <LoadingSpinner />
           ) : playerDetails ? (
-            <div className="flex gap-8 items-center">
-              <div className="hidden md:flex items-center gap-4">
+            <div className="flex items-center gap-8">
+              {/* Desktop Nav */}
+              <div className="hidden lg:flex items-center gap-4">
                 {loggedInNav.map((item) => {
                   const isActive =
                     pathname === item.href &&
@@ -66,6 +107,7 @@ const Header = () => {
                 })}
               </div>
 
+              {/* Profile Dropdown */}
               <div className="relative">
                 <button
                   onClick={() => setDropdownOpen((v) => !v)}
