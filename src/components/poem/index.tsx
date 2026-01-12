@@ -9,6 +9,7 @@ import { Notification } from "@/types/notification";
 import type { Poem } from "@/types/poem";
 import { useState } from "react";
 import AboutPoem from "./AboutPoem";
+import Comments from "./Comments";
 
 type Props = {
   poem: Poem;
@@ -32,34 +33,40 @@ const Poem = ({ poem }: Props) => {
 
   return (
     <Layout>
-      <div className="grid grid-cols-12 p-4 gap-6">
-        {/* Left bar */}
-        <div className="col-span-12 lg:col-span-9 space-y-4">
-          {/* Dynamic Poem Card */}
-          <PoemMotion motionKey={poem.slug}>
-            <PoemDetailCard
-              title={poem.title}
-              username={poem.author}
-              content={poem.content || "No content available"}
-              onInvite={() => setShowInviteModal(true)}
-            />
-          </PoemMotion>
-          {/* Collaboration List */}
-          <Collaborations collaborations={poem.collaborations ?? []} />
-        </div>
+      <div className="bg-secondary pt-4">
+        <div className="bg-primary grid grid-cols-12 p-4 gap-6">
+          {/* Left bar */}
+          <div className="col-span-12 lg:col-span-9 space-y-4">
+            {/* Dynamic Poem Card */}
+            <PoemMotion motionKey={poem.slug}>
+              <PoemDetailCard
+                title={poem.title}
+                username={poem.author}
+                content={poem.content || "No content available"}
+                onInvite={() => setShowInviteModal(true)}
+              />
+            </PoemMotion>
+            {/* Collaboration List */}
+            {poem.isPublish ? (
+              <Comments comments={poem.comments ?? []} />
+            ) : (
+              <Collaborations collaborations={poem.collaborations ?? []} />
+            )}
+          </div>
 
-        {/* Notifications */}
-        <div className="col-span-12 lg:col-span-3 space-y-4">
-          <Notifications
-            notifications={notifications}
-            setNotifications={setNotifications}
-          />
-          <AboutPoem />
+          {/* Notifications */}
+          <div className="col-span-12 lg:col-span-3 space-y-4">
+            <Notifications
+              notifications={notifications}
+              setNotifications={setNotifications}
+            />
+            <AboutPoem />
+          </div>
         </div>
+        {showInviteModal && (
+          <InviteModal onClose={() => setShowInviteModal(false)} />
+        )}
       </div>
-      {showInviteModal && (
-        <InviteModal onClose={() => setShowInviteModal(false)} />
-      )}
     </Layout>
   );
 };

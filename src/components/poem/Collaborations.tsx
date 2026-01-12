@@ -5,6 +5,7 @@ import { Collaboration } from "@/types/poem";
 import { motion } from "framer-motion";
 import { Check, ChevronDown, X } from "lucide-react";
 import { usePlayerDetails } from "@/utils/UserSession";
+import { useModal } from "@/context/ModalContext";
 
 type Props = {
   collaborations: Collaboration[];
@@ -20,6 +21,7 @@ const Collaborations = ({ collaborations }: Props) => {
   const [newLine, setNewLine] = useState("");
 
   const { playerDetails } = usePlayerDetails();
+  const { openLogin } = useModal();
 
   const handleToggle = (collab: Collaboration) => {
     setSelectedCollab((prev) => (prev?.id === collab.id ? null : collab));
@@ -30,7 +32,7 @@ const Collaborations = ({ collaborations }: Props) => {
 
     const newCollab: Collaboration = {
       id: Date.now(),
-      author: "@you",
+      author: String(playerDetails?.userName),
       content: newLine,
       imageUrl: "https://randomuser.me/api/portraits/men/32.jpg",
     };
@@ -38,11 +40,6 @@ const Collaborations = ({ collaborations }: Props) => {
     setCollaborationsList((prev) => [newCollab, ...prev]);
     setNewLine("");
     setShowInput(false);
-  };
-
-  const handleReject = (id: number) => {
-    setCollaborationsList((prev) => prev.filter((c) => c.id !== id));
-    setSelectedCollab(null);
   };
 
   return (
@@ -102,7 +99,13 @@ const Collaborations = ({ collaborations }: Props) => {
                  hover:shadow-md transition-shadow">
           {!showInput ? (
             <button
-              onClick={() => setShowInput(true)}
+              onClick={() => {
+                if (!playerDetails) {
+                  openLogin();
+                  return;
+                }
+                setShowInput(true);
+              }}
               className="text-sm text-blue-500 hover:underline">
               + Add your line to this poem
             </button>
