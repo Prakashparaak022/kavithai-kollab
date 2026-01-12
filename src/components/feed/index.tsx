@@ -3,6 +3,7 @@ import { useState } from "react";
 import FeedCardList from "./FeedCardList";
 import Filterbar from "./Filterbar";
 import { Camera } from "lucide-react";
+import Link from "next/link";
 
 export type FilterType = "all" | "liked" | "recent";
 export type FilterItem = {
@@ -43,10 +44,12 @@ const Feed = () => {
         </div>
         <div className="min-h-[80vh] bg-primary col-span-12 lg:col-span-10 p-4 space-y-2">
           {/* Share kavithai */}
-          <div className="w-md bg-[#f8f5e4] p-2 flex items-center justify-between rounded-lg text-green ">
+          <Link
+            href={"/post"}
+            className="w-md bg-[#f8f5e4] p-2 flex items-center justify-between rounded-lg text-green ">
             <p>Share a kavithai...</p>
             <Camera fill="currentColor" stroke="white" />
-          </div>
+          </Link>
 
           <p className="px-2 text-green text-sm font-semibold">
             {filterList.find((item) => item.value === filter)?.helperText}
