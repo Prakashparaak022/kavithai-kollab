@@ -218,7 +218,6 @@ export default function WriteKavidhai({ allowCollab, isPrivate }: Props) {
                 value={tagInput}
                 onChange={(e) => {
                   setTagInput(e.target.value);
-                  autoGrow(e.target);
                 }}
                 onKeyDown={(e) => {
                   if (e.key === "Enter" || e.key === " ") {
