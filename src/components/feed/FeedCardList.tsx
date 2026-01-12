@@ -7,6 +7,7 @@ import { poems } from "@/data/poem";
 import { Poem } from "@/types/poem";
 import Link from "next/link";
 import Image from "next/image";
+import TempFeedCardList from "./TempFeedCardList";
 
 const FeedCardList = ({ filter }: { filter: FilterType }) => {
   const [poemsList, setPoemsList] = useState<Poem[]>(
@@ -92,6 +93,8 @@ const FeedCardList = ({ filter }: { filter: FilterType }) => {
           </div>
         </Link>
       ))}
+      {/* temp */}
+      <TempFeedCardList filter={filter} />
     </div>
   );
 };

@@ -13,4 +13,5 @@ export const API_URLS = {
     `${BASE_URL}/main-api-gateway/user-management-gateway/user-management/api/v1/user-profiles/getCurrencyDetailsByBrandName/` +
     BRAND,
   KAVITHAI_POST: `${BASE_URL}/api/v1/posts/create`,
+  KAVITHAI_ALL: `${BASE_URL}/api/v1/posts/all`,
 };
