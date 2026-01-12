@@ -6,6 +6,7 @@ import { ChevronDown } from "lucide-react";
 import { usePlayerDetails } from "@/utils/UserSession";
 import { useModal } from "@/context/ModalContext";
 import { Comment } from "@/types/poem";
+import useRequireAuth from "@/hooks/useRequireAuth";
 
 type Props = {
   comments: Comment[];
@@ -18,7 +19,7 @@ const Comments = ({ comments }: Props) => {
   const [newComment, setNewComment] = useState("");
 
   const { playerDetails } = usePlayerDetails();
-  const { openLogin } = useModal();
+  const { withAuth } = useRequireAuth();
 
   const toggleComment = (id: number) => {
     setSelectedComment((prev) => (prev === id ? null : id));
@@ -92,13 +93,7 @@ const Comments = ({ comments }: Props) => {
       <div className="p-3 rounded-xl bg-[#f8f5e4]">
         {!showInput ? (
           <button
-            onClick={() => {
-              if (!playerDetails) {
-                openLogin();
-                return;
-              }
-              setShowInput(true);
-            }}
+            onClick={withAuth(() => setShowInput(true))}
             className="text-sm text-blue-600 hover:underline">
             + Add a comment
           </button>

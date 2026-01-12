@@ -4,8 +4,7 @@ import FeedCardList from "./FeedCardList";
 import Filterbar from "./Filterbar";
 import { Camera } from "lucide-react";
 import Link from "next/link";
-import { usePlayerDetails } from "@/utils/UserSession";
-import { useModal } from "@/context/ModalContext";
+import useRequireAuth from "@/hooks/useRequireAuth";
 
 export type FilterType = "all" | "liked" | "recent";
 export type FilterItem = {
@@ -15,8 +14,7 @@ export type FilterItem = {
 };
 
 const Feed = () => {
-  const { playerDetails } = usePlayerDetails();
-  const { openLogin } = useModal();
+  const { requireAuth } = useRequireAuth();
 
   const [filter, setFilter] = useState<FilterType>("all");
   const filterList: FilterItem[] = [
@@ -51,12 +49,7 @@ const Feed = () => {
           {/* Share kavithai */}
           <Link
             href={"/post"}
-            onClick={(e) => {
-              if (!playerDetails) {
-                e.preventDefault();
-                openLogin();
-              }
-            }}
+            onClick={requireAuth}
             className="w-md bg-[#f8f5e4] p-2 flex items-center justify-between rounded-lg text-green ">
             <p>Share a kavithai...</p>
             <Camera fill="currentColor" stroke="white" />

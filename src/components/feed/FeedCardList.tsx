@@ -8,8 +8,11 @@ import { Poem } from "@/types/poem";
 import Link from "next/link";
 import Image from "next/image";
 import TempFeedCardList from "./TempFeedCardList";
+import useRequireAuth from "@/hooks/useRequireAuth";
 
 const FeedCardList = ({ filter }: { filter: FilterType }) => {
+  const { requireAuth } = useRequireAuth();
+
   const [poemsList, setPoemsList] = useState<Poem[]>(
     poems.map((poem) => ({ ...poem, isLiked: false }))
   );
@@ -46,6 +49,7 @@ const FeedCardList = ({ filter }: { filter: FilterType }) => {
       {filteredPoems.map((poem, index) => (
         <Link
           href={`/poem/${poem.slug}`}
+          onClick={requireAuth}
           key={poem.id}
           className="col-span-12 sm:col-span-6 md:col-span-4 lg:col-span-3 bg-[#f8f5e4] rounded-2xl shadow-md hover:shadow-xl transition-shadow duration-300 flex flex-col">
           <div className="relative h-44 w-full">

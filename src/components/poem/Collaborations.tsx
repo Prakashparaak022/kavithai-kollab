@@ -5,7 +5,7 @@ import { Collaboration } from "@/types/poem";
 import { motion } from "framer-motion";
 import { Check, ChevronDown, X } from "lucide-react";
 import { usePlayerDetails } from "@/utils/UserSession";
-import { useModal } from "@/context/ModalContext";
+import useRequireAuth from "@/hooks/useRequireAuth";
 
 type Props = {
   collaborations: Collaboration[];
@@ -21,7 +21,7 @@ const Collaborations = ({ collaborations }: Props) => {
   const [newLine, setNewLine] = useState("");
 
   const { playerDetails } = usePlayerDetails();
-  const { openLogin } = useModal();
+  const { withAuth } = useRequireAuth();
 
   const handleToggle = (collab: Collaboration) => {
     setSelectedCollab((prev) => (prev?.id === collab.id ? null : collab));
@@ -99,13 +99,7 @@ const Collaborations = ({ collaborations }: Props) => {
                  hover:shadow-md transition-shadow">
           {!showInput ? (
             <button
-              onClick={() => {
-                if (!playerDetails) {
-                  openLogin();
-                  return;
-                }
-                setShowInput(true);
-              }}
+              onClick={withAuth(() => setShowInput(true))}
               className="text-sm text-blue-500 hover:underline">
               + Add your line to this poem
             </button>
