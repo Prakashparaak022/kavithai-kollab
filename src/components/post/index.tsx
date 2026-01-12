@@ -9,9 +9,9 @@ const Post = () => {
 
   return (
     <div className="bg-secondary p-4">
-      <div className="bg-secondary grid grid-cols-12 gap-4 rounded-xl overflow-hidden">
+      <div className="grid grid-cols-12 gap-4 rounded-xl overflow-hidden">
         {/* Left bar */}
-        <div className="bg-primary col-span-12 lg:col-span-9 space-y-4 p-4">
+        <div className="bg-primary col-span-12 lg:col-span-9 p-4">
           {/* Create Post */}
           <WriteKavidhai allowCollab={allowCollab} isPrivate={isPrivate} />
         </div>

@@ -69,7 +69,7 @@ export default function WriteKavidhai({ allowCollab, isPrivate }: Props) {
    };
 
   return (
-    <form onSubmit={handleSubmit(onSubmit)} className="w-full p-4 space-y-2">
+    <form onSubmit={handleSubmit(onSubmit)} className="w-full space-y-2">
       <input
         type="file"
         accept="image/*"
@@ -128,7 +128,7 @@ export default function WriteKavidhai({ allowCollab, isPrivate }: Props) {
           </div>
         )}
 
-        <div className="space-y-3 rounded-xl p-3 bg-[#f8f5e4]">
+        <div className="space-y-6 rounded-xl p-3 bg-[#f8f5e4]">
           <textarea
             {...register("content")}
             placeholder="Write your thoughts..."
@@ -161,7 +161,7 @@ export default function WriteKavidhai({ allowCollab, isPrivate }: Props) {
             <div className="flex items-end gap-2">
               <textarea
                 rows={1}
-                placeholder="#love #nature"
+                placeholder="Add optional tags..."
                 value={tagInput}
                 onChange={(e) => {
                   setTagInput(e.target.value);
@@ -174,7 +174,7 @@ export default function WriteKavidhai({ allowCollab, isPrivate }: Props) {
                   }
                 }}
                 onBlur={addTags}
-                className="w-full resize-none bg-transparent outline-none text-sm text-primary"
+                className="w-full resize-none bg-transparent outline-none text-sm text-primary py-[6px]"
               />
               <span className="text-xs text-gray-500">{tags.length}</span>
             </div>
