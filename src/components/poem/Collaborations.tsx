@@ -47,7 +47,7 @@ const Collaborations = ({ collaborations }: Props) => {
 
   return (
     <div className="space-y-2">
-      <h3 className="text-lg font-semibold text-green">Community Lines</h3>
+      <h3 className="text-lg font-semibold text-green">Collaboration Lines</h3>
 
       <div className="space-y-3">
         {collaborationsList.map((collab) => {

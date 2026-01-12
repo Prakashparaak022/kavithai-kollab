@@ -79,21 +79,21 @@ export const AuthProvider = ({ children }: AuthProviderProps) => {
 
   useEffect(() => {
     const fetchAllDetails = async () => {
-      let storedBrandId = sessionStorage.getItem("brandId");
+      // let storedBrandId = sessionStorage.getItem("brandId");
 
-      if (storedBrandId) {
-        setBrandId(storedBrandId);
-      } else {
-        storedBrandId = await fetchBrandID();
+      // if (storedBrandId) {
+      //   setBrandId(storedBrandId);
+      // } else {
+      //   storedBrandId = await fetchBrandID();
 
-        if (!storedBrandId) {
-          toast.error("Failed to retrieve brand ID.");
-          return;
-        }
+      //   if (!storedBrandId) {
+      //     toast.error("Failed to retrieve brand ID.");
+      //     return;
+      //   }
 
-        sessionStorage.setItem("brandId", storedBrandId);
-        setBrandId(storedBrandId);
-      }
+      //   sessionStorage.setItem("brandId", storedBrandId);
+      //   setBrandId(storedBrandId);
+      // }
 
       const details = getDeviceDetails({}, "");
       setDeviceDetails(details);

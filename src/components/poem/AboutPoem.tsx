@@ -30,7 +30,7 @@ const AboutPoem = () => {
           </div>
         ))}
 
-        {/* Example switch usage */}
+        {/* Poet Approval */}
         <div className="flex justify-between items-center">
           <p className="text-[#6a7a78] text-sm">Original Poet Approval</p>
           <CustomSwitch
