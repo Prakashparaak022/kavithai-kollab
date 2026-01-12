@@ -34,14 +34,14 @@ const Feed = () => {
   return (
     <div className="bg-secondary p-4">
       <div className="grid grid-cols-12 gap-4 rounded-xl overflow-hidden">
-        <div className="bg-primary col-span-2">
+        <div className="bg-primary col-span-12 lg:col-span-2">
           <Filterbar
             filterList={filterList}
             filter={filter}
             setFilter={setFilter}
           />
         </div>
-        <div className="min-h-[80vh] bg-primary col-span-10 p-4 space-y-2">
+        <div className="min-h-[80vh] bg-primary col-span-12 lg:col-span-10 p-4 space-y-2">
           {/* Share kavithai */}
           <div className="w-md bg-[#f8f5e4] p-2 flex items-center justify-between rounded-lg text-green ">
             <p>Share a kavithai...</p>

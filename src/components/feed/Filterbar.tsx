@@ -21,9 +21,9 @@ const Filterbar = ({ filter, setFilter, filterList }: Props) => {
         <button
           key={item.value}
           onClick={() => setFilter(item.value)}
-          className={`text-left text-sm px-3 py-2 rounded-lg transition ${
+          className={`text-left text-sm px-3 py-1 rounded-lg transition ${
             filter === item.value
-              ? "bg-secondary font-medium"
+              ? "bg-secondary font-medium shadow-lg"
               : "text-green hover:bg-secondary/60"
           }`}>
           {item.name}
