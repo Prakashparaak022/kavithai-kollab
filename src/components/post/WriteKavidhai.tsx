@@ -3,6 +3,9 @@
 import { useState, useRef } from "react";
 import { useForm } from "react-hook-form";
 import { Camera, X } from "lucide-react";
+import { toast } from "react-toastify";
+import { API_URLS } from "@/services/apiUrls";
+import { usePlayerDetails } from "@/utils/UserSession";
 
 const categories = ["Love", "Nature", "Fantasy", "Existential", "Freestyle"];
 const TAG_REGEX = /^#[a-z0-9]+$/;
@@ -21,23 +24,27 @@ type FormValues = {
 
 export default function WriteKavidhai({ allowCollab, isPrivate }: Props) {
   const fileRef = useRef<HTMLInputElement | null>(null);
+  const { playerDetails, accessToken } = usePlayerDetails();
 
-  const { register, handleSubmit, setValue, watch } = useForm<FormValues>({
-    defaultValues: {
-      title: "",
-      content: "",
-      category: "Nature",
-      image: null,
-    },
-  });
+  const { register, handleSubmit, setValue, watch, reset } =
+    useForm<FormValues>({
+      defaultValues: {
+        title: "",
+        content: "",
+        category: "Nature",
+        image: null,
+      },
+    });
 
   const isSaveMode = allowCollab || isPrivate;
 
   const [tags, setTags] = useState<string[]>([]);
   const [tagInput, setTagInput] = useState("");
   const [imagePreview, setImagePreview] = useState<string | null>(null);
+  const [loading, setLoading] = useState(false);
 
   const selectedCategory = watch("category");
+  const imageFile = watch("image");
 
   const autoGrow = (el: HTMLTextAreaElement) => {
     el.style.height = "auto";
@@ -57,16 +64,81 @@ export default function WriteKavidhai({ allowCollab, isPrivate }: Props) {
     setTagInput("");
   };
 
-  const onSubmit = (data: FormValues) => {
-    const payload = {
-      ...data,
-      tags,
-      allowCollab,
-      isPrivate,
-    };
+  const convertImageToBinary = (): Promise<Blob> => {
+    return new Promise<Blob>((resolve, reject) => {
+      if (!imageFile) {
+        toast.error("Please select a valid file first.");
+        reject(new Error("No file selected"));
+        return;
+      }
 
-    console.log(payload);
-   };
+      const reader = new FileReader();
+      reader.readAsArrayBuffer(imageFile);
+
+      reader.onloadend = () => {
+        if (!reader.result) {
+          reject(new Error("Failed to read file"));
+          return;
+        }
+
+        resolve(new Blob([reader.result], { type: imageFile.type }));
+      };
+
+      reader.onerror = () => {
+        reject(new Error("File reading error"));
+      };
+    });
+  };
+
+  const onSubmit = async (data: FormValues) => {
+    try {
+      setLoading(true);
+      const blob = await convertImageToBinary();
+
+      if (!playerDetails?.id) {
+        toast.error("Player not found");
+        return;
+      }
+
+      const formData = new FormData();
+
+      formData.append("title", data.title);
+      formData.append("content", data.content);
+      formData.append("category", data.category);
+      if (tags.length > 0) {
+        const formattedTags = tags.map((t) => t.replace(/^#/, "")).join(",");
+        formData.append("tags", formattedTags);
+      }
+      formData.append("allowCollaboration", String(allowCollab));
+      formData.append("isPrivate", isSaveMode ? "1" : "0");
+      formData.append("isPublish", isSaveMode ? "0" : "1");
+      formData.append("userId", String(playerDetails.id));
+
+      if (imageFile) {
+        formData.append("image", imageFile, imageFile.name);
+      }
+
+      const response = await fetch(API_URLS.KAVITHAI_POST, {
+        method: "POST",
+        headers: { Accept: "application/json" },
+        body: formData,
+      });
+
+      if (!response.ok) {
+        throw new Error("Failed to submit");
+      }
+
+      toast.success("Kavidhai created successfully");
+      reset();
+      setTags([]);
+      setImagePreview(null);
+    } catch (error) {
+      console.error(error);
+      toast.error("Something went wrong");
+    } finally {
+      setLoading(false);
+    }
+  };
 
   return (
     <form onSubmit={handleSubmit(onSubmit)} className="w-full space-y-2">
@@ -77,6 +149,13 @@ export default function WriteKavidhai({ allowCollab, isPrivate }: Props) {
         hidden
         onChange={(e) => {
           const file = e.target.files?.[0] || null;
+          if (!file) return;
+
+          if (file.size > 1 * 1024 * 1024) {
+            toast.error("File size exceeds 1MB limit.");
+            return;
+          }
+
           setValue("image", file);
 
           if (file) {
@@ -132,7 +211,8 @@ export default function WriteKavidhai({ allowCollab, isPrivate }: Props) {
           <textarea
             {...register("content")}
             placeholder="Write your thoughts..."
-            className="w-full h-36 resize-none bg-transparent outline-none text-sm text-primary"
+            onInput={(e) => autoGrow(e.currentTarget)}
+            className="w-full resize-none bg-transparent outline-none text-sm text-primary"
           />
 
           <div>
@@ -209,7 +289,8 @@ export default function WriteKavidhai({ allowCollab, isPrivate }: Props) {
         </button>
         <button
           type="submit"
-          className="flex-1 rounded-xl bg-[#1e4f4f] py-2 text-sm text-white">
+          disabled={loading}
+          className="flex-1 rounded-xl bg-[#1e4f4f] py-2 text-sm text-white disabled:opacity-60">
           {isSaveMode ? "Save" : "Publish"}
         </button>
       </div>

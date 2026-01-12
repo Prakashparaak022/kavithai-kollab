@@ -3,15 +3,9 @@
 import { useEffect, useState } from "react";
 
 export type PlayerDetails = {
+  id?: string | number;
   userName?: string;
   accessToken?: string;
-  [key: string]:
-    | string
-    | number
-    | boolean
-    | null
-    | undefined
-    | Record<string, unknown>;
 };
 
 export function useSessionStorage<T = string | null>(key: string): T | null {
