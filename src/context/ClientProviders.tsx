@@ -14,7 +14,7 @@ type ProviderProps = {
 // const AuthModals = dynamic(() => import("@/components/AuthModals"), {
 //   ssr: false,
 // });
-const Toast = dynamic(() => import("@/components/Toast"), {
+const Toast = dynamic(() => import("@/components/ui/Toast"), {
   ssr: false,
 });
 

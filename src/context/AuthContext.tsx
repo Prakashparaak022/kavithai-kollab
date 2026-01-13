@@ -10,7 +10,6 @@ import {
 } from "react";
 import { toast } from "react-toastify";
 
-import { fetchBrandID } from "@/lib/fetchBrandId";
 import { getDeviceDetails } from "@/utils/getDeviceDetails";
 import {
   PlayerDetails,

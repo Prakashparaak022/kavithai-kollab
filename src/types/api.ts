@@ -11,6 +11,6 @@ export type ApiPoem = {
   userId: number;
 };
 
-export interface ApiResponse<T = any> {
+export interface ApiResponse<T = unknown> {
   content: T[];
 }

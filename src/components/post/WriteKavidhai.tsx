@@ -6,6 +6,9 @@ import { Camera, X } from "lucide-react";
 import { toast } from "react-toastify";
 import { API_URLS } from "@/constants/apiUrls";
 import { usePlayerDetails } from "@/utils/UserSession";
+import { createPoemService } from "@/services/api/poems.service";
+import { useDispatch } from "react-redux";
+import { addPoem } from "@/store/slices/poemsSlice";
 
 const categories = ["Love", "Nature", "Fantasy", "Existential", "Freestyle"];
 const TAG_REGEX = /^#[a-z0-9]+$/;
@@ -36,6 +39,7 @@ export default function WriteKavidhai({ allowCollab, isPrivate }: Props) {
       },
     });
 
+  const dispatch = useDispatch();
   const isSaveMode = allowCollab || isPrivate;
 
   const [tags, setTags] = useState<string[]>([]);
@@ -66,42 +70,36 @@ export default function WriteKavidhai({ allowCollab, isPrivate }: Props) {
   };
 
   const onSubmit = async (data: FormValues) => {
+    if (!playerDetails?.id) {
+      toast.error("Player not found");
+      return;
+    }
+
+    setLoading(true);
+
     try {
-      setLoading(true);
-      if (!playerDetails?.id) {
-        toast.error("Player not found");
-        return;
-      }
-
       const formData = new FormData();
-
       formData.append("title", data.title);
       formData.append("content", data.content);
       formData.append("category", data.category);
-      if (tags.length > 0) {
-        const formattedTags = tags.map((t) => t.replace(/^#/, "")).join(",");
-        formData.append("tags", formattedTags);
+
+      if (tags.length) {
+        formData.append("tags", tags.map((t) => t.replace(/^#/, "")).join(","));
       }
+
       formData.append("allowCollaboration", String(allowCollab));
       formData.append("isPrivate", isSaveMode ? "1" : "0");
       formData.append("isPublish", isSaveMode ? "0" : "1");
       formData.append("userId", String(playerDetails.id));
 
-      if (imageFile) {
-        formData.append("image", imageFile, imageFile.name);
-      }
+      if (imageFile) formData.append("image", imageFile, imageFile.name);
 
-      const response = await fetch(API_URLS.KAVITHAI_POST, {
-        method: "POST",
-        headers: { Accept: "application/json" },
-        body: formData,
-      });
-
-      if (!response.ok) {
-        throw new Error("Failed to submit");
-      }
+      const response = await createPoemService(formData);
 
       toast.success("Kavidhai created successfully");
+
+      dispatch(addPoem(response.content));
+
       reset();
       setTags([]);
       setImagePreview(null);

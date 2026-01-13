@@ -9,12 +9,14 @@
     "lint": "eslint"
   },
   "dependencies": {
+    "@reduxjs/toolkit": "^2.11.2",
     "framer-motion": "^11.18.2",
     "lucide-react": "^0.562.0",
     "next": "15.5.9",
     "react": "19.2.3",
     "react-dom": "19.2.3",
     "react-hook-form": "^7.70.0",
+    "react-redux": "^9.2.0",
     "react-toastify": "^11.0.5",
     "ua-parser-js": "^2.0.7"
   },

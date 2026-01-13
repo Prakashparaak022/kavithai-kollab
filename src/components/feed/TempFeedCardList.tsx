@@ -1,40 +1,29 @@
 "use client";
 
-import { useEffect, useMemo, useState } from "react";
+import { useEffect, useMemo } from "react";
 import { FilterType } from "./index";
-import Link from "next/link";
 import Image from "next/image";
-import { fetchAllPoems } from "@/services/poems.service";
-import { ApiPoem } from "@/types/api";
+import { useDispatch, useSelector } from "react-redux";
+import { AppDispatch, RootState } from "@/store";
+import { loadPoems } from "@/store/slices/poemsSlice";
 
 const TempFeedCardList = ({ filter }: { filter: FilterType }) => {
-  const [poemsList, setPoemsList] = useState<ApiPoem[]>([]);
-  const [loading, setLoading] = useState(true);
+  const dispatch = useDispatch<AppDispatch>();
+  const { poems, loading } = useSelector((state: RootState) => state.poems);
 
   useEffect(() => {
-    const fetchPoems = async () => {
-      try {
-        const data = await fetchAllPoems();
-        console.log("data : ", data);
-
-        setPoemsList(data.content);
-      } catch (error) {
-        console.error("Error while fetching Feed List:", error);
-      } finally {
-        setLoading(false);
-      }
-    };
-
-    fetchPoems();
-  }, []);
+    if (!poems.length) {
+      dispatch(loadPoems());
+    }
+  }, [dispatch, poems.length]);
 
   const displayList = useMemo(() => {
     if (filter === "recent") {
-      return [...poemsList].reverse();
+      return [...poems].reverse();
     }
 
-    return poemsList;
-  }, [filter, poemsList]);
+    return poems;
+  }, [filter, poems]);
 
   if (loading) {
     return (

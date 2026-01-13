@@ -1,4 +1,4 @@
-import Providers from "../Providers";
+import Providers from "../../providers/Providers";
 import Header from "./header";
 
 const Layout = ({ children }: { children: React.ReactNode }) => {

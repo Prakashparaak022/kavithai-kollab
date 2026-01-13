@@ -5,16 +5,14 @@ import dynamic from "next/dynamic";
 import { AuthProvider } from "@/context/AuthContext";
 import { ModalProvider } from "@/context/ModalContext";
 
-const Toast = dynamic(() => import("@/components/Toast"), {
+const Toast = dynamic(() => import("@/components/ui/Toast"), {
   ssr: false,
 });
 
 export default function Providers({ children }: { children: ReactNode }) {
   return (
     <AuthProvider>
-      <ModalProvider>
-        {children}
-      </ModalProvider>
+      <ModalProvider>{children}</ModalProvider>
       <Toast />
     </AuthProvider>
   );
