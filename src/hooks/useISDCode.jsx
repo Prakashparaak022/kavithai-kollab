@@ -1,6 +1,6 @@
-"use client"
+"use client";
 import { toast } from "react-toastify";
-import { API_URLS } from "@/services/apiUrls";
+import { API_URLS } from "@/constants/apiUrls";
 import { formatErrorMessage } from "@/utils/errorMessage";
 import { useEffect, useState } from "react";
 

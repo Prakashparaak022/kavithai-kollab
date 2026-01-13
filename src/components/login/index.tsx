@@ -8,7 +8,7 @@ import { toast } from "react-toastify";
 import Logo from "@/assets/img/logo-1.png";
 import { useAuth } from "@/context/AuthContext";
 // import { useModal } from "@/context/ModalContext";
-import { API_URLS } from "@/services/apiUrls";
+import { API_URLS } from "@/constants/apiUrls";
 import { formatErrorMessage } from "@/utils/errorMessage";
 import FormInput from "../form/FormInput";
 import SubmitButton from "../ui/SubmitButton";
@@ -70,7 +70,7 @@ const LoginContainer = ({ handleClose }: LoginContainerProps) => {
       setLoading(false);
     }
   };
-  
+
   return (
     <div className="flex flex-col items-center p-8 bg-secondary">
       <Image src={Logo} className="logo h-20 w-auto" alt="logo" />

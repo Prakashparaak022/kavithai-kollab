@@ -5,7 +5,7 @@ import { useForm, Controller } from "react-hook-form";
 import { toast } from "react-toastify";
 import { useAuth } from "@/context/AuthContext";
 import { useISDCode } from "@/hooks/useISDCode";
-import { API_URLS } from "@/services/apiUrls";
+import { API_URLS } from "@/constants/apiUrls";
 import { formatErrorMessage } from "@/utils/errorMessage";
 import Logo from "@/assets/img/logo-1.png";
 import Image from "next/image";

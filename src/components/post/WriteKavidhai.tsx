@@ -4,7 +4,7 @@ import { useState, useRef } from "react";
 import { useForm } from "react-hook-form";
 import { Camera, X } from "lucide-react";
 import { toast } from "react-toastify";
-import { API_URLS } from "@/services/apiUrls";
+import { API_URLS } from "@/constants/apiUrls";
 import { usePlayerDetails } from "@/utils/UserSession";
 
 const categories = ["Love", "Nature", "Fantasy", "Existential", "Freestyle"];

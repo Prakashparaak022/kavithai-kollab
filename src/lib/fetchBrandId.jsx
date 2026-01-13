@@ -1,4 +1,4 @@
-import { API_URLS } from "@/services/apiUrls";
+import { API_URLS } from "@/constants/apiUrls";
 
 export async function fetchBrandID() {
   const timestamp = new Date().getTime();

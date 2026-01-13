@@ -2,14 +2,10 @@
 
 import { useEffect, useMemo, useState } from "react";
 import { FilterType } from "./index";
-import { ApiPoem, Poem } from "@/types/poem";
 import Link from "next/link";
 import Image from "next/image";
-import { API_URLS } from "@/services/apiUrls";
-
-type ApiResponse = {
-  content: ApiPoem[];
-};
+import { fetchAllPoems } from "@/services/poems.service";
+import { ApiPoem } from "@/types/api";
 
 const TempFeedCardList = ({ filter }: { filter: FilterType }) => {
   const [poemsList, setPoemsList] = useState<ApiPoem[]>([]);
@@ -18,13 +14,9 @@ const TempFeedCardList = ({ filter }: { filter: FilterType }) => {
   useEffect(() => {
     const fetchPoems = async () => {
       try {
-        const res = await fetch(API_URLS.KAVITHAI_ALL);
+        const data = await fetchAllPoems();
+        console.log("data : ", data);
 
-        if (!res.ok) {
-          throw new Error("Failed to fetch poems");
-        }
-
-        const data: ApiResponse = await res.json();
         setPoemsList(data.content);
       } catch (error) {
         console.error("Error while fetching Feed List:", error);
@@ -45,7 +37,9 @@ const TempFeedCardList = ({ filter }: { filter: FilterType }) => {
   }, [filter, poemsList]);
 
   if (loading) {
-    return <div className="text-center py-10 text-gray-600">Loading poems...</div>;
+    return (
+      <div className="text-center py-10 text-gray-600">Loading poems...</div>
+    );
   }
 
   return (
