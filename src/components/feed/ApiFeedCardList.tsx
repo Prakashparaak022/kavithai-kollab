@@ -7,7 +7,7 @@ import { useDispatch, useSelector } from "react-redux";
 import { AppDispatch, RootState } from "@/store";
 import { loadPoems } from "@/store/slices/poemsSlice";
 
-const TempFeedCardList = ({ filter }: { filter: FilterType }) => {
+const ApiFeedCardList = ({ filter }: { filter: FilterType }) => {
   const dispatch = useDispatch<AppDispatch>();
   const { poems, loading } = useSelector((state: RootState) => state.poems);
 
@@ -65,4 +65,4 @@ const TempFeedCardList = ({ filter }: { filter: FilterType }) => {
   );
 };
 
-export default TempFeedCardList;
+export default ApiFeedCardList;

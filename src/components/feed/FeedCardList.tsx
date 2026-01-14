@@ -7,7 +7,7 @@ import { poems } from "@/data/poem";
 import { Poem } from "@/types/poem";
 import Link from "next/link";
 import Image from "next/image";
-import TempFeedCardList from "./TempFeedCardList";
+import ApiFeedCardList from "./ApiFeedCardList";
 import useRequireAuth from "@/hooks/useRequireAuth";
 
 const FeedCardList = ({ filter }: { filter: FilterType }) => {
@@ -101,7 +101,7 @@ const FeedCardList = ({ filter }: { filter: FilterType }) => {
         </Link>
       ))}
       {/* temp */}
-      <TempFeedCardList filter={filter} />
+      <ApiFeedCardList filter={filter} />
     </div>
   );
 };
