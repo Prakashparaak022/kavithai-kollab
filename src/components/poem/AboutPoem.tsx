@@ -22,7 +22,7 @@ const AboutPoem = () => {
     <div className="space-y-2">
       <h3 className="text-lg font-semibold text-green">Account Info</h3>
 
-      <div className="bg-[#f8f5e4] rounded-xl p-6 shadow-lg space-y-4">
+      <div className="bg-primary rounded-xl p-6 shadow-lg space-y-4">
         {infoList.map(({ label, value }) => (
           <div key={label}>
             <p className="text-[#6a7a78] text-sm">{label}</p>

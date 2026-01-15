@@ -3,7 +3,7 @@ type Layout = "2fr_16px_10fr" | "9fr_16px_3fr";
 type Props = {
   left: React.ReactNode;
   right: React.ReactNode;
-  layout?: Layout;
+  layout: Layout;
 };
 
 const AppBgLayout = ({ left, right, layout = "2fr_16px_10fr" }: Props) => {

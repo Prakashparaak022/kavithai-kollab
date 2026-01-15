@@ -4,10 +4,10 @@
    Root Theme Variables
 ================================ */
 :root {
-  --background: #EDE5D0;
+  --background: #f8f5e4;
   --foreground: #171717;
 
-  --bg-primary: #EDE5D0;
+  --bg-primary: #f8f5e4;
   --bg-secondary: #1E494F;
   --bg-highlight: #d4a574;
 
@@ -37,7 +37,7 @@
 ================================ */
 @media (prefers-color-scheme: dark) {
   :root {
-    --background: #EDE5D0;
+    --background: #f8f5e4;
     --foreground: #ededed;
   }
 }

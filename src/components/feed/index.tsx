@@ -53,7 +53,7 @@ const Feed = () => {
           <Link
             href={"/post"}
             onClick={requireAuth}
-            className="w-auto lg:w-md bg-[#f8f5e4] p-2 flex items-center justify-between rounded-lg text-green">
+            className="w-auto lg:w-md bg-primary p-2 flex items-center justify-between rounded-lg text-green">
             <p>Share a kavithai...</p>
             <Camera fill="currentColor" stroke="white" />
           </Link>

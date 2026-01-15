@@ -4,7 +4,7 @@ type LeftSidebarProps = {
 
 const FilterPanel: React.FC<LeftSidebarProps> = ({ imageUrl }) => {
   return (
-    <div className="bg-[#f8f5e4] rounded-2xl p-2 flex flex-col gap-4">
+    <div className="bg-primary rounded-2xl p-2 flex flex-col gap-4">
       <div className="flex items-center gap-3">
         <img
           src={imageUrl || "https://randomuser.me/api/portraits/men/32.jpg"}

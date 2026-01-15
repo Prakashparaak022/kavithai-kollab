@@ -42,7 +42,7 @@ const Notifications = ({ notifications, setNotifications }: Props) => {
           hover:shadow-md hover:-translate-y-[1px]
           ${
             n.read
-              ? "bg-[#f8f5e4] opacity-80"
+              ? "bg-primary opacity-80"
               : "bg-[#fcfaf3] border border-[#f5c16c] animate-[pulseGlow_2s_infinite]"
           }`}>
           <div className="flex items-center justify-between mb-4">

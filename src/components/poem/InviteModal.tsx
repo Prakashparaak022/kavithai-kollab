@@ -61,7 +61,7 @@ const InviteModal = ({ onClose }: Props) => {
               value={searchQuery}
               onChange={(e) => setSearchQuery(e.target.value)}
               placeholder="Search by username or handle..."
-              className="w-full pl-12 pr-4 py-3 bg-[#f8f5e4] rounded-xl text-gray-600 border border-[#d4c4b3] focus:outline-none focus:border-[#2c5f5d]"
+              className="w-full pl-12 pr-4 py-3 bg-primary rounded-xl text-gray-600 border border-[#d4c4b3] focus:outline-none focus:border-[#2c5f5d]"
             />
           </div>
 
@@ -72,7 +72,7 @@ const InviteModal = ({ onClose }: Props) => {
               return (
                 <div
                   key={user.id}
-                  className="flex items-center justify-between bg-[#f8f5e4] p-4 rounded-xl">
+                  className="flex items-center justify-between bg-primary p-4 rounded-xl">
                   <div className="flex items-center gap-3">
                     <img
                       src={user.imageUrl}
@@ -116,7 +116,7 @@ const InviteModal = ({ onClose }: Props) => {
               <input
                 readOnly
                 value="kollab.com/invite/eternal-echoes"
-                className="flex-1 px-4 h-8 bg-[#f8f5e4] rounded-lg text-[#6a7a78] border border-[#d4c4b3]"
+                className="flex-1 px-4 h-8 bg-primary rounded-lg text-[#6a7a78] border border-[#d4c4b3]"
               />
               <button
                 onClick={handleCopyLink}
