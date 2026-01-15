@@ -1,5 +1,4 @@
 "use client";
-import Layout from "@/components/layouts";
 import Collaborations from "@/components/poem/Collaborations";
 import InviteModal from "@/components/poem/InviteModal";
 import Notifications from "@/components/poem/Notifications";
@@ -10,6 +9,7 @@ import type { Poem } from "@/types/poem";
 import { useState } from "react";
 import AboutPoem from "./AboutPoem";
 import Comments from "./Comments";
+import AppBgLayout from "../layouts/AppBgLayout";
 
 type Props = {
   poem: Poem;
@@ -32,42 +32,41 @@ const Poem = ({ poem }: Props) => {
     useState<Notification[]>(initialNotifications);
 
   return (
-    <Layout>
-      <div className="bg-secondary pt-4">
-        <div className="bg-primary grid grid-cols-12 p-4 gap-6">
-          {/* Left bar */}
-          <div className="col-span-12 lg:col-span-9 space-y-4">
-            {/* Dynamic Poem Card */}
-            <PoemMotion motionKey={poem.slug}>
-              <PoemDetailCard
-                title={poem.title}
-                username={poem.author}
-                content={poem.content || "No content available"}
-                onInvite={() => setShowInviteModal(true)}
-              />
-            </PoemMotion>
-            {/* Collaboration List */}
-            {poem.isPublish ? (
-              <Comments comments={poem.comments ?? []} />
-            ) : (
-              <Collaborations collaborations={poem.collaborations ?? []} />
-            )}
-          </div>
-
-          {/* Notifications */}
-          <div className="col-span-12 lg:col-span-3 space-y-4">
-            <Notifications
-              notifications={notifications}
-              setNotifications={setNotifications}
+    <AppBgLayout
+      layout="9fr_16px_3fr"
+      left={
+        <div className="p-4 space-y-4">
+          {/* Dynamic Poem Card */}
+          <PoemMotion motionKey={poem.slug}>
+            <PoemDetailCard
+              title={poem.title}
+              username={poem.author}
+              content={poem.content || "No content available"}
+              onInvite={() => setShowInviteModal(true)}
             />
-            <AboutPoem />
-          </div>
+          </PoemMotion>
+          {/* Collaboration List */}
+          {poem.isPublish ? (
+            <Comments comments={poem.comments ?? []} />
+          ) : (
+            <Collaborations collaborations={poem.collaborations ?? []} />
+          )}
         </div>
-        {showInviteModal && (
-          <InviteModal onClose={() => setShowInviteModal(false)} />
-        )}
-      </div>
-    </Layout>
+      }
+      right={
+        <div className="p-4 space-y-4">
+          {/* Notifications */}
+          <Notifications
+            notifications={notifications}
+            setNotifications={setNotifications}
+          />
+          <AboutPoem />
+          {showInviteModal && (
+            <InviteModal onClose={() => setShowInviteModal(false)} />
+          )}
+        </div>
+      }
+    />
   );
 };
 

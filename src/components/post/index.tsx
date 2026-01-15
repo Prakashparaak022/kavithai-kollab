@@ -2,22 +2,22 @@
 import { useState } from "react";
 import PostSettings from "./PostSettings";
 import WriteKavidhai from "./WriteKavidhai";
+import AppBgLayout from "../layouts/AppBgLayout";
 
 const Post = () => {
   const [allowCollab, setAllowCollab] = useState(false);
   const [isPrivate, setIsPrivate] = useState(false);
 
   return (
-    <div className="bg-secondary p-4">
-      <div className="grid grid-cols-12 gap-4 rounded-xl overflow-hidden">
-        {/* Left bar */}
-        <div className="bg-primary col-span-12 lg:col-span-9 p-4">
-          {/* Create Post */}
+    <AppBgLayout
+      layout="9fr_16px_3fr"
+      left={
+        <div className="p-4">
           <WriteKavidhai allowCollab={allowCollab} isPrivate={isPrivate} />
         </div>
-
-        {/* Notifications */}
-        <div className="bg-primary col-span-12 lg:col-span-3 p-4">
+      }
+      right={
+        <div className="p-4">
           <PostSettings
             allowCollab={allowCollab}
             setAllowCollab={setAllowCollab}
@@ -25,8 +25,8 @@ const Post = () => {
             setIsPrivate={setIsPrivate}
           />
         </div>
-      </div>
-    </div>
+      }
+    />
   );
 };
 

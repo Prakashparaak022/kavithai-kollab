@@ -9,7 +9,7 @@ type Props = {
 
 const Filterbar = ({ filter, setFilter, filterList }: Props) => {
   return (
-    <div className="bg-primary rounded-2xl p-4 flex flex-col gap-4">
+    <div className="rounded-2xl flex flex-col gap-4">
       <div className="flex items-center justify-between">
         <div className="text-sm font-semibold text-green">Filters</div>
         <SlidersHorizontal size={16} className="text-gray-600" />

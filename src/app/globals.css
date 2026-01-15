@@ -4,17 +4,17 @@
    Root Theme Variables
 ================================ */
 :root {
-  --background: #dcd4c3;
+  --background: #EDE5D0;
   --foreground: #171717;
 
-  --bg-primary: #dcd4c3;
-  --bg-secondary: #2c5f5d;
+  --bg-primary: #EDE5D0;
+  --bg-secondary: #1E494F;
   --bg-highlight: #d4a574;
 
   --text-primary: #171717;
   --text-secondary: #ffffff;
   --text-highlight: #e8dcc8;
-  --text-green: #2c5f5d;
+  --text-green: #1E494F;
 
   --border-primary: #d4a574;
 
@@ -37,7 +37,7 @@
 ================================ */
 @media (prefers-color-scheme: dark) {
   :root {
-    --background: #dcd4c3;
+    --background: #EDE5D0;
     --foreground: #ededed;
   }
 }
@@ -50,9 +50,12 @@ html {
 }
 
 body {
-  background: var(--background);
   color: var(--foreground);
   font-family: var(--font-inter);
+  background-image: url("/kavidhai-bg.png");
+  background-size: cover;
+  background-position: center;
+  background-repeat: no-repeat;
 }
 
 /* ================================
@@ -75,6 +78,14 @@ p {
 /* ================================
    Background Utilities
 ================================ */
+.bg-app {
+  background-image: url("/kavidhai-bg.png");
+  background-size: cover;
+  background-position: center;
+  background-repeat: no-repeat;
+  min-height: 100vh;
+}
+
 .bg-primary {
   background: var(--bg-primary);
 }

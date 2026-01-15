@@ -1,3 +1,4 @@
+import Layout from "@/components/layouts";
 import Poem from "@/components/poem";
 import { poems } from "@/data/poem";
 import { notFound } from "next/navigation";
@@ -13,5 +14,9 @@ export default async function PoemDetailPage({
 
   if (!poem) notFound();
 
-  return <Poem poem={poem} />;
+  return (
+    <Layout>
+      <Poem poem={poem} />
+    </Layout>
+  );
 }

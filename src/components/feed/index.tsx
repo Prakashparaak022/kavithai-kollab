@@ -5,6 +5,7 @@ import Filterbar from "./Filterbar";
 import { Camera } from "lucide-react";
 import Link from "next/link";
 import useRequireAuth from "@/hooks/useRequireAuth";
+import AppBgLayout from "../layouts/AppBgLayout";
 
 export type FilterType = "all" | "liked" | "recent";
 export type FilterItem = {
@@ -36,21 +37,23 @@ const Feed = () => {
   ];
 
   return (
-    <div className="bg-secondary p-4">
-      <div className="grid grid-cols-12 gap-4 rounded-xl overflow-hidden">
-        <div className="bg-primary col-span-12 lg:col-span-2">
+    <AppBgLayout
+      layout="2fr_16px_10fr"
+      left={
+        <div className="p-4">
           <Filterbar
             filterList={filterList}
             filter={filter}
             setFilter={setFilter}
           />
         </div>
-        <div className="min-h-[80vh] bg-primary col-span-12 lg:col-span-10 p-4 space-y-2">
-          {/* Share kavithai */}
+      }
+      right={
+        <div className="p-4 space-y-2">
           <Link
             href={"/post"}
             onClick={requireAuth}
-            className="w-md bg-[#f8f5e4] p-2 flex items-center justify-between rounded-lg text-green ">
+            className="w-auto lg:w-md bg-[#f8f5e4] p-2 flex items-center justify-between rounded-lg text-green">
             <p>Share a kavithai...</p>
             <Camera fill="currentColor" stroke="white" />
           </Link>
@@ -61,8 +64,8 @@ const Feed = () => {
 
           <FeedCardList filter={filter} />
         </div>
-      </div>
-    </div>
+      }
+    />
   );
 };
 

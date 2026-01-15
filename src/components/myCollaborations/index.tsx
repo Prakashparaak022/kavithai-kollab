@@ -1,23 +1,23 @@
 import { myCollaborations } from "@/data/myCollaborations";
 import AboutPoem from "../poem/AboutPoem";
 import Collaborations from "./Collaborations";
+import AppBgLayout from "../layouts/AppBgLayout";
 
 const MyCollaborations = () => {
   return (
-    <div className="bg-secondary p-4">
-      <div className="min-h-[80vh] grid grid-cols-12 gap-4 rounded-xl overflow-hidden">
-        {/* Left bar */}
-        <div className="bg-primary col-span-12 lg:col-span-9 p-4">
-          {/* Collaboration List */}
+    <AppBgLayout
+      layout="9fr_16px_3fr"
+      left={
+        <div className="p-4">
           <Collaborations collaborations={myCollaborations ?? []} />
         </div>
-
-        {/* Notifications */}
-        <div className="bg-primary col-span-12 lg:col-span-3 p-4">
+      }
+      right={
+        <div className="p-4">
           <AboutPoem />
         </div>
-      </div>
-    </div>
+      }
+    />
   );
 };
 
