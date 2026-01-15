@@ -1,12 +1,16 @@
-type Layout = "2fr_16px_10fr" | "9fr_16px_3fr";
-
 type Props = {
   left: React.ReactNode;
   right: React.ReactNode;
-  layout: Layout;
+  layout?: string;
 };
 
-const AppBgLayout = ({ left, right, layout = "2fr_16px_10fr" }: Props) => {
+const layoutClasses: Record<string, string> = {
+  "2/10": "lg:grid-cols-[2fr_16px_10fr]",
+  "9/3": "lg:grid-cols-[9fr_16px_3fr]",
+  "6fr_16px_6fr": "lg:grid-cols-[6fr_16px_6fr]",
+};
+
+const AppBgLayout = ({ left, right, layout = "2/10" }: Props) => {
   return (
     <div className="bg-secondary p-4">
       <div
@@ -17,7 +21,7 @@ const AppBgLayout = ({ left, right, layout = "2fr_16px_10fr" }: Props) => {
           bg-app
           rounded-xl
           overflow-hidden
-          lg:grid-cols-[${layout}]
+          ${layoutClasses[layout]}
         `}>
         {left}
         <div className="hidden lg:block bg-secondary" />

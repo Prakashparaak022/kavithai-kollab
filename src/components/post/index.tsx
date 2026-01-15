@@ -10,7 +10,7 @@ const Post = () => {
 
   return (
     <AppBgLayout
-      layout="9fr_16px_3fr"
+      layout="9/3"
       left={
         <div className="p-4">
           <WriteKavidhai allowCollab={allowCollab} isPrivate={isPrivate} />

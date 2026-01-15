@@ -36,7 +36,7 @@ const ApiFeedCardList = ({ filter }: { filter: FilterType }) => {
       {displayList.map((poem, index) => (
         <div
           key={poem.id}
-          className="col-span-12 sm:col-span-6 md:col-span-4 lg:col-span-3 bg-primary rounded-2xl shadow-md hover:shadow-xl transition-shadow duration-300 flex flex-col">
+          className="col-span-12 sm:col-span-6 md:col-span-4 lg:col-span-3 bg-card rounded-2xl shadow-md hover:shadow-xl transition-shadow duration-300 flex flex-col">
           <div className="relative h-44 w-full">
             <Image
               src={`data:image/jpeg;base64,${poem.imageUrl}`}

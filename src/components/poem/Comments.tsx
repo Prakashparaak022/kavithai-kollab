@@ -53,7 +53,7 @@ const Comments = ({ comments }: Props) => {
           <div
             key={comment.id}
             onClick={() => toggleComment(comment.id)}
-            className="p-3 rounded-xl bg-primary cursor-pointer
+            className="p-3 rounded-xl bg-card cursor-pointer
                        hover:shadow-md transition-shadow">
             <div className="flex gap-3">
               <img
@@ -90,7 +90,7 @@ const Comments = ({ comments }: Props) => {
       })}
 
       {/* ADD COMMENT */}
-      <div className="p-3 rounded-xl bg-primary">
+      <div className="p-3 rounded-xl bg-card">
         {!showInput ? (
           <button
             onClick={withAuth(() => setShowInput(true))}

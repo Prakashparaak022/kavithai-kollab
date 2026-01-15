@@ -83,11 +83,19 @@ p {
   background-size: cover;
   background-position: center;
   background-repeat: no-repeat;
-  min-height: 100vh;
 }
 
 .bg-primary {
   background: var(--bg-primary);
+}
+
+.bg-card {
+  background: rgba(243, 233, 216, 0.80);
+  backdrop-filter: blur(10px);
+  -webkit-backdrop-filter: blur(10px);
+
+  border: 1px solid rgba(255, 255, 255, 0.35);
+  box-shadow: 0 8px 24px rgba(0, 0, 0, 0.08);
 }
 
 .bg-secondary {

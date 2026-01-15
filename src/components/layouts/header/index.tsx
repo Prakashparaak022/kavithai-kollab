@@ -65,11 +65,11 @@ const Header = () => {
                       href={item.href}
                       onClick={() => setMobileOpen(false)}
                       className={`block px-4 py-1 m-1 rounded-lg text-sm
-                  ${
-                    isActive
-                      ? "bg-primary text-gray-600"
-                      : "text-highlight hover:bg-primary hover:text-secondary"
-                  }`}>
+                      ${
+                        isActive
+                          ? "bg-app text-gray-600"
+                          : "text-highlight hover:bg-primary hover:text-secondary"
+                      }`}>
                       {item.name}
                     </Link>
                   );

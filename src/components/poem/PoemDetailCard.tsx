@@ -15,7 +15,7 @@ const PoemDetailCard: React.FC<PoemCardProps> = ({
   onInvite,
 }) => {
   return (
-    <div className="relative rounded-lg border-4 border-[#d4a574] bg-[#2c5f5d] p-6 overflow-hidden">
+    <div className="relative rounded-lg border-4 border-[#d4a574] bg-secondary p-6 overflow-hidden">
       <button
         onClick={onInvite}
         className="absolute right-6 flex items-center gap-1 px-3 h-8 bg-highlight rounded-full cursor-pointer outline-none">

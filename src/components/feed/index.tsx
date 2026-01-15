@@ -38,7 +38,7 @@ const Feed = () => {
 
   return (
     <AppBgLayout
-      layout="2fr_16px_10fr"
+      layout="2/10"
       left={
         <div className="p-4">
           <Filterbar
@@ -53,7 +53,7 @@ const Feed = () => {
           <Link
             href={"/post"}
             onClick={requireAuth}
-            className="w-auto lg:w-md bg-primary p-2 flex items-center justify-between rounded-lg text-green">
+            className="w-auto lg:w-md bg-card p-2 flex items-center justify-between rounded-lg text-green">
             <p>Share a kavithai...</p>
             <Camera fill="currentColor" stroke="white" />
           </Link>

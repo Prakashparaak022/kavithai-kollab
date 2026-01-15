@@ -6,7 +6,7 @@ import AppBgLayout from "../layouts/AppBgLayout";
 const MyCollaborations = () => {
   return (
     <AppBgLayout
-      layout="9fr_16px_3fr"
+      layout="9/3"
       left={
         <div className="p-4">
           <Collaborations collaborations={myCollaborations ?? []} />

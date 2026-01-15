@@ -59,7 +59,7 @@ const Collaborations = ({ collaborations }: Props) => {
               onClick={() => handleToggle(collab)}
               role="button"
               tabIndex={0}
-              className="p-3 rounded-lg bg-primary cursor-pointer
+              className="p-3 rounded-lg bg-card cursor-pointer
                  hover:shadow-md transition-shadow
                  focus:outline-none focus:ring-2 focus:ring-blue-300">
               <div className="flex items-start justify-between gap-3">

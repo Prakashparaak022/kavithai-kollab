@@ -138,7 +138,7 @@ export default function WriteKavidhai({ allowCollab, isPrivate }: Props) {
       <div className="flex items-center gap-2">
         <button
           type="button"
-          className="px-4 py-1 rounded-full bg-primary text-green text-sm font-medium">
+          className="px-4 py-1 rounded-full bg-card text-green text-sm font-medium">
           Write Kavidhai
         </button>
         <span className="text-sm text-gray-600">• Seed Collaboration</span>
@@ -147,7 +147,7 @@ export default function WriteKavidhai({ allowCollab, isPrivate }: Props) {
       <p className="text-xs text-gray-500">7 minutes</p>
 
       <div className="space-y-3">
-        <div className="flex items-center rounded-xl bg-primary px-3 py-2">
+        <div className="flex items-center rounded-xl bg-card px-3 py-2">
           <input
             {...register("title")}
             placeholder="Title (Optional)"
@@ -159,7 +159,7 @@ export default function WriteKavidhai({ allowCollab, isPrivate }: Props) {
         </div>
 
         {imagePreview && (
-          <div className="relative w-full rounded-xl bg-primary p-2">
+          <div className="relative w-full rounded-xl bg-card p-2">
             <img
               src={imagePreview}
               alt="preview"
@@ -178,7 +178,7 @@ export default function WriteKavidhai({ allowCollab, isPrivate }: Props) {
           </div>
         )}
 
-        <div className="space-y-6 rounded-xl p-3 bg-primary">
+        <div className="space-y-6 rounded-xl p-3 bg-card">
           <textarea
             {...register("content")}
             placeholder="Write your thoughts..."
@@ -197,7 +197,7 @@ export default function WriteKavidhai({ allowCollab, isPrivate }: Props) {
                   className={`px-3 py-1 rounded-full text-xs transition ${
                     selectedCategory === cat
                       ? "bg-secondary text-white"
-                      : "bg-[#e6e1c9] text-gray-700 hover:bg-[#CCE0AB]"
+                      : "bg-card text-gray-700 hover:bg-[#CCE0AB]"
                   }`}>
                   {cat}
                 </button>
@@ -254,7 +254,7 @@ export default function WriteKavidhai({ allowCollab, isPrivate }: Props) {
       <div className="flex items-center gap-3 pt-2">
         <button
           type="button"
-          className="flex-1 rounded-xl border border-gray-300 bg-primary py-2 text-sm text-gray-600">
+          className="flex-1 rounded-xl border border-gray-300 bg-card py-2 text-sm text-gray-600">
           Save as Draft
         </button>
         <button
