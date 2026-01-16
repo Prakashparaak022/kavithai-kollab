@@ -29,7 +29,10 @@ const initialNotifications: Notification[] = [
 const Poem = ({ poem }: Props) => {
   const [showInviteModal, setShowInviteModal] = useState(false);
   const [notifications, setNotifications] =
-    useState<Notification[]>(initialNotifications);
+    useState<Notification[]>(initialNotifications);4
+
+    console.log("poem : ",poem);
+    
 
   return (
     <AppBgLayout
@@ -42,6 +45,7 @@ const Poem = ({ poem }: Props) => {
               title={poem.title}
               username={poem.author}
               content={poem.content || "No content available"}
+              imageUrl={poem.imageUrl}
             />
           </PoemMotion>
           {/* Collaboration List */}

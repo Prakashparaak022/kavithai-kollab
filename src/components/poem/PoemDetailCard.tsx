@@ -4,18 +4,29 @@ type PoemCardProps = {
   title: string;
   username: string;
   content: string;
+  imageUrl?: string;
 };
 
 const PoemDetailCard: React.FC<PoemCardProps> = ({
   title,
   username,
-  content
+  content,
+  imageUrl
 }) => {
   return (
     <div className="relative rounded-lg border-4 border-[#d4a574] bg-secondary p-6 overflow-hidden">
-      {/* border design */}
       <BorderDots />
-      {/* Content */}
+
+      {imageUrl && (
+        <div className="flex justify-center">
+          <img
+            src={imageUrl}
+            alt={title}
+            className="h-40 w-40 object-cover rounded-full border-2 border-[var(--border-primary)]"
+          />
+        </div>
+      )}
+
       <div className="pt-2 text-center">
         <h2 className="mb-1 text-xl text-[#e8dcc8]">{title}</h2>
         <p className="mb-3 text-sm text-[#a8c4c2]">{username}</p>
