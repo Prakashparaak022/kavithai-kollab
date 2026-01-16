@@ -45,7 +45,6 @@ const InviteModal = ({ onClose }: Props) => {
         transition={{ duration: 0.2 }}
         onClick={(e) => e.stopPropagation()}
         className="w-full max-w-xl bg-secondary rounded-2xl p-4 shadow-xl relative">
-        {" "}
         <button
           onClick={onClose}
           className="absolute right-4 top-4 text-gray-400 hover:text-white">
@@ -54,14 +53,14 @@ const InviteModal = ({ onClose }: Props) => {
         <h2 className="font-semibold text-gray-200 text-center text-2xl mb-6">
           Invite a Collaborator
         </h2>
-        <div className="bg-primary p-4 rounded-xl">
+        <div className="bg-app p-4 rounded-xl">
           <div className="relative mb-6">
             <Search className="absolute left-4 top-1/2 -translate-y-1/2 text-[#6a7a78] w-5 h-5" />
             <input
               value={searchQuery}
               onChange={(e) => setSearchQuery(e.target.value)}
               placeholder="Search by username or handle..."
-              className="w-full pl-12 pr-4 py-3 bg-primary rounded-xl text-gray-600 border border-[#d4c4b3] focus:outline-none focus:border-[#2c5f5d]"
+              className="w-full pl-12 pr-4 py-3 bg-card rounded-xl text-gray-600 border border-[#d4c4b3] focus:outline-none focus:border-[#2c5f5d]"
             />
           </div>
 
@@ -72,7 +71,7 @@ const InviteModal = ({ onClose }: Props) => {
               return (
                 <div
                   key={user.id}
-                  className="flex items-center justify-between bg-primary p-4 rounded-xl">
+                  className="flex items-center justify-between bg-card p-4 rounded-xl">
                   <div className="flex items-center gap-3">
                     <img
                       src={user.imageUrl}
@@ -116,7 +115,7 @@ const InviteModal = ({ onClose }: Props) => {
               <input
                 readOnly
                 value="kollab.com/invite/eternal-echoes"
-                className="flex-1 px-4 h-8 bg-primary rounded-lg text-[#6a7a78] border border-[#d4c4b3]"
+                className="flex-1 px-4 h-8 bg-card rounded-lg text-[#6a7a78] border border-[#d4c4b3]"
               />
               <button
                 onClick={handleCopyLink}
