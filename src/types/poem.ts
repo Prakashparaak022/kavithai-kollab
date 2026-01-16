@@ -17,6 +17,7 @@ export type Poem = {
   title: string;
   slug: string;
   author: string;
+  authorImage?: string;
   imageUrl: string;
   content?: string;
   likes: number;

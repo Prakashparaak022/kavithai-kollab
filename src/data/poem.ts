@@ -7,6 +7,7 @@ export const poems: Poem[] = [
     title: "Mazhai varugai",
     content: "Mazhai vandhu en manadhai sutham seythathu",
     author: "@arunpoet",
+    authorImage: "https://randomuser.me/api/portraits/men/1.jpg",
     imageUrl:
       "https://plus.unsplash.com/premium_photo-1686388793418-d86246be4f97?fm=jpg&q=60&w=3000",
     likes: 12,
@@ -59,6 +60,7 @@ export const poems: Poem[] = [
     content:
       "Kannil vizhum thuligalukku, naangal marandha pandhangalai meendum suvaasikkirom.",
     author: "@kavivisionary",
+    authorImage: "https://randomuser.me/api/portraits/men/2.jpg",
     imageUrl:
       "https://images.unsplash.com/photo-1486649567693-aaa9b2e59385?fm=jpg&q=60&w=3000&ixlib=rb-4.1.0&ixid=M3wxMjA3fDB8MHxzZWFyY2h8Mnx8ZXllc3xlbnwwfHwwfHx8MA%3D%3D",
     likes: 15,
@@ -104,6 +106,7 @@ export const poems: Poem[] = [
     content:
       "Uyirin osai, uyirin sevigalukkuk kaetthum, suvaasathai thirumbap perugiradhu.",
     author: "@soul_poet",
+    authorImage: "https://randomuser.me/api/portraits/men/3.jpg",
     imageUrl:
       "https://images.unsplash.com/reserve/Af0sF2OS5S5gatqrKzVP_Silhoutte.jpg",
     likes: 10,
@@ -148,6 +151,7 @@ export const poems: Poem[] = [
     content:
       "Ezhudhaadha kavithaigal, manadhin adipadaiyil pathindhu nirkkinrathu.",
     author: "@unwritten_poet",
+    authorImage: "https://randomuser.me/api/portraits/men/4.jpg",
     imageUrl:
       "https://plus.unsplash.com/premium_photo-1661686853400-d21b77a61d7e?fm=jpg&q=60&w=3000",
     likes: 18,
@@ -190,6 +194,7 @@ export const poems: Poem[] = [
     title: "Irundhaal",
     content: "Irundhaal manadhil oru aasai, irundhaal manadhil oru varam.",
     author: "@mindful_poet",
+    authorImage: "https://randomuser.me/api/portraits/men/5.jpg",
     imageUrl:
       "https://img.freepik.com/free-vector/abstract-hand-drawn-woman-portrait_23-2148901737.jpg",
     likes: 14,
@@ -238,6 +243,7 @@ export const poems: Poem[] = [
     title: "Arpudham",
     content: "Arpudham ennum azhagiya sol, azhagiya kaadhalin ezhuththugal.",
     author: "@dreamy_writer",
+    authorImage: "https://randomuser.me/api/portraits/men/6.jpg",
     imageUrl:
       "https://images.unsplash.com/photo-1465101162946-4377e57745c3?fm=jpg&q=60&w=3000",
     likes: 17,
@@ -279,6 +285,7 @@ export const poems: Poem[] = [
     title: "Vannam Thunai",
     content: "Vannam thunaiyil, paavaiyin thunaiyil, kavithai thunaiyil.",
     author: "@silent_soul",
+    authorImage: "https://randomuser.me/api/portraits/men/7.jpg",
     imageUrl:
       "https://plus.unsplash.com/premium_photo-1670157709475-804e923487fb?fm=jpg&q=60&w=3000",
     likes: 20,
@@ -319,6 +326,7 @@ export const poems: Poem[] = [
     title: "Vizhiyin Ragasiyam",
     content: "Vizhiyin ragasiyam, kannai thavira, ennam thavira enna thunai.",
     author: "@heart_waves",
+    authorImage: "https://randomuser.me/api/portraits/men/8.jpg",
     imageUrl:
       "https://i.pinimg.com/736x/71/7d/86/717d86d6abd1a94118bc9d5ad2071995.jpg",
     likes: 13,
@@ -361,6 +369,7 @@ export const poems: Poem[] = [
     content:
       "Azhagiya vaazhum, adhisaya thunaiyil, manadhin vaazhum aasaigalil.",
     author: "@divine_poet",
+    authorImage: "https://randomuser.me/api/portraits/men/9.jpg",
     imageUrl:
       "https://images.unsplash.com/photo-1530103043960-ef38714abb15?fm=jpg&q=60&w=3000",
     likes: 19,

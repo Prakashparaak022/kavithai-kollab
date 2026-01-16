@@ -51,7 +51,7 @@ const FeedCardList = ({ filter }: { filter: FilterType }) => {
           href={`/poem/${poem.slug}`}
           onClick={requireAuth}
           key={poem.id}
-          className="col-span-12 sm:col-span-6 md:col-span-4 lg:col-span-3 bg-card rounded-2xl shadow-md hover:shadow-xl transition-shadow duration-300 flex flex-col">
+          className="col-span-12 sm:col-span-6 md:col-span-4 lg:col-span-3 bg-card rounded-2xl flex flex-col">
           <div className="relative h-44 w-full">
             <Image
               src={poem.imageUrl}
@@ -65,15 +65,25 @@ const FeedCardList = ({ filter }: { filter: FilterType }) => {
             />
           </div>
 
-          <div className="p-4 flex flex-col h-40">
-            <div className="flex items-center justify-between">
-              <h3 className="text-base font-semibold text-gray-800 line-clamp-1">
-                {poem.title}
-              </h3>
-              <span className="text-xs text-gray-500">{poem.author}</span>
+          <div className="p-4 flex flex-col h-40 space-y-1">
+            <h3 className="text-base font-semibold text-gray-800 line-clamp-1">
+              {poem.title}
+            </h3>
+
+            <div className="flex items-center gap-1">
+              <Image
+                src={poem.authorImage || "/images/avatar-placeholder.png"}
+                alt={poem.author}
+                width={20}
+                height={20}
+                className="rounded-full object-cover"
+              />
+              <span className="text-xs text-blue-500 font-medium line-clamp-1">
+                {poem.author}
+              </span>
             </div>
 
-            <p className="text-sm text-gray-600 line-clamp-3 mt-2">
+            <p className="text-sm text-gray-600 line-clamp-2">
               {poem.content}
             </p>
 
