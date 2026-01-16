@@ -2,7 +2,7 @@
 import { useState } from "react";
 import FeedCardList from "./FeedCardList";
 import Filterbar from "./Filterbar";
-import { Camera } from "lucide-react";
+import { Camera, SlidersHorizontal } from "lucide-react";
 import Link from "next/link";
 import useRequireAuth from "@/hooks/useRequireAuth";
 import AppBgLayout from "../layouts/AppBgLayout";
@@ -16,7 +16,7 @@ export type FilterItem = {
 
 const Feed = () => {
   const { requireAuth } = useRequireAuth();
-
+  const [showFilters, setShowFilters] = useState(false);
   const [filter, setFilter] = useState<FilterType>("all");
   const filterList: FilterItem[] = [
     {
@@ -41,11 +41,22 @@ const Feed = () => {
       layout="2/10"
       left={
         <div className="p-4">
-          <Filterbar
-            filterList={filterList}
-            filter={filter}
-            setFilter={setFilter}
-          />
+          <button
+            onClick={() => setShowFilters((v) => !v)}
+            className="flex items-center gap-2 text-sm font-semibold text-green bg-card px-3 py-1 rounded-lg">
+            <SlidersHorizontal size={16} />
+            Filters
+          </button>
+
+          {showFilters && (
+            <div className="mt-3">
+              <Filterbar
+                filterList={filterList}
+                filter={filter}
+                setFilter={setFilter}
+              />
+            </div>
+          )}
         </div>
       }
       right={
