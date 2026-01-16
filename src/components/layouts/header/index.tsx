@@ -40,48 +40,11 @@ const Header = () => {
         </Link>
 
         {/* Right Section */}
-        <div className="flex items-center gap-2">
-          {/* Mobile Menu Button */}
-          <div className="relative lg:hidden">
-            {playerDetails && (
-              <button
-                onClick={() => setMobileOpen((v) => !v)}
-                className="p-2 text-highlight">
-                {mobileOpen ? <X size={20} /> : <Menu size={20} />}
-              </button>
-            )}
-
-            {/* Mobile Menu */}
-            {mobileOpen && playerDetails && (
-              <div className="absolute right-0  w-44 bg-secondary border border-primary rounded-lg shadow-lg z-50">
-                {loggedInNav.map((item) => {
-                  const isActive =
-                    pathname === item.href &&
-                    (pathname !== "/" || item.name === "Home");
-
-                  return (
-                    <Link
-                      key={item.name}
-                      href={item.href}
-                      onClick={() => setMobileOpen(false)}
-                      className={`block px-4 py-1 m-1 rounded-lg text-sm
-                      ${
-                        isActive
-                          ? "bg-app text-gray-600"
-                          : "text-highlight hover:bg-primary hover:text-secondary"
-                      }`}>
-                      {item.name}
-                    </Link>
-                  );
-                })}
-              </div>
-            )}
-          </div>
-
+        <div className="flex items-center">
           {loading ? (
             <LoadingSpinner />
           ) : playerDetails ? (
-            <div className="flex items-center gap-8">
+            <div className="flex items-center gap-2 lg:gap-8">
               {/* Desktop Nav */}
               <div className="hidden lg:flex items-center gap-4">
                 {loggedInNav.map((item) => {
@@ -132,6 +95,43 @@ const Header = () => {
                       <LogOut size={16} />
                       Logout
                     </button>
+                  </div>
+                )}
+              </div>
+
+              {/* Mobile Menu Button */}
+              <div className="relative lg:hidden">
+                {playerDetails && (
+                  <button
+                    onClick={() => setMobileOpen((v) => !v)}
+                    className="p-2 text-highlight">
+                    {mobileOpen ? <X size={20} /> : <Menu size={20} />}
+                  </button>
+                )}
+
+                {/* Mobile Menu */}
+                {mobileOpen && playerDetails && (
+                  <div className="absolute right-0  w-44 bg-secondary border border-primary rounded-lg shadow-lg z-50">
+                    {loggedInNav.map((item) => {
+                      const isActive =
+                        pathname === item.href &&
+                        (pathname !== "/" || item.name === "Home");
+
+                      return (
+                        <Link
+                          key={item.name}
+                          href={item.href}
+                          onClick={() => setMobileOpen(false)}
+                          className={`block px-4 py-1 m-1 rounded-lg text-sm
+                      ${
+                        isActive
+                          ? "bg-app text-gray-600"
+                          : "text-highlight hover:bg-primary hover:text-secondary"
+                      }`}>
+                          {item.name}
+                        </Link>
+                      );
+                    })}
                   </div>
                 )}
               </div>
