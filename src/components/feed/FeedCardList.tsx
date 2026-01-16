@@ -45,9 +45,7 @@ const FeedCardList = ({ filter, feedType }: Props) => {
   }, [filter, poemsList, feedType]);
 
   const handleLike = (e: React.MouseEvent, id: number) => {
-    e.preventDefault();
-    e.stopPropagation();
-
+    if (!requireAuth(e)) return;
     setPoemsList((prev) =>
       prev.map((poem) =>
         poem.id === id
@@ -68,7 +66,6 @@ const FeedCardList = ({ filter, feedType }: Props) => {
         {filteredPoems.map((poem, index) => (
           <Link
             href={`/poem/${poem.slug}`}
-            onClick={requireAuth}
             key={poem.id}
             className="col-span-12 sm:col-span-6 md:col-span-4 lg:col-span-3 bg-card rounded-2xl flex flex-col">
             <div className="relative h-44 w-full">
@@ -91,7 +88,7 @@ const FeedCardList = ({ filter, feedType }: Props) => {
 
               <div className="flex items-center gap-1">
                 <Image
-                  src={poem.authorImage || "/images/avatar-placeholder.png"}
+                  src={poem.authorImage || "/avatar-placeholder.png"}
                   alt={poem.author}
                   width={20}
                   height={20}
@@ -131,7 +128,7 @@ const FeedCardList = ({ filter, feedType }: Props) => {
         ))}
 
         {/* temp */}
-        <ApiFeedCardList filter={filter} feedType={feedType}/>
+        <ApiFeedCardList filter={filter} feedType={feedType} />
       </div>
     </>
   );

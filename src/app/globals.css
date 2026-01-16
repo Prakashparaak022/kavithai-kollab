@@ -8,13 +8,15 @@
   --foreground: #171717;
 
   --bg-primary: #f8f5e4;
-  --bg-secondary: #1e494f;
+  --bg-secondary: #173b40;
+  /* --bg-secondary: #1C474E; */
+
   --bg-highlight: #d4a574;
 
   --text-primary: #171717;
   --text-secondary: #ffffff;
   --text-highlight: #e8dcc8;
-  --text-green: #1e494f;
+  --text-green: #1C474E;
 
   --border-primary: #d4a574;
 

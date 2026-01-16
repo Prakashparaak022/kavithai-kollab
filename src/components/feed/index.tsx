@@ -44,23 +44,25 @@ const Feed = () => {
     <AppBgLayout
       layout="2/10"
       left={
-        <div className="p-4">
-          <button
-            onClick={() => setShowFilters((v) => !v)}
-            className="flex items-center gap-2 text-sm font-semibold text-green bg-card px-3 py-1 rounded-lg">
-            <SlidersHorizontal size={16} />
-            Filters
-          </button>
+        <div className="pt-4 px-4 lg:p-4 flex justify-end lg:justify-start">
+          <div className="relative">
+            <button
+              onClick={() => setShowFilters((v) => !v)}
+              className="flex items-center gap-2 text-sm font-semibold text-green bg-card px-3 py-1 rounded-lg">
+              <SlidersHorizontal size={16} />
+              Filters
+            </button>
 
-          {showFilters && (
-            <div className="mt-3">
-              <Filterbar
-                filterList={filterList}
-                filter={filter}
-                setFilter={setFilter}
-              />
-            </div>
-          )}
+            {showFilters && (
+              <div className="absolute right-0 lg:left-0 mt-3 z-30 min-w-40">
+                <Filterbar
+                  filterList={filterList}
+                  filter={filter}
+                  setFilter={setFilter}
+                />
+              </div>
+            )}
+          </div>
         </div>
       }
       right={

@@ -34,7 +34,7 @@ const Header = () => {
           <Image
             src={logo}
             alt="Kavithai Kollab Logo"
-            className="logo h-10 w-auto"
+            className="h-10 w-auto"
           />
           <h2 className="title text-highlight mt-4">Kavithai&nbsp;Kollab</h2>
         </Link>

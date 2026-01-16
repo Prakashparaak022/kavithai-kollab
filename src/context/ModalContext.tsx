@@ -30,7 +30,7 @@ export const ModalProvider = ({ children }: { children: ReactNode }) => {
 
       {activeModal && (
         <div
-          className="fixed inset-0 z-50 flex items-center justify-center bg-black/25 backdrop-blur-sm overflow-y-auto py-10"
+          className="fixed inset-0 z-50 flex items-center justify-center bg-black/25 backdrop-blur-sm overflow-y-auto py-10 p-4"
           onClick={closeModal}>
           <div
             className="relative w-full max-w-lg rounded-xl overflow-hidden"
