@@ -20,6 +20,7 @@ const inter = Inter({
 export const metadata: Metadata = {
   title: "Kavithai Kollab",
   description: "Kavidhai Kollab Platform (Web – MVP)",
+  manifest: "/manifest.json"
 };
 
 export default function RootLayout({
