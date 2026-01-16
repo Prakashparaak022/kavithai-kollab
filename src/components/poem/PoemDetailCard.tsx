@@ -1,26 +1,18 @@
-import { UserRoundPlusIcon } from "lucide-react";
 import BorderDots from "../ui/BorderDots";
 
 type PoemCardProps = {
   title: string;
   username: string;
   content: string;
-  onInvite: () => void;
 };
 
 const PoemDetailCard: React.FC<PoemCardProps> = ({
   title,
   username,
-  content,
-  onInvite,
+  content
 }) => {
   return (
     <div className="relative rounded-lg border-4 border-[#d4a574] bg-secondary p-6 overflow-hidden">
-      <button
-        onClick={onInvite}
-        className="absolute right-6 flex items-center gap-1 px-3 h-8 bg-highlight rounded-full cursor-pointer outline-none">
-        Invite <UserRoundPlusIcon size={15} />
-      </button>
       {/* border design */}
       <BorderDots />
       {/* Content */}

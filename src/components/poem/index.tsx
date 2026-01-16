@@ -42,14 +42,16 @@ const Poem = ({ poem }: Props) => {
               title={poem.title}
               username={poem.author}
               content={poem.content || "No content available"}
-              onInvite={() => setShowInviteModal(true)}
             />
           </PoemMotion>
           {/* Collaboration List */}
           {poem.isPublish ? (
             <Comments comments={poem.comments ?? []} />
           ) : (
-            <Collaborations collaborations={poem.collaborations ?? []} />
+            <Collaborations
+              collaborations={poem.collaborations ?? []}
+              onInvite={() => setShowInviteModal(true)}
+            />
           )}
         </div>
       }

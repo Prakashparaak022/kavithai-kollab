@@ -3,15 +3,16 @@
 import { useState } from "react";
 import { Collaboration } from "@/types/poem";
 import { motion } from "framer-motion";
-import { Check, ChevronDown, X } from "lucide-react";
+import { Check, ChevronDown, UserRoundPlusIcon, X } from "lucide-react";
 import { usePlayerDetails } from "@/utils/UserSession";
 import useRequireAuth from "@/hooks/useRequireAuth";
 
 type Props = {
   collaborations: Collaboration[];
+  onInvite: () => void;
 };
 
-const Collaborations = ({ collaborations }: Props) => {
+const Collaborations = ({ collaborations, onInvite }: Props) => {
   const [selectedCollab, setSelectedCollab] = useState<Collaboration | null>(
     null
   );
@@ -44,7 +45,16 @@ const Collaborations = ({ collaborations }: Props) => {
 
   return (
     <div className="space-y-2">
-      <h3 className="text-lg font-semibold text-green">Collaboration Lines</h3>
+      <div className="w-full flex items-center justify-between">
+        <h3 className="text-lg font-semibold text-green">
+          Collaboration Lines
+        </h3>
+        <button
+          onClick={onInvite}
+          className="flex items-center gap-1 px-3 h-8 bg-highlight rounded-full cursor-pointer outline-none">
+          Invite <UserRoundPlusIcon size={15} />
+        </button>
+      </div>
 
       <div className="space-y-3">
         {collaborationsList.map((collab) => {
