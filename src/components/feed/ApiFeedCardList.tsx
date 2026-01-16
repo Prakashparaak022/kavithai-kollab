@@ -1,15 +1,22 @@
 "use client";
 
 import { useEffect, useMemo } from "react";
-import { FilterType } from "./index";
+import { FeedType, FilterType } from "./index";
 import Image from "next/image";
 import { useDispatch, useSelector } from "react-redux";
 import { AppDispatch, RootState } from "@/store";
-import { loadPoems } from "@/store/slices/poemsSlice";
+import { addPoemLike, loadPoems } from "@/store/slices/poemsSlice";
+import { Heart, MessageCircle } from "lucide-react";
+import { usePlayerDetails } from "@/utils/UserSession";
 
-const ApiFeedCardList = ({ filter }: { filter: FilterType }) => {
+type Props = {
+  filter: FilterType;
+  feedType: FeedType;
+};
+const ApiFeedCardList = ({ filter, feedType }: Props) => {
   const dispatch = useDispatch<AppDispatch>();
   const { poems, loading } = useSelector((state: RootState) => state.poems);
+  const { playerDetails } = usePlayerDetails();
 
   useEffect(() => {
     if (!poems.length) {
@@ -17,13 +24,33 @@ const ApiFeedCardList = ({ filter }: { filter: FilterType }) => {
     }
   }, [dispatch, poems.length]);
 
-  const displayList = useMemo(() => {
-    if (filter === "recent") {
-      return [...poems].reverse();
+  const handleLike = (e: React.MouseEvent, id: number) => {
+    e.preventDefault();
+    e.stopPropagation();
+    dispatch(addPoemLike({ id, playerDetails }));
+  };
+
+  const filteredPoems = useMemo(() => {
+    let list = [...poems];
+
+    if (filter === "liked") {
+      list.sort((a, b) => b.likesCount - a.likesCount);
     }
 
-    return poems;
-  }, [filter, poems]);
+    if (filter === "recent") {
+      list.reverse();
+    }
+
+    if (feedType === "public") {
+      list = list.filter((p) => p.isPublish === true);
+    }
+
+    if (feedType === "private") {
+      list = list.filter((p) => p.isPrivate === true);
+    }
+
+    return list;
+  }, [filter, poems, feedType]);
 
   if (loading) {
     return (
@@ -33,31 +60,61 @@ const ApiFeedCardList = ({ filter }: { filter: FilterType }) => {
 
   return (
     <>
-      {displayList.map((poem, index) => (
+      {filteredPoems.map((poem, index) => (
         <div
           key={poem.id}
-          className="col-span-12 sm:col-span-6 md:col-span-4 lg:col-span-3 bg-card rounded-2xl shadow-md hover:shadow-xl transition-shadow duration-300 flex flex-col">
+          className="col-span-12 sm:col-span-6 md:col-span-4 lg:col-span-3 bg-card rounded-2xl flex flex-col">
           <div className="relative h-44 w-full">
             <Image
               src={`data:image/jpeg;base64,${poem.imageUrl}`}
-              alt={poem.title}
+              alt={poem.title || ""}
               fill
               unoptimized
-              className="p-2 object-cover rounded-2xl"
+              className="object-cover rounded-t-2xl p-2"
+              priority={index === 0}
             />
           </div>
 
-          <div className="p-4 flex flex-col h-40">
-            <div className="flex items-center justify-between">
-              <h3 className="text-base font-semibold text-gray-800 line-clamp-1">
-                {poem.title}
-              </h3>
-              <span className="text-xs text-gray-500">@{poem.author}</span>
+          <div className="pt-2 px-4 pb-4 flex flex-col h-40 space-y-1">
+            <h3 className="text-base font-semibold text-gray-800 line-clamp-1">
+              {poem.title}
+            </h3>
+
+            <div className="flex items-center gap-1">
+              <Image
+                src={poem.authorImage || "/avatar-placeholder.png"}
+                alt={poem.author}
+                width={20}
+                height={20}
+                className="rounded-full object-cover"
+              />
+              <span className="text-xs text-blue-500 font-medium line-clamp-1">
+                {poem.author}
+              </span>
             </div>
 
-            <p className="text-sm text-gray-600 line-clamp-3 mt-2">
-              {poem.content}
-            </p>
+            <p className="text-sm text-gray-600 line-clamp-2">{poem.content}</p>
+
+            <div className="mt-auto flex items-center justify-between text-gray-500">
+              <button
+                onClick={(e) => handleLike(e, poem.id)}
+                className={`flex items-center gap-1 text-xs transition ${
+                  poem.isLiked
+                    ? "text-red-500"
+                    : "text-gray-500 hover:text-red-500"
+                }`}>
+                <Heart
+                  size={16}
+                  fill={poem.isLiked ? "currentColor" : "none"}
+                />
+                {poem.likesCount}
+              </button>
+
+              <div className="flex items-center gap-1 text-xs hover:text-blue-500 transition">
+                <MessageCircle size={16} />
+                {poem.comments?.length ?? 0}
+              </div>
+            </div>
           </div>
         </div>
       ))}

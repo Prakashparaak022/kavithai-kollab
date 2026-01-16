@@ -30,6 +30,28 @@ const poemsSlice = createSlice({
         state.poems[index] = action.payload;
       }
     },
+    addPoemLike: (state, action) => {
+      const { id, playerDetails } = action.payload;
+      const poem = state.poems.find((p) => p.id === id);
+
+      if (poem) {
+        poem.isLiked = !poem.isLiked;
+        poem.likesCount += poem.isLiked ? 1 : -1;
+
+        if (poem.isLiked) {
+          poem.likes.push({
+            id: Date.now(),
+            userId: playerDetails.id,
+            author: playerDetails.userName,
+            authorImage: playerDetails.authorImage,
+          });
+        } else {
+          poem.likes = poem.likes.filter(
+            (like) => like.userId !== playerDetails.id
+          );
+        }
+      }
+    },
   },
   extraReducers: (builder) => {
     builder
@@ -39,12 +61,12 @@ const poemsSlice = createSlice({
       .addCase(loadPoems.fulfilled, (state, action) => {
         state.poems = action.payload;
         state.loading = false;
-      })                                                                                                                                                                                 
+      })
       .addCase(loadPoems.rejected, (state) => {
         state.loading = false;
       });
   },
 });
 
-export const { addPoem, updatePoem } = poemsSlice.actions;
+export const { addPoem, updatePoem, addPoemLike } = poemsSlice.actions;
 export default poemsSlice.reducer;

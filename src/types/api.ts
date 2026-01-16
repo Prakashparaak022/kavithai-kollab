@@ -1,15 +1,58 @@
+export type ApiLike = {
+  id: number;
+  userId: number;
+  author: string;
+  authorImage?: string | null;
+};
+
+
+export type ApiComment = {
+  id: number;
+  userId: number;
+  author: string;
+  content: string;
+  authorImage?: string | null;
+};
+
+
+export type ApiCollaboration = {
+  id: number;
+  userId: number;
+  author: string;
+  content: string;
+  authorImage?: string | null;
+};
+
 export type ApiPoem = {
   id: number;
-  title: string;
+  userId: number;
+
   author: string;
-  imageUrl: string;
+  title?: string;
   content?: string;
-  tags: string;
+
+  imageUrl?: string;
+  authorImage?: string | null;
+
+  categoryName?: string;
+  tags?: string;
+
   allowCollaboration: boolean;
+
   isPrivate: boolean;
   isPublish: boolean;
-  userId: number;
+
+  status: "PENDING" | "APPROVED" | "REJECTED";
+
+  likesCount: number;
+  likes: ApiLike[];
+  isLiked?: boolean;
+
+  comments: ApiComment[];
+
+  collaborations: ApiCollaboration[];
 };
+
 
 export interface ApiResponse<T = unknown> {
   content: T[];

@@ -6,8 +6,10 @@ import { Camera, SlidersHorizontal } from "lucide-react";
 import Link from "next/link";
 import useRequireAuth from "@/hooks/useRequireAuth";
 import AppBgLayout from "../layouts/AppBgLayout";
+import { usePlayerDetails } from "@/utils/UserSession";
 
 export type FilterType = "all" | "liked" | "recent";
+export type FeedType = "private" | "public";
 export type FilterItem = {
   name: string;
   value: FilterType;
@@ -16,7 +18,9 @@ export type FilterItem = {
 
 const Feed = () => {
   const { requireAuth } = useRequireAuth();
+  const { playerDetails } = usePlayerDetails();
   const [showFilters, setShowFilters] = useState(false);
+  const [feedType, setFeedType] = useState<FeedType>("public");
   const [filter, setFilter] = useState<FilterType>("all");
   const filterList: FilterItem[] = [
     {
@@ -69,11 +73,38 @@ const Feed = () => {
             <Camera fill="currentColor" stroke="white" />
           </Link>
 
+          {/* Publish filter badges */}
+          {playerDetails && (
+            <div className="flex gap-2 mb-4">
+              <button
+                onClick={() => setFeedType("public")}
+                className={`px-3 py-1 rounded-full text-xs font-semibold transition
+              ${
+                feedType === "public"
+                  ? "bg-secondary text-white"
+                  : "bg-green-100 text-green-700 hover:bg-green-200"
+              }`}>
+                PUBLIC
+              </button>
+
+              <button
+                onClick={() => setFeedType("private")}
+                className={`px-3 py-1 rounded-full text-xs font-semibold transition
+              ${
+                feedType === "private"
+                  ? "bg-secondary text-white"
+                  : "bg-gray-200 text-gray-700 hover:bg-gray-300"
+              }`}>
+                PRIVATE
+              </button>
+            </div>
+          )}
+
           <p className="px-2 text-green text-sm font-semibold">
             {filterList.find((item) => item.value === filter)?.helperText}
           </p>
 
-          <FeedCardList filter={filter} />
+          <FeedCardList feedType={feedType} filter={filter} />
         </div>
       }
     />

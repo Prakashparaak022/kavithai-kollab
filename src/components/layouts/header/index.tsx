@@ -40,7 +40,7 @@ const Header = () => {
         </Link>
 
         {/* Right Section */}
-        <div className="flex items-center">
+        <div className="flex items-center gap-2">
           {loading ? (
             <LoadingSpinner />
           ) : playerDetails ? (
