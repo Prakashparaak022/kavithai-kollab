@@ -8,13 +8,13 @@
   --foreground: #171717;
 
   --bg-primary: #f8f5e4;
-  --bg-secondary: #1E494F;
+  --bg-secondary: #1e494f;
   --bg-highlight: #d4a574;
 
   --text-primary: #171717;
   --text-secondary: #ffffff;
   --text-highlight: #e8dcc8;
-  --text-green: #1E494F;
+  --text-green: #1e494f;
 
   --border-primary: #d4a574;
 
@@ -86,11 +86,11 @@ p {
 }
 
 .bg-primary {
-  background: var(--bg-primary);
+  background: linear-gradient(to bottom, #f8edd4, #f4e6c9, #ecd7ad);
 }
 
 .bg-card {
-  background: rgba(243, 233, 216, 0.80);
+  background: rgba(243, 233, 216, 0.8);
   backdrop-filter: blur(10px);
   -webkit-backdrop-filter: blur(10px);
 
@@ -153,6 +153,10 @@ p {
     hue-rotate(22deg) brightness(96%) contrast(92%);
 }
 
+.title {
+  font-size: large;
+  font-weight: bolder;
+}
 /* ================================
    Animations
 ================================ */

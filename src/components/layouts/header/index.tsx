@@ -36,7 +36,7 @@ const Header = () => {
             alt="Kavithai Kollab Logo"
             className="logo h-10 w-auto"
           />
-          <span className="text-highlight mt-4">Kavithai&nbsp;Kollab</span>
+          <h2 className="title text-highlight mt-4">Kavithai&nbsp;Kollab</h2>
         </Link>
 
         {/* Right Section */}
