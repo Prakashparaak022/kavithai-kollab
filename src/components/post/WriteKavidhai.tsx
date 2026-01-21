@@ -9,8 +9,10 @@ import { usePlayerDetails } from "@/utils/UserSession";
 import { createPoemService } from "@/services/api/poems.service";
 import { useDispatch } from "react-redux";
 import { addPoem } from "@/store/slices/poemsSlice";
+import { useCategories } from "@/hooks/useCategories";
+import { ApiCategory } from "@/types/api";
+import LoadingSpinner from "../ui/LoadingSpinner";
 
-const categories = ["Love", "Nature", "Fantasy", "Existential", "Freestyle"];
 const TAG_REGEX = /^#[a-z0-9]+$/;
 
 type Props = {
@@ -21,20 +23,24 @@ type Props = {
 type FormValues = {
   title: string;
   content: string;
-  category: string;
+  category: number;
   image: File | null;
 };
 
 export default function WriteKavidhai({ allowCollab, isPrivate }: Props) {
   const fileRef = useRef<HTMLInputElement | null>(null);
   const { playerDetails, accessToken } = usePlayerDetails();
+  const {
+    data: categoryData,
+    loading: categoryLoading,
+    error,
+  } = useCategories();
 
   const { register, handleSubmit, setValue, watch, reset } =
     useForm<FormValues>({
       defaultValues: {
         title: "",
         content: "",
-        category: "Nature",
         image: null,
       },
     });
@@ -81,7 +87,7 @@ export default function WriteKavidhai({ allowCollab, isPrivate }: Props) {
       const formData = new FormData();
       formData.append("title", data.title);
       formData.append("content", data.content);
-      formData.append("category", data.category);
+      formData.append("categoryId", String(data.category));
 
       if (tags.length) {
         formData.append("tags", tags.map((t) => t.replace(/^#/, "")).join(","));
@@ -189,19 +195,23 @@ export default function WriteKavidhai({ allowCollab, isPrivate }: Props) {
           <div>
             <p className="mb-2 text-sm font-medium text-gray-600">Category</p>
             <div className="flex flex-wrap gap-2">
-              {categories.map((cat) => (
-                <button
-                  key={cat}
-                  type="button"
-                  onClick={() => setValue("category", cat)}
-                  className={`px-3 py-1 rounded-full text-xs transition ${
-                    selectedCategory === cat
-                      ? "bg-secondary text-white"
-                      : "bg-card text-gray-700 hover:bg-[#CCE0AB]"
-                  }`}>
-                  {cat}
-                </button>
-              ))}
+              {categoryLoading ? (
+                <LoadingSpinner color="var(--bg-secondary)"  />
+              ) : (
+                categoryData?.map((cat) => (
+                  <button
+                    key={cat.id}
+                    type="button"
+                    onClick={() => setValue("category", cat.id)}
+                    className={`px-3 py-1 rounded-full text-xs transition ${
+                      selectedCategory === cat.id
+                        ? "bg-secondary text-white"
+                        : "bg-card text-gray-700 hover:bg-[#CCE0AB]"
+                    }`}>
+                    {cat.name}
+                  </button>
+                ))
+              )}
             </div>
           </div>
 

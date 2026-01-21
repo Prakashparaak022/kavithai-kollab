@@ -53,6 +53,10 @@ export type ApiPoem = {
   collaborations: ApiCollaboration[];
 };
 
+export type ApiCategory = {
+  id: number;
+  name: string;
+};
 
 export interface ApiResponse<T = unknown> {
   content: T[];

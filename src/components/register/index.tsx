@@ -7,7 +7,7 @@ import { useAuth } from "@/context/AuthContext";
 import { useISDCode } from "@/hooks/useISDCode";
 import { API_URLS } from "@/constants/apiUrls";
 import { formatErrorMessage } from "@/utils/errorMessage";
-import Logo from "@/assets/img/logo-1.png";
+import Logo from "@/assets/img/logo-full.png";
 import Image from "next/image";
 import FormInput from "../form/FormInput";
 import SubmitButton from "../ui/SubmitButton";
@@ -18,14 +18,15 @@ type RegisterProps = {
 };
 
 type RegisterFormValues = {
-  username: string;
+  firstname?: string;
+  lastname?: string;
+  penname: string;
   email: string;
   password: string;
   confirmPassword: string;
   promoCode?: string;
   mobileNumber: string;
   countryId: number;
-  is18Plus: boolean;
   isTermsAndConditions: boolean;
 };
 
@@ -44,8 +45,6 @@ const Register = ({ handleClose }: RegisterProps) => {
     mode: "onChange",
     defaultValues: {
       countryId: 95,
-      is18Plus: false,
-      isTermsAndConditions: false,
     },
   });
 
@@ -60,10 +59,10 @@ const Register = ({ handleClose }: RegisterProps) => {
       try {
         setLoading(true);
 
-        const username = data.username.trim().replace(/\s+/g, "");
+        const penname = data.penname.trim().replace(/\s+/g, "");
 
         const profile = {
-          userName: username,
+          penname: penname,
           password: data.password,
           email: data.email,
           phoneNo: Number(data.mobileNumber),
@@ -104,7 +103,7 @@ const Register = ({ handleClose }: RegisterProps) => {
 
   return (
     <div className="flex flex-col items-center p-8 bg-secondary">
-      <Image src={Logo} className="logo h-20 w-auto" alt="logo" />
+      <Image src={Logo} className="h-20 w-auto" alt="logo" />
       <div className="w-full mx-auto">
         <h2 className="text-2xl font-extrabold text-[#d4a574] text-center">
           Register
@@ -112,18 +111,49 @@ const Register = ({ handleClose }: RegisterProps) => {
 
         <form
           onSubmit={handleSubmit(onSubmit)}
-          className="space-y-5 mt-4"
+          className="space-y-3 mt-4"
           noValidate>
-          {/* Username */}
+          {/* Firstname */}
           <FormInput
-            name="username"
+            name="firstname"
             control={control}
             errors={errors}
-            placeholder="Enter your username"
+            placeholder="Enter your firstname"
             rules={{
-              required: "Username is required",
+              required: "Firstname is required",
               minLength: { value: 3, message: "Min 3 characters" },
-              maxLength: { value: 12, message: "Max 12 characters" },
+              maxLength: { value: 20, message: "Max 20 characters" },
+              validate: (v) =>
+                typeof v === "string"
+                  ? !/\s/.test(v) || "Spaces are not allowed"
+                  : true,
+            }}
+          />
+          {/* Lastname */}
+          <FormInput
+            name="lastname"
+            control={control}
+            errors={errors}
+            placeholder="Enter your lastname"
+            rules={{
+              required: "Lastname is required",
+              minLength: { value: 3, message: "Min 3 characters" },
+              maxLength: { value: 20, message: "Max 20 characters" },
+              validate: (v) =>
+                typeof v === "string"
+                  ? !/\s/.test(v) || "Spaces are not allowed"
+                  : true,
+            }}
+          />
+          {/* Penname */}
+          <FormInput
+            name="penname"
+            control={control}
+            errors={errors}
+            placeholder="Enter your penname"
+            rules={{
+              minLength: { value: 3, message: "Min 3 characters" },
+              maxLength: { value: 20, message: "Max 20 characters" },
               validate: (v) =>
                 typeof v === "string"
                   ? !/\s/.test(v) || "Spaces are not allowed"
@@ -179,7 +209,7 @@ const Register = ({ handleClose }: RegisterProps) => {
           />
 
           {/* Country + Mobile */}
-          <div className="w-full flex gap-2">
+          <div className="w-full flex gap-2 mb-5">
             <div className="w-[100px]">
               <FormSelect
                 name="countryId"
@@ -189,7 +219,6 @@ const Register = ({ handleClose }: RegisterProps) => {
                 labelKey="isdCode"
                 valueKey="id"
                 options={isdCodeDetails || []}
-                rules={{ required: "Role is required" }}
                 prefix="+"
                 loading={isdCodeLoading}
               />
@@ -202,34 +231,13 @@ const Register = ({ handleClose }: RegisterProps) => {
                 placeholder="Mobile number"
                 type="text"
                 rules={{
-                  required: "Mobile number is required",
-                  pattern: { value: /^[6-9]\d{9}$/, message: "Invalid number" },
+                  pattern: {
+                    value: /^[2-9]\d{1,13}$/,
+                    message: "Invalid number",
+                  },
                 }}
               />
             </div>
-          </div>
-
-          {/* Checkboxes */}
-          <div className="flex flex-col gap-2 text-sm text-gray-300">
-            <Controller
-              name="is18Plus"
-              control={control}
-              rules={{ required: "Must be 21+" }}
-              render={({ field, fieldState: { error } }) => (
-                <div className="flex items-center gap-2">
-                  <CustomSwitch
-                    checked={field.value || false}
-                    onChange={() => field.onChange(!field.value)}
-                  />
-                  <span>Please confirm that you’re 21 years or above.</span>
-                  {error && (
-                    <p className="mt-1 ml-2 text-xs text-red-600 dark:text-red-700">
-                      {error.message}
-                    </p>
-                  )}
-                </div>
-              )}
-            />
           </div>
 
           {/* Submit Button */}
@@ -237,7 +245,7 @@ const Register = ({ handleClose }: RegisterProps) => {
             text="Register Now"
             loadingText="Registering…"
             isLoading={loading}
-            disabled={!watch("is18Plus") || !isValid}
+            disabled={!isValid}
           />
         </form>
       </div>
@@ -246,18 +254,3 @@ const Register = ({ handleClose }: RegisterProps) => {
 };
 
 export default Register;
-
-const CustomSwitch = ({ checked, onChange }: CustomSwitchProps) => {
-  return (
-    <button
-      type="button"
-      onClick={onChange}
-      className={`relative inline-flex h-5 w-[34px] items-center cursor-pointer rounded-full transition-colors duration-300 
-        ${checked ? "bg-highlight" : "bg-gray-300"}`}>
-      <span
-        className={`inline-block h-[14px] w-[14px] transform rounded-full bg-white shadow-md transition-transform duration-300
-          ${checked ? "translate-x-[16px]" : "translate-x-[2px]"}`}
-      />
-    </button>
-  );
-};

@@ -5,16 +5,16 @@ import { useState } from "react";
 import { useForm } from "react-hook-form";
 import { toast } from "react-toastify";
 
-import Logo from "@/assets/img/logo-1.png";
+import Logo from "@/assets/img/logo-full.png";
 import { useAuth } from "@/context/AuthContext";
-// import { useModal } from "@/context/ModalContext";
+import { useModal } from "@/context/ModalContext";
 import { API_URLS } from "@/constants/apiUrls";
 import { formatErrorMessage } from "@/utils/errorMessage";
 import FormInput from "../form/FormInput";
 import SubmitButton from "../ui/SubmitButton";
 
 type LoginForm = {
-  username: string;
+  email: string;
   password: string;
 };
 
@@ -24,7 +24,7 @@ type LoginContainerProps = {
 
 const LoginContainer = ({ handleClose }: LoginContainerProps) => {
   const { login, deviceDetails } = useAuth();
-  //   const { openRegister } = useModal();
+  const { openRegister } = useModal();
 
   const preLoginNumber = process.env.NEXT_PUBLIC_PRE_LOGIN_NUM;
   const [loading, setLoading] = useState(false);
@@ -36,15 +36,14 @@ const LoginContainer = ({ handleClose }: LoginContainerProps) => {
     formState: { errors, isValid },
   } = useForm<LoginForm>({
     mode: "onChange",
-    defaultValues: { username: "", password: "" },
+    defaultValues: { email: "", password: "" },
   });
 
   const handleLogin = async (data: LoginForm) => {
     try {
       setLoading(true);
 
-      const username = data.username.trim().replace(/\s+/g, "");
-      const reqPayload = { identifier: username, password: data.password };
+      const reqPayload = { identifier: data.email, password: data.password };
 
       const response = await fetch(API_URLS.LOGIN, {
         method: "POST",
@@ -73,7 +72,7 @@ const LoginContainer = ({ handleClose }: LoginContainerProps) => {
 
   return (
     <div className="flex flex-col items-center p-8 bg-secondary">
-      <Image src={Logo} className="logo h-20 w-auto" alt="logo" />
+      <Image src={Logo} className="h-20 w-auto" alt="logo" />
 
       <div className="mt-4 w-full max-w-lg md:flex md:gap-6">
         {/* form */}
@@ -83,20 +82,18 @@ const LoginContainer = ({ handleClose }: LoginContainerProps) => {
           </h2>
 
           <form onSubmit={handleSubmit(handleLogin)} className="space-y-5 mt-5">
-            {/* Username */}
+            {/* Email */}
             <FormInput
-              name="username"
+              name="email"
               control={control}
               errors={errors}
-              placeholder="Enter your username"
+              placeholder="Enter your email"
               rules={{
-                required: "Username is required",
-                minLength: { value: 3, message: "Min 3 characters" },
-                maxLength: { value: 12, message: "Max 12 characters" },
-                validate: (v) =>
-                  typeof v === "string"
-                    ? !/\s/.test(v) || "Spaces are not allowed"
-                    : true,
+                required: "Email is required",
+                pattern: {
+                  value: /^[^\s@]+@[^\s@]+\.[^\s@]+$/,
+                  message: "Enter a valid email",
+                },
               }}
             />
 
@@ -135,7 +132,7 @@ const LoginContainer = ({ handleClose }: LoginContainerProps) => {
           <p className="text-center text-gray-400 text-sm">
             Don’t have an account?{" "}
             <span
-              //   onClick={openRegister}
+              onClick={openRegister}
               className="text-orange-500 font-bold cursor-pointer">
               Register
             </span>

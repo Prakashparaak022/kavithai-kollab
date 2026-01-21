@@ -140,13 +140,13 @@ const Header = () => {
             <>
               <button
                 onClick={openLogin}
-                className="px-4 h-7 text-sm text-highlight border border-primary rounded-full hover:bg-primary hover:text-secondary">
+                className="px-4 mt-3.5 h-7 text-sm text-highlight border border-primary rounded-full hover:bg-primary hover:text-secondary">
                 Login
               </button>
 
               <button
                 onClick={openRegister}
-                className="px-4 h-7 text-sm text-green bg-primary rounded-full">
+                className="px-4 mt-3.5 h-7 text-sm text-green bg-primary rounded-full">
                 Register
               </button>
             </>
