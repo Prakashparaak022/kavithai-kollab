@@ -92,7 +92,8 @@ const Register = ({ handleClose }: RegisterProps) => {
               "Registration failed"
           );
         }
-      } catch {
+      } catch (error) {
+        console.error("An error occurred during registration.", error);
         toast.error("Unexpected error occurred during registration.");
       } finally {
         setLoading(false);

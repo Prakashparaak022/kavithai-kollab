@@ -63,7 +63,8 @@ const LoginContainer = ({ handleClose }: LoginContainerProps) => {
         const err = await response.text();
         toast.error(formatErrorMessage(err) || "Login failed");
       }
-    } catch {
+    } catch (error) {
+      console.error("An error occurred during login.", error);
       toast.error("Unexpected error occurred");
     } finally {
       setLoading(false);
