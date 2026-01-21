@@ -7,7 +7,7 @@ import { useAuth } from "@/context/AuthContext";
 import { useISDCode } from "@/hooks/useISDCode";
 import { API_URLS } from "@/constants/apiUrls";
 import { formatErrorMessage } from "@/utils/errorMessage";
-import Logo from "@/assets/img/logo-full.png";
+import Logo from "@/assets/img/logo-full.webp";
 import Image from "next/image";
 import FormInput from "../form/FormInput";
 import SubmitButton from "../ui/SubmitButton";

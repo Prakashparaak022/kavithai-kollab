@@ -5,7 +5,7 @@ import { useState } from "react";
 import { useForm } from "react-hook-form";
 import { toast } from "react-toastify";
 
-import Logo from "@/assets/img/logo-full.png";
+import Logo from "@/assets/img/logo-full.webp";
 import { useAuth } from "@/context/AuthContext";
 import { useModal } from "@/context/ModalContext";
 import { API_URLS } from "@/constants/apiUrls";
