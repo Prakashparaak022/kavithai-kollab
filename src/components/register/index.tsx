@@ -119,7 +119,7 @@ const Register = ({ handleClose }: RegisterProps) => {
             name="firstName"
             control={control}
             errors={errors}
-            placeholder="Enter your firstname"
+            placeholder="Enter First Name *"
             rules={{
               required: "Firstname is required",
               minLength: { value: 3, message: "Min 3 characters" },
@@ -135,7 +135,7 @@ const Register = ({ handleClose }: RegisterProps) => {
             name="lastName"
             control={control}
             errors={errors}
-            placeholder="Enter your lastname"
+            placeholder="Enter Last Name *"
             rules={{
               required: "Lastname is required",
               minLength: { value: 3, message: "Min 3 characters" },
@@ -151,7 +151,7 @@ const Register = ({ handleClose }: RegisterProps) => {
             name="penName"
             control={control}
             errors={errors}
-            placeholder="Enter your penName"
+            placeholder="Enter Pen Name"
             rules={{
               minLength: { value: 3, message: "Min 3 characters" },
               maxLength: { value: 20, message: "Max 20 characters" },
@@ -167,7 +167,7 @@ const Register = ({ handleClose }: RegisterProps) => {
             name="email"
             control={control}
             errors={errors}
-            placeholder="Enter your email"
+            placeholder="Enter Email *"
             rules={{
               required: "Email is required",
               pattern: {
@@ -182,7 +182,7 @@ const Register = ({ handleClose }: RegisterProps) => {
             name="password"
             control={control}
             errors={errors}
-            placeholder="Enter your password"
+            placeholder="Enter Password *"
             type="password"
             rules={{
               required: "Password is required",
@@ -200,7 +200,7 @@ const Register = ({ handleClose }: RegisterProps) => {
             name="confirmPassword"
             control={control}
             errors={errors}
-            placeholder="Confirm password"
+            placeholder="Confirm Password *"
             type="password"
             rules={{
               required: "Confirm Password is required",

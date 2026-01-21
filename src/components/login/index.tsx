@@ -88,7 +88,7 @@ const LoginContainer = ({ handleClose }: LoginContainerProps) => {
               name="email"
               control={control}
               errors={errors}
-              placeholder="Enter your email"
+              placeholder="Enter Email *"
               rules={{
                 required: "Email is required",
                 pattern: {
@@ -103,7 +103,7 @@ const LoginContainer = ({ handleClose }: LoginContainerProps) => {
               name="password"
               control={control}
               errors={errors}
-              placeholder="Enter your password"
+              placeholder="Enter Password *"
               type="password"
               rules={{
                 required: "Password is required",
