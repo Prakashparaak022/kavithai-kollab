@@ -60,11 +60,11 @@ function FormSelect<
 
           <select
             {...field}
-            className={`${
-              prefix ? "pl-8" : "pl-4"
-            } pr-8 h-9 w-full rounded-lg text-gray-200 text-sm border ${
+            className={`w-full h-9 rounded-lg text-gray-200 text-sm border ${
               error ? "border-red-500" : "border-primary"
-            } bg-secondary focus:outline-none`}
+            } bg-secondary focus:outline-none ${
+              prefix ? "pl-8" : "pl-4"
+            } pr-4`}
             disabled={loading || field.disabled}>
             {loading ? (
               <option value="" disabled>
