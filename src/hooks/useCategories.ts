@@ -14,8 +14,14 @@ export const useCategories = () => {
       try {
         const res = await fetchAllCategories();
         if (isMounted) setData(res.content);
-      } catch (err: any) {
-        if (isMounted) setError(err.message);
+      } catch (err) {
+        if (!isMounted) return;
+
+        if (err instanceof Error) {
+          setError(err.message);
+        } else {
+          setError("Failed to fetch categories");
+        }
       } finally {
         if (isMounted) setLoading(false);
       }
