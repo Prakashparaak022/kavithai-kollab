@@ -18,9 +18,9 @@ type RegisterProps = {
 };
 
 type RegisterFormValues = {
-  firstname?: string;
-  lastname?: string;
-  penname: string;
+  firstName: string;
+  lastName: string;
+  penName: string;
   email: string;
   password: string;
   confirmPassword: string;
@@ -59,10 +59,10 @@ const Register = ({ handleClose }: RegisterProps) => {
       try {
         setLoading(true);
 
-        const penname = data.penname.trim().replace(/\s+/g, "");
-
         const profile = {
-          penname: penname,
+          penName: data.penName.trim().replace(/\s+/g, ""),
+          firstName: data.firstName.trim().replace(/\s+/g, ""),
+          lastName: data.lastName.trim().replace(/\s+/g, ""),
           password: data.password,
           email: data.email,
           phoneNo: Number(data.mobileNumber),
@@ -115,7 +115,7 @@ const Register = ({ handleClose }: RegisterProps) => {
           noValidate>
           {/* Firstname */}
           <FormInput
-            name="firstname"
+            name="firstName"
             control={control}
             errors={errors}
             placeholder="Enter your firstname"
@@ -131,7 +131,7 @@ const Register = ({ handleClose }: RegisterProps) => {
           />
           {/* Lastname */}
           <FormInput
-            name="lastname"
+            name="lastName"
             control={control}
             errors={errors}
             placeholder="Enter your lastname"
@@ -145,12 +145,12 @@ const Register = ({ handleClose }: RegisterProps) => {
                   : true,
             }}
           />
-          {/* Penname */}
+          {/* penName */}
           <FormInput
-            name="penname"
+            name="penName"
             control={control}
             errors={errors}
-            placeholder="Enter your penname"
+            placeholder="Enter your penName"
             rules={{
               minLength: { value: 3, message: "Min 3 characters" },
               maxLength: { value: 20, message: "Max 20 characters" },
