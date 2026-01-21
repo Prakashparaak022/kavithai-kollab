@@ -21,7 +21,7 @@ const Collaborations = ({ collaborations, onInvite }: Props) => {
   const [showInput, setShowInput] = useState(false);
   const [newLine, setNewLine] = useState("");
 
-  const { playerDetails } = usePlayerDetails();
+  const { displayName } = usePlayerDetails();
   const { withAuth } = useRequireAuth();
 
   const handleToggle = (collab: Collaboration) => {
@@ -33,7 +33,7 @@ const Collaborations = ({ collaborations, onInvite }: Props) => {
 
     const newCollab: Collaboration = {
       id: Date.now(),
-      author: String(playerDetails?.userName),
+      author: String(displayName),
       content: newLine,
       imageUrl: "https://randomuser.me/api/portraits/men/32.jpg",
     };

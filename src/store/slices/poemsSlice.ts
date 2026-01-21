@@ -31,7 +31,7 @@ const poemsSlice = createSlice({
       }
     },
     addPoemLike: (state, action) => {
-      const { id, playerDetails } = action.payload;
+      const { id, playerDetails, displayName } = action.payload;
       const poem = state.poems.find((p) => p.id === id);
 
       if (poem) {
@@ -42,7 +42,7 @@ const poemsSlice = createSlice({
           poem.likes.push({
             id: Date.now(),
             userId: playerDetails.id,
-            author: playerDetails.userName,
+            author: displayName,
             authorImage: playerDetails.authorImage,
           });
         } else {

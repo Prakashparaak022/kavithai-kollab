@@ -4,7 +4,9 @@ import { useEffect, useState } from "react";
 
 export type PlayerDetails = {
   id?: string | number;
-  userName?: string;
+  firstName: string;
+  lastName: string;
+  penName?: string;
   accessToken?: string;
 };
 
@@ -48,6 +50,7 @@ export function useSessionStorage<T = string | null>(key: string): T | null {
  */
 export const usePlayerDetails = (): {
   playerDetails: PlayerDetails | null;
+  displayName: string | null;
   loading: boolean;
   accessToken: string | null;
 } => {
@@ -87,7 +90,10 @@ export const usePlayerDetails = (): {
     loadPlayerDetails();
   }, [playerDetailsStr]);
 
-  return { playerDetails, loading, accessToken };
+  const displayName =
+    playerDetails?.penName ?? playerDetails?.firstName ?? null;
+
+  return { playerDetails, displayName, loading, accessToken };
 };
 
 /**

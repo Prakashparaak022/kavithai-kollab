@@ -18,7 +18,7 @@ const Comments = ({ comments }: Props) => {
   const [showInput, setShowInput] = useState(false);
   const [newComment, setNewComment] = useState("");
 
-  const { playerDetails } = usePlayerDetails();
+  const { displayName } = usePlayerDetails();
   const { withAuth } = useRequireAuth();
 
   const toggleComment = (id: number) => {
@@ -30,7 +30,7 @@ const Comments = ({ comments }: Props) => {
 
     const comment: Comment = {
       id: Date.now(),
-      name: `@${playerDetails?.userName}`,
+      name: `@${displayName}`,
       content: newComment,
       imageUrl: "https://randomuser.me/api/portraits/men/32.jpg",
     };

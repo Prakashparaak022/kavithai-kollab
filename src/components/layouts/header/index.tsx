@@ -14,7 +14,7 @@ import { usePlayerDetails } from "@/utils/UserSession";
 const Header = () => {
   const pathname = usePathname();
   const { openLogin, openRegister } = useModal();
-  const { playerDetails, loading } = usePlayerDetails();
+  const { playerDetails, displayName, loading } = usePlayerDetails();
   const { logout } = useAuth();
 
   const [dropdownOpen, setDropdownOpen] = useState(false);
@@ -76,7 +76,7 @@ const Header = () => {
                   onClick={() => setDropdownOpen((v) => !v)}
                   className="flex items-center gap-2 px-4 h-9 text-sm text-green bg-primary rounded-full">
                   <User size={16} />
-                  {playerDetails.userName}
+                  {displayName}
                   <ChevronDown size={16} />
                 </button>
 

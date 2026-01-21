@@ -16,7 +16,7 @@ type Props = {
 const ApiFeedCardList = ({ filter, feedType }: Props) => {
   const dispatch = useDispatch<AppDispatch>();
   const { poems, loading } = useSelector((state: RootState) => state.poems);
-  const { playerDetails } = usePlayerDetails();
+  const { playerDetails, displayName } = usePlayerDetails();
 
   useEffect(() => {
     if (!poems.length) {
@@ -27,7 +27,7 @@ const ApiFeedCardList = ({ filter, feedType }: Props) => {
   const handleLike = (e: React.MouseEvent, id: number) => {
     e.preventDefault();
     e.stopPropagation();
-    dispatch(addPoemLike({ id, playerDetails }));
+    dispatch(addPoemLike({ id, playerDetails, displayName }));
   };
 
   const filteredPoems = useMemo(() => {
