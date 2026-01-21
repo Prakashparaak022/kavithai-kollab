@@ -60,7 +60,7 @@ const Register = ({ handleClose }: RegisterProps) => {
         setLoading(true);
 
         const profile = {
-          penName: data.penName.trim().replace(/\s+/g, ""),
+          penName: data.penName?.trim().replace(/\s+/g, ""),
           firstName: data.firstName.trim().replace(/\s+/g, ""),
           lastName: data.lastName.trim().replace(/\s+/g, ""),
           password: data.password,
