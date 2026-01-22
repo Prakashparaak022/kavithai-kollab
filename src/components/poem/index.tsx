@@ -29,9 +29,7 @@ const initialNotifications: Notification[] = [
 const Poem = ({ poem }: Props) => {
   const [showInviteModal, setShowInviteModal] = useState(false);
   const [notifications, setNotifications] =
-    useState<Notification[]>(initialNotifications);4
-
-    console.log("poem : ",poem);
+    useState<Notification[]>(initialNotifications);
     
 
   return (
@@ -61,11 +59,6 @@ const Poem = ({ poem }: Props) => {
       }
       right={
         <div className="p-4 space-y-4">
-          {/* Notifications */}
-          <Notifications
-            notifications={notifications}
-            setNotifications={setNotifications}
-          />
           <AboutPoem />
           {showInviteModal && (
             <InviteModal onClose={() => setShowInviteModal(false)} />

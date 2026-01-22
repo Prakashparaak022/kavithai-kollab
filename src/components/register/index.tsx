@@ -44,7 +44,7 @@ const Register = ({ handleClose }: RegisterProps) => {
   } = useForm<RegisterFormValues>({
     mode: "onChange",
     defaultValues: {
-      // countryId: 95,
+      countryId: 95,
     },
   });
 
