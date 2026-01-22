@@ -12,8 +12,7 @@ const AboutPoem = () => {
   const [requireApproval, setRequireApproval] = useState(true);
 
   const infoList: InfoItem[] = [
-    { label: "Poem Name", value: "Eternal Echoes" },
-    { label: "Original Poet", value: "@Bhronohi" },
+    { label: "Poet", value: "@Bhronohi" },
     { label: "Time Remaining", value: "11 hours", inline: true },
     { label: "Participants", value: 6 },
   ];

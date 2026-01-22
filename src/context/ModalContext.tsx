@@ -35,19 +35,32 @@ export const ModalProvider = ({ children }: { children: ReactNode }) => {
           <div
             className="relative w-full max-w-lg rounded-xl overflow-hidden"
             onClick={(e) => e.stopPropagation()}>
-            {/* Border dots */}
-            <BorderDots />
-
-            {/* Close Button */}
-            <button
-              onClick={closeModal}
-              className="absolute right-2 top-2 p-1 btn text-white hover:text-gray-500 rounded-full transition">
-              <X size={15} />
-            </button>
             {activeModal === "login" ? (
-              <LoginContainer handleClose={closeModal} />
+              <>
+                {/* Border dots */}
+                <BorderDots color="var(--border-secondary)" />
+
+                {/* Close Button */}
+                <button
+                  onClick={closeModal}
+                  className="absolute right-2 top-2 p-1 btn-secondary rounded-full transition">
+                  <X size={15} />
+                </button>
+                <LoginContainer handleClose={closeModal} />
+              </>
             ) : (
-              <Register handleClose={closeModal} />
+              <>
+                {/* Border dots */}
+                <BorderDots />
+
+                {/* Close Button */}
+                <button
+                  onClick={closeModal}
+                  className="absolute right-2 top-2 p-1 btn text-white hover:text-gray-500 rounded-full transition">
+                  <X size={15} />
+                </button>
+                <Register handleClose={closeModal} />
+              </>
             )}
           </div>
         </div>

@@ -14,7 +14,7 @@ const PoemDetailCard: React.FC<PoemCardProps> = ({
   imageUrl
 }) => {
   return (
-    <div className="relative rounded-lg border-4 border-[#d4a574] bg-secondary p-6 overflow-hidden">
+    <div className="relative rounded-lg !border-4 border-primary bg-secondary p-6 overflow-hidden">
       <BorderDots />
 
       {imageUrl && (
