@@ -57,6 +57,48 @@ const Collaborations = ({ collaborations, onInvite }: Props) => {
       </div>
 
       <div className="space-y-3">
+        {/* ADD COLLABORATION */}
+        <div
+          className="p-3 rounded-lg bg-card cursor-pointer
+                 hover:shadow-md transition-shadow">
+          {!showInput ? (
+            <button
+              onClick={withAuth(() => setShowInput(true))}
+              className="text-sm text-blue-500 hover:underline">
+              + Add your line to this poem
+            </button>
+          ) : (
+            <div className="space-y-3">
+              <textarea
+                value={newLine}
+                onChange={(e) => setNewLine(e.target.value)}
+                rows={3}
+                placeholder="Write your line..."
+                className="w-full text-sm text-gray-700 p-3 rounded-md border-primary
+                   focus:outline-none focus:ring-1 focus:ring-green-700"
+              />
+
+              <div className="flex gap-2">
+                <button
+                  onClick={handleAddCollaboration}
+                  className="px-4 py-1.5 text-sm rounded-md
+                     bg-secondary text-white">
+                  Submit
+                </button>
+
+                <button
+                  onClick={() => {
+                    setShowInput(false);
+                    setNewLine("");
+                  }}
+                  className="px-4 py-1.5 text-sm rounded-md
+                     bg-highlight text-white">
+                  Cancel
+                </button>
+              </div>
+            </div>
+          )}
+        </div>
         {collaborationsList.map((collab) => {
           const isOpen = selectedCollab?.id === collab.id;
 
@@ -104,47 +146,6 @@ const Collaborations = ({ collaborations, onInvite }: Props) => {
             </div>
           );
         })}
-        <div
-          className="p-3 rounded-lg bg-card cursor-pointer
-                 hover:shadow-md transition-shadow">
-          {!showInput ? (
-            <button
-              onClick={withAuth(() => setShowInput(true))}
-              className="text-sm text-blue-500 hover:underline">
-              + Add your line to this poem
-            </button>
-          ) : (
-            <div className="space-y-3">
-              <textarea
-                value={newLine}
-                onChange={(e) => setNewLine(e.target.value)}
-                rows={3}
-                placeholder="Write your line..."
-                className="w-full text-sm text-gray-700 p-3 rounded-md border-primary
-                   focus:outline-none focus:ring-1 focus:ring-green-700"
-              />
-
-              <div className="flex gap-2">
-                <button
-                  onClick={handleAddCollaboration}
-                  className="px-4 py-1.5 text-sm rounded-md
-                     bg-secondary text-white">
-                  Submit
-                </button>
-
-                <button
-                  onClick={() => {
-                    setShowInput(false);
-                    setNewLine("");
-                  }}
-                  className="px-4 py-1.5 text-sm rounded-md
-                     bg-highlight text-white">
-                  Cancel
-                </button>
-              </div>
-            </div>
-          )}
-        </div>
       </div>
     </div>
   );
