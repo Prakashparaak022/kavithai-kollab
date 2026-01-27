@@ -1,10 +1,12 @@
 import { configureStore } from "@reduxjs/toolkit";
 import { poemsReducer } from "./poems";
 import { useDispatch } from "react-redux";
+import { commentsReducer } from "./comments";
 
 export const store = configureStore({
   reducer: {
     poems: poemsReducer,
+    comments: commentsReducer,
   },
 });
 

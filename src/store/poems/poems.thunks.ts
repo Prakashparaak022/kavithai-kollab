@@ -30,8 +30,8 @@ export const togglePoemLike = createAsyncThunk(
   "poems/toggleLike",
   async ({ poemId, userId }: AddLikePayload, { rejectWithValue }) => {
     try {
-      await AddLikeService({ poemId, userId });
-      return { poemId, userId };
+      const response = await AddLikeService({ poemId, userId });
+      return response;
     } catch {
       return rejectWithValue("Failed to like poem");
     }
