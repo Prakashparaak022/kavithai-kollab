@@ -5,9 +5,10 @@ import { FeedType, FilterType } from "./index";
 import Image from "next/image";
 import { useDispatch, useSelector } from "react-redux";
 import { AppDispatch, RootState } from "@/store";
-import { addPoemLike, loadPoems } from "@/store/slices/poemsSlice";
 import { Heart, MessageCircle } from "lucide-react";
 import { usePlayerDetails } from "@/utils/UserSession";
+import useRequireAuth from "@/hooks/useRequireAuth";
+import { loadPoems, togglePoemLike } from "@/store/poems";
 
 type Props = {
   filter: FilterType;
@@ -15,7 +16,10 @@ type Props = {
 };
 const ApiFeedCardList = ({ filter, feedType }: Props) => {
   const dispatch = useDispatch<AppDispatch>();
-  const { poems, loading } = useSelector((state: RootState) => state.poems);
+  const { poems, loading, likeLoading } = useSelector(
+    (state: RootState) => state.poems
+  );
+  const { withAuth } = useRequireAuth();
   const { playerDetails, displayName } = usePlayerDetails();
 
   useEffect(() => {
@@ -24,10 +28,18 @@ const ApiFeedCardList = ({ filter, feedType }: Props) => {
     }
   }, [dispatch, poems.length]);
 
-  const handleLike = (e: React.MouseEvent, id: number) => {
-    e.preventDefault();
-    e.stopPropagation();
-    dispatch(addPoemLike({ id, playerDetails, displayName }));
+  const handleLike = (id: number) => {
+    if (!playerDetails?.id) return;
+      
+    const isLiking = likeLoading === id;
+    if (isLiking) return;
+
+    dispatch(
+      togglePoemLike({
+        poemId: id,
+        userId: playerDetails.id,
+      })
+    );
   };
 
   const filteredPoems = useMemo(() => {
@@ -97,7 +109,7 @@ const ApiFeedCardList = ({ filter, feedType }: Props) => {
 
             <div className="mt-auto flex items-center justify-between text-gray-500">
               <button
-                onClick={(e) => handleLike(e, poem.id)}
+                onClick={withAuth(() => handleLike(poem.id))}
                 className={`flex items-center gap-1 text-xs transition ${
                   poem.isLiked
                     ? "text-red-500"

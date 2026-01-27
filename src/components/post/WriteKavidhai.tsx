@@ -4,14 +4,11 @@ import { useState, useRef } from "react";
 import { useForm } from "react-hook-form";
 import { Camera, X } from "lucide-react";
 import { toast } from "react-toastify";
-import { API_URLS } from "@/constants/apiUrls";
 import { usePlayerDetails } from "@/utils/UserSession";
-import { createPoemService } from "@/services/api/poems.service";
-import { useDispatch } from "react-redux";
-import { addPoem } from "@/store/slices/poemsSlice";
 import { useCategories } from "@/hooks/useCategories";
-import { ApiCategory } from "@/types/api";
 import LoadingSpinner from "../ui/LoadingSpinner";
+import { createPoem } from "@/store/poems";
+import { useAppDispatch } from "@/store";
 
 const TAG_REGEX = /^#[a-z0-9]+$/;
 
@@ -45,7 +42,7 @@ export default function WriteKavidhai({ allowCollab, isPrivate }: Props) {
       },
     });
 
-  const dispatch = useDispatch();
+  const dispatch = useAppDispatch();
   const isSaveMode = allowCollab || isPrivate;
 
   const [tags, setTags] = useState<string[]>([]);
@@ -100,12 +97,9 @@ export default function WriteKavidhai({ allowCollab, isPrivate }: Props) {
 
       if (imageFile) formData.append("image", imageFile, imageFile.name);
 
-      const response = await createPoemService(formData);
+      await dispatch(createPoem(formData)).unwrap();
 
       toast.success("Kavidhai created successfully");
-
-      dispatch(addPoem(response.content));
-
       reset();
       setTags([]);
       setImagePreview(null);

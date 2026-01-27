@@ -14,5 +14,6 @@ export const API_URLS = {
     BRAND,
   KAVITHAI_POST: `${BASE_URL}/api/v1/posts/create`,
   KAVITHAI_ALL: `${BASE_URL}/api/v1/posts/all`,
+  KAVITHAI_LIKE: `${BASE_URL}/api/v1/posts/`,
   CATEGORY_ALL: `${BASE_URL}/api/v1/categories/all`,
 };
