@@ -59,5 +59,10 @@ export type ApiCategory = {
 };
 
 export interface ApiResponse<T = unknown> {
-  content: T[];
+  content: T;
 }
+
+export type AddLikePayload = {
+  poemId: number;
+  userId: number;
+};
