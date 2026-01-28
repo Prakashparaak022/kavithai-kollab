@@ -12,6 +12,7 @@ import { loadPoems, togglePoemLike } from "@/store/poems";
 import CustomModal from "../ui/CustomModal";
 import CommentsList from "./CommentsList";
 import { getUserImageSrc } from "@/utils/imageUtils";
+import Loader from "../ui/Loader";
 
 type Props = {
   filter: FilterType;
@@ -23,17 +24,20 @@ const ApiFeedCardList = ({ filter, feedType }: Props) => {
     (state: RootState) => state.poems
   );
   const { withAuth } = useRequireAuth();
-  const { playerDetails, displayName } = usePlayerDetails();
+  const {
+    playerDetails,
+    loading: playerLoading,
+    displayName,
+  } = usePlayerDetails();
   const [activePoemId, setActivePoemId] = useState<number | null>(null);
   const [commentsOpen, setCommentsOpen] = useState(false);
 
   useEffect(() => {
-    if (!poems.length) {
-      dispatch(loadPoems());
-    }
-  }, [dispatch, poems.length]);
+    if (playerLoading) return;
+    dispatch(loadPoems({ userId: playerDetails?.id }));
+  }, [dispatch, playerDetails?.id, playerLoading]);
 
-  const handleLike = (id: number) => {
+  const handleLike = (id: number, isLiked: boolean) => {
     if (!playerDetails?.id) return;
 
     if (likeLoading === id) return;
@@ -42,6 +46,7 @@ const ApiFeedCardList = ({ filter, feedType }: Props) => {
       togglePoemLike({
         poemId: id,
         userId: playerDetails.id,
+        isLiked: !isLiked,
       })
     );
   };
@@ -54,7 +59,10 @@ const ApiFeedCardList = ({ filter, feedType }: Props) => {
     }
 
     if (filter === "recent") {
-      list.reverse();
+      list.sort(
+        (a, b) =>
+          new Date(b.createdAt).getTime() - new Date(a.createdAt).getTime()
+      );
     }
 
     if (feedType === "public") {
@@ -70,16 +78,16 @@ const ApiFeedCardList = ({ filter, feedType }: Props) => {
 
   if (loading) {
     return (
-      <div className="text-center py-10 text-gray-600">Loading poems...</div>
+      <div className="w-full flex flex-col items-center justify-center py-6">
+        <Loader />
+        <p className="text-green text-sm font-semibold">Loading poems...</p>
+      </div>
     );
   }
 
   return (
-    <>
+    <div className="grid grid-cols-12 gap-5">
       {filteredPoems.map((poem, index) => {
-        const isLiked = poem.likes?.some(
-          (like) => like.userId === playerDetails?.id
-        );
         return (
           <div
             key={poem.id}
@@ -119,13 +127,16 @@ const ApiFeedCardList = ({ filter, feedType }: Props) => {
 
               <div className="mt-auto flex items-center justify-between text-gray-500">
                 <button
-                  onClick={withAuth(() => handleLike(poem.id))}
+                  onClick={withAuth(() => handleLike(poem.id, poem.isLiked))}
                   className={`flex items-center gap-1 text-xs transition ${
-                    isLiked
+                    poem.isLiked
                       ? "text-red-500"
                       : "text-gray-500 hover:text-red-500"
                   }`}>
-                  <Heart size={16} fill={isLiked ? "currentColor" : "none"} />
+                  <Heart
+                    size={16}
+                    fill={poem.isLiked ? "currentColor" : "none"}
+                  />
                   {poem.likesCount}
                 </button>
 
@@ -136,7 +147,7 @@ const ApiFeedCardList = ({ filter, feedType }: Props) => {
                     setCommentsOpen(true);
                   })}>
                   <MessageCircle size={16} />
-                  {poem.comments?.length ?? 0}
+                  {poem.commentsCount}
                 </div>
               </div>
             </div>
@@ -150,7 +161,7 @@ const ApiFeedCardList = ({ filter, feedType }: Props) => {
           <CommentsList postId={activePoemId} />
         </CustomModal>
       )}
-    </>
+    </div>
   );
 };
 

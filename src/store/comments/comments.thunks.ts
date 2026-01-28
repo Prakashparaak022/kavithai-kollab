@@ -10,7 +10,7 @@ export const loadComments = createAsyncThunk(
   async ({ postId }: { postId: number }, { rejectWithValue }) => {
     try {
       const response = await fetchPostComments({ postId });
-      return response;
+      return response.content;
     } catch {
       return rejectWithValue("failed to load comments");
     }

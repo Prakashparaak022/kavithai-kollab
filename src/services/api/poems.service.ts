@@ -6,8 +6,16 @@ import {
   ToggleLikeResponse,
 } from "@/types/api";
 
-export const fetchAllPoems = async (): Promise<ApiResponse<ApiPoem[]>> => {
-  const res = await fetch(API_URLS.KAVITHAI_ALL);
+export const fetchAllPoems = async ({
+  userId,
+}: {
+  userId?: number;
+}): Promise<ApiResponse<ApiPoem[]>> => {
+  const url = userId
+    ? `${API_URLS.KAVITHAI_ALL}?userId=${userId}`
+    : `${API_URLS.KAVITHAI_ALL}`;
+
+  const res = await fetch(url);
 
   if (!res.ok) {
     throw new Error("Failed to fetch poems");
@@ -35,9 +43,10 @@ export const createPoemService = async (
 export const AddLikeService = async ({
   poemId,
   userId,
+  isLiked,
 }: AddLikePayload): Promise<ToggleLikeResponse> => {
   const res = await fetch(
-    `${API_URLS.KAVITHAI_LIKE}${poemId}/toggle-like?userId=${userId}`,
+    `${API_URLS.KAVITHAI_LIKE}${poemId}/like?userId=${userId}&isLiked=${isLiked}`,
     {
       method: "POST",
       headers: { Accept: "application/json" },
