@@ -5,22 +5,21 @@ export type ApiLike = {
   authorImage?: string | null;
 };
 
-
 export type ApiComment = {
   id: number;
   userId: number;
   author: string;
   content: string;
-  authorImage?: string | null;
+  authorImage: string | null;
+  createdAt: string;
 };
-
 
 export type ApiCollaboration = {
   id: number;
   userId: number;
   author: string;
   content: string;
-  authorImage?: string | null;
+  authorImage: string | null;
 };
 
 export type ApiPoem = {
@@ -32,7 +31,7 @@ export type ApiPoem = {
   content?: string;
 
   imageUrl?: string;
-  authorImage?: string | null;
+  authorImage: string | null;
 
   categoryName?: string;
   tags?: string;
@@ -45,12 +44,9 @@ export type ApiPoem = {
   status: "PENDING" | "APPROVED" | "REJECTED";
 
   likesCount: number;
-  likes: ApiLike[];
-  isLiked?: boolean;
-
-  comments: ApiComment[];
-
-  collaborations: ApiCollaboration[];
+  commentsCount: number;
+  isLiked: boolean;
+  createdAt: string;
 };
 
 export type ApiCategory = {
@@ -65,4 +61,17 @@ export interface ApiResponse<T = unknown> {
 export type AddLikePayload = {
   poemId: number;
   userId: number;
+  isLiked: boolean;
+};
+
+export type AddCommentPayload = {
+  postId: number;
+  userId: number;
+  content: string;
+};
+
+export type ToggleLikeResponse = {
+  id: number;
+  isLiked: boolean;
+  likesCount: number;
 };

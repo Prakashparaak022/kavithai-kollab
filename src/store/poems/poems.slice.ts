@@ -53,13 +53,14 @@ const poemsSlice = createSlice({
         state.likeLoading = action.meta.arg.poemId;
       })
       .addCase(togglePoemLike.fulfilled, (state, action) => {
-        const { poemId } = action.payload;
-        const poem = state.poems.find((p) => p.id === poemId);
+        const { id, isLiked, likesCount } = action.payload;
 
+        const poem = state.poems.find((p) => p.id === id);
         if (poem) {
-          poem.isLiked = !poem.isLiked;
-          poem.likesCount += poem.isLiked ? 1 : -1;
+          poem.isLiked = isLiked;
+          poem.likesCount = likesCount;
         }
+
         state.likeLoading = null;
       })
       .addCase(togglePoemLike.rejected, (state) => {

@@ -126,9 +126,6 @@ const FeedCardList = ({ filter, feedType }: Props) => {
             </div>
           </Link>
         ))}
-
-        {/* temp */}
-        <ApiFeedCardList filter={filter} feedType={feedType} />
       </div>
     </>
   );
