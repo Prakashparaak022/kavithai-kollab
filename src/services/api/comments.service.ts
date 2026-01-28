@@ -5,7 +5,7 @@ export const fetchPostComments = async ({
   postId,
 }: {
   postId: number;
-}): Promise<ApiComment[]> => {
+}): Promise<ApiResponse<ApiComment[]>> => {
   const res = await fetch(`${API_URLS.COMMENTTS}${postId}`);
   if (!res.ok) {
     throw new Error("Failed to fetch comments");
@@ -18,7 +18,10 @@ export const AddCommentService = async (
 ): Promise<ApiComment> => {
   const res = await fetch(`${API_URLS.COMMENTS_ADD}`, {
     method: "POST",
-    headers: { Accept: "application/json" },
+    headers: {
+      Accept: "application/json",
+      "Content-Type": "application/json",
+    },
     body: JSON.stringify(payload),
   });
 

@@ -7,6 +7,7 @@ import Link from "next/link";
 import useRequireAuth from "@/hooks/useRequireAuth";
 import AppBgLayout from "../layouts/AppBgLayout";
 import { usePlayerDetails } from "@/utils/UserSession";
+import ApiFeedCardList from "./ApiFeedCardList";
 
 export type FilterType = "all" | "liked" | "recent";
 export type FeedType = "private" | "public";
@@ -106,7 +107,10 @@ const Feed = () => {
             {filterList.find((item) => item.value === filter)?.helperText}
           </p>
 
-          <FeedCardList feedType={feedType} filter={filter} />
+          {/* <FeedCardList feedType={feedType} filter={filter} /> */}
+
+          {/* APi */}
+          <ApiFeedCardList filter={filter} feedType={feedType} />
         </div>
       }
     />

@@ -11,6 +11,7 @@ export type ApiComment = {
   author: string;
   content: string;
   authorImage: string | null;
+  createdAt: string;
 };
 
 export type ApiCollaboration = {
@@ -43,12 +44,9 @@ export type ApiPoem = {
   status: "PENDING" | "APPROVED" | "REJECTED";
 
   likesCount: number;
-  likes: ApiLike[];
-  isLiked?: boolean;
-
-  comments: ApiComment[];
-
-  collaborations: ApiCollaboration[];
+  commentsCount: number;
+  isLiked: boolean;
+  createdAt: string;
 };
 
 export type ApiCategory = {
@@ -63,6 +61,7 @@ export interface ApiResponse<T = unknown> {
 export type AddLikePayload = {
   poemId: number;
   userId: number;
+  isLiked: boolean;
 };
 
 export type AddCommentPayload = {
