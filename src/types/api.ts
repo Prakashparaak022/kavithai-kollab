@@ -75,3 +75,14 @@ export type ToggleLikeResponse = {
   isLiked: boolean;
   likesCount: number;
 };
+
+export type AddCollabPayload = {
+  postId: number;
+  userId: number;
+  content: string;
+};
+
+export type DecisionCollabPayload = {
+  collabId: number;
+  ownerId: number;
+};

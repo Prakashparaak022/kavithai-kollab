@@ -11,8 +11,9 @@ import useRequireAuth from "@/hooks/useRequireAuth";
 import { loadPoems, togglePoemLike } from "@/store/poems";
 import CustomModal from "../ui/CustomModal";
 import CommentsList from "./CommentsList";
-import { getUserImageSrc } from "@/utils/imageUtils";
+import { getBase64ImageSrc, getUserImageSrc } from "@/utils/imageUtils";
 import Loader from "../ui/Loader";
+import Link from "next/link";
 
 type Props = {
   filter: FilterType;
@@ -89,12 +90,17 @@ const ApiFeedCardList = ({ filter, feedType }: Props) => {
     <div className="grid grid-cols-12 gap-5">
       {filteredPoems.map((poem, index) => {
         return (
-          <div
+          <Link
             key={poem.id}
+            href={
+              poem.isPublish
+                ? `/poem/${poem.id}`
+                : `/poem/${poem.id}?userId=${playerDetails?.id}`
+            }
             className="col-span-12 sm:col-span-6 md:col-span-4 lg:col-span-3 bg-card rounded-2xl flex flex-col">
             <div className="relative h-44 w-full">
               <Image
-                src={`data:image/jpeg;base64,${poem.imageUrl}`}
+                src={getBase64ImageSrc(poem.imageUrl ?? "")}
                 alt={poem.title || ""}
                 fill
                 unoptimized
@@ -142,16 +148,19 @@ const ApiFeedCardList = ({ filter, feedType }: Props) => {
 
                 <div
                   className="flex items-center gap-1 text-xs hover:text-blue-500 transition"
-                  onClick={withAuth(() => {
-                    setActivePoemId(poem.id);
-                    setCommentsOpen(true);
-                  })}>
+                  onClick={(e) => {
+                    e.preventDefault();
+                    withAuth(() => {
+                      setActivePoemId(poem.id);
+                      setCommentsOpen(true);
+                    })();
+                  }}>
                   <MessageCircle size={16} />
                   {poem.commentsCount}
                 </div>
               </div>
             </div>
-          </div>
+          </Link>
         );
       })}
       {commentsOpen && activePoemId && (
