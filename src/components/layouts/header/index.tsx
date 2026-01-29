@@ -7,7 +7,15 @@ import { usePathname } from "next/navigation";
 import logo from "@/assets/img/logo.png";
 import { useModal } from "@/context/ModalContext";
 import { useAuth } from "@/context/AuthContext";
-import { ChevronDown, LogOut, User, Menu, X } from "lucide-react";
+import {
+  ChevronDown,
+  LogOut,
+  User,
+  Menu,
+  X,
+  Book,
+  BellDot,
+} from "lucide-react";
 import LoadingSpinner from "../../ui/LoadingSpinner";
 import { usePlayerDetails } from "@/utils/UserSession";
 
@@ -22,7 +30,7 @@ const Header = () => {
 
   const loggedInNav = [
     { name: "Home", href: "/" },
-    { name: "Discover", href: "/" },
+    // { name: "Discover", href: "/" },
     { name: "My Collaborations", href: "/my-collaborations" },
     { name: "Post", href: "/post" },
   ];
@@ -69,6 +77,16 @@ const Header = () => {
                   );
                 })}
               </div>
+              {/* Notification icon with badge */}
+              <div className="relative">
+                <BellDot
+                  size={24}
+                  className="text-highlight hover:text-secondary transition duration-300"
+                />
+                <span className="absolute top-0 right-0 block w-3 h-3 rounded-full bg-red-500 text-white text-xs font-semibold flex items-center justify-center">
+                  0
+                </span>
+              </div>
 
               {/* Profile Dropdown */}
               <div className="relative">
@@ -88,6 +106,13 @@ const Header = () => {
                       onClick={() => setDropdownOpen(false)}>
                       <User size={16} />
                       Profile
+                    </Link>
+                    <Link
+                      href=""
+                      className="flex items-center gap-2 px-4 py-2 text-sm text-gray-200 hover:bg-primary rounded-t-lg"
+                      onClick={() => setDropdownOpen(false)}>
+                      <Book size={16} />
+                      My Poems
                     </Link>
                     <button
                       onClick={logout}
