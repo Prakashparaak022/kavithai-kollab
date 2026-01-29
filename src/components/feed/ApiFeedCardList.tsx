@@ -133,7 +133,10 @@ const ApiFeedCardList = ({ filter, feedType }: Props) => {
 
               <div className="mt-auto flex items-center justify-between text-gray-500">
                 <button
-                  onClick={withAuth(() => handleLike(poem.id, poem.isLiked))}
+                  onClick={(e) => {
+                    e.preventDefault();
+                    withAuth(() => handleLike(poem.id, poem.isLiked))();
+                  }}
                   className={`flex items-center gap-1 text-xs transition ${
                     poem.isLiked
                       ? "text-red-500"
@@ -150,6 +153,7 @@ const ApiFeedCardList = ({ filter, feedType }: Props) => {
                   className="flex items-center gap-1 text-xs hover:text-blue-500 transition"
                   onClick={(e) => {
                     e.preventDefault();
+                    if (poem.isPrivate) return;
                     withAuth(() => {
                       setActivePoemId(poem.id);
                       setCommentsOpen(true);
