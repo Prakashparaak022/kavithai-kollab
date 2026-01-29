@@ -7,7 +7,7 @@ import { useAuth } from "@/context/AuthContext";
 import { useISDCode } from "@/hooks/useISDCode";
 import { API_URLS } from "@/constants/apiUrls";
 import { formatErrorMessage } from "@/utils/errorMessage";
-import Logo from "@/assets/img/logo-full.webp";
+import Logo from "@/assets/img/logo-green.webp";
 import Image from "next/image";
 import FormInput from "../form/FormInput";
 import SubmitButton from "../ui/SubmitButton";
@@ -103,10 +103,10 @@ const Register = ({ handleClose }: RegisterProps) => {
   );
 
   return (
-    <div className="flex flex-col items-center p-8 bg-secondary">
+    <div className="flex flex-col items-center p-8 bg-app">
       <Image src={Logo} className="h-20 w-auto" alt="logo" />
       <div className="w-full mx-auto">
-        <h2 className="text-2xl font-extrabold text-[#d4a574] text-center">
+        <h2 className="text-2xl font-extrabold text-green text-center">
           Register
         </h2>
 
@@ -129,6 +129,8 @@ const Register = ({ handleClose }: RegisterProps) => {
                   ? !/\s/.test(v) || "Spaces are not allowed"
                   : true,
             }}
+            variant="secondary"
+            textColor="text-green"
           />
           {/* Lastname */}
           <FormInput
@@ -145,6 +147,8 @@ const Register = ({ handleClose }: RegisterProps) => {
                   ? !/\s/.test(v) || "Spaces are not allowed"
                   : true,
             }}
+            variant="secondary"
+            textColor="text-green"
           />
           {/* penName */}
           <FormInput
@@ -160,6 +164,8 @@ const Register = ({ handleClose }: RegisterProps) => {
                   ? !/\s/.test(v) || "Spaces are not allowed"
                   : true,
             }}
+            variant="secondary"
+            textColor="text-green"
           />
 
           {/* Email */}
@@ -175,6 +181,8 @@ const Register = ({ handleClose }: RegisterProps) => {
                 message: "Enter a valid email",
               },
             }}
+            variant="secondary"
+            textColor="text-green"
           />
 
           {/* Password */}
@@ -193,6 +201,8 @@ const Register = ({ handleClose }: RegisterProps) => {
                   "Must be 8–15 chars with uppercase, lowercase, number & special char",
               },
             }}
+            variant="secondary"
+            textColor="text-green"
           />
 
           {/* Confirm Password */}
@@ -207,6 +217,8 @@ const Register = ({ handleClose }: RegisterProps) => {
               validate: (value: unknown) =>
                 value === watch("password") || "Passwords do not match",
             }}
+            variant="secondary"
+            textColor="text-green"
           />
 
           {/* Country + Mobile */}
@@ -222,6 +234,8 @@ const Register = ({ handleClose }: RegisterProps) => {
                 options={isdCodeDetails || []}
                 prefix="+"
                 loading={isdCodeLoading}
+                variant="secondary"
+                textColor="text-green"
               />
             </div>
             <div className="flex-1">
@@ -237,12 +251,15 @@ const Register = ({ handleClose }: RegisterProps) => {
                     message: "Invalid number",
                   },
                 }}
+                variant="secondary"
+                textColor="text-green"
               />
             </div>
           </div>
 
           {/* Submit Button */}
           <SubmitButton
+            background="bg-secondary"
             text="Register Now"
             loadingText="Registering…"
             isLoading={loading}

@@ -19,7 +19,7 @@ const CustomModal = ({ title, children, onClose }: Props) => {
         animate={{ scale: 1, opacity: 1 }}
         transition={{ duration: 0.2 }}
         onClick={(e) => e.stopPropagation()}
-        className="w-full max-w-xl bg-secondary rounded-2xl p-4 shadow-xl relative">
+        className="w-full max-w-5xl bg-secondary rounded-2xl p-4 shadow-xl relative">
         <button
           onClick={onClose}
           className="absolute right-4 top-4 text-gray-400 hover:text-white">

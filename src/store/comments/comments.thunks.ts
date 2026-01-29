@@ -24,7 +24,7 @@ export const addComment = createAsyncThunk(
       const response = await AddCommentService(payload);
       return response;
     } catch {
-      return rejectWithValue("Failed to like poem");
+      return rejectWithValue("Failed to add comment");
     }
   }
 );

@@ -24,6 +24,26 @@ export const fetchAllPoems = async ({
   return res.json();
 };
 
+export const fetchPoemById = async ({
+  poemId,
+  userId,
+}: {
+  poemId: number;
+  userId?: number;
+}): Promise<ApiPoem> => {
+  const url = userId
+    ? `${API_URLS.KAVITHAI_BY_ID}/${poemId}?userId=${userId}`
+    : `${API_URLS.KAVITHAI_BY_ID}/${poemId}`;
+
+  const res = await fetch(url, { cache: "no-store" });
+
+  if (!res.ok) {
+    throw new Error("Failed to fetch poem");
+  }
+
+  return res.json();
+};
+
 export const createPoemService = async (
   formData: FormData
 ): Promise<ApiPoem> => {
