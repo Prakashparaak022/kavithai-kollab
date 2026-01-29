@@ -6,7 +6,7 @@ export const fetchPostComments = async ({
 }: {
   postId: number;
 }): Promise<ApiResponse<ApiComment[]>> => {
-  const res = await fetch(`${API_URLS.COMMENTTS}${postId}`);
+  const res = await fetch(`${API_URLS.COMMENTS}${postId}`);
   if (!res.ok) {
     throw new Error("Failed to fetch comments");
   }
