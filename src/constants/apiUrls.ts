@@ -21,4 +21,5 @@ export const API_URLS = {
   COMMENTS_ADD: `${BASE_URL}/api/v1/comments/add`,
   COLLABS: `${BASE_URL}/api/v1/posts/collaborations/`,
   COLLABS_ADD: `${BASE_URL}/api/v1/posts/collaborations`,
+  COLLAB_DECISION: `${BASE_URL}/api/v1/posts/collaborations/decision`
 };

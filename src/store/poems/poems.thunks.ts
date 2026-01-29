@@ -3,6 +3,7 @@ import {
   AddLikeService,
   createPoemService,
   fetchAllPoems,
+  fetchPoemById,
 } from "@/services/api/poems.service";
 import { AddLikePayload } from "@/types/api";
 
@@ -14,6 +15,21 @@ export const loadPoems = createAsyncThunk(
       return response.content;
     } catch {
       return rejectWithValue("Failed to load poems");
+    }
+  }
+);
+
+export const loadPoemById = createAsyncThunk(
+  "poems/loadById",
+  async (
+    { poemId, userId }: { poemId: number; userId?: number },
+    { rejectWithValue }
+  ) => {
+    try {
+      const response = await fetchPoemById({ poemId, userId });
+      return response;
+    } catch {
+      return rejectWithValue("Failed to fetch poem");
     }
   }
 );

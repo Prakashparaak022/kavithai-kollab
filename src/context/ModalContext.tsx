@@ -51,12 +51,12 @@ export const ModalProvider = ({ children }: { children: ReactNode }) => {
             ) : (
               <>
                 {/* Border dots */}
-                <BorderDots />
+                <BorderDots color="var(--border-secondary)" />
 
                 {/* Close Button */}
                 <button
                   onClick={closeModal}
-                  className="absolute right-2 top-2 p-1 btn text-white hover:text-gray-500 rounded-full transition">
+                  className="absolute right-2 top-2 p-1 btn-secondary rounded-full transition">
                   <X size={15} />
                 </button>
                 <Register handleClose={closeModal} />

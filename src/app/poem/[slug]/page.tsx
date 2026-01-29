@@ -1,7 +1,6 @@
 import Layout from "@/components/layouts";
 import Poem from "@/components/poem";
-import { getPoemById } from "@/services/api/poems.service";
-import { cookies } from "next/headers";
+import { fetchPoemById } from "@/services/api/poems.service";
 import { notFound } from "next/navigation";
 
 export default async function PoemDetailPage({
@@ -13,7 +12,7 @@ export default async function PoemDetailPage({
 }) {
   const { slug } = await params;
   const { userId } =  await searchParams;
-  const poem = await getPoemById({
+  const poem = await fetchPoemById({
     poemId: Number(slug),
     userId: userId ? Number(userId) : undefined,
   });

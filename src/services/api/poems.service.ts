@@ -24,7 +24,7 @@ export const fetchAllPoems = async ({
   return res.json();
 };
 
-export const getPoemById = async ({
+export const fetchPoemById = async ({
   poemId,
   userId,
 }: {
@@ -34,8 +34,6 @@ export const getPoemById = async ({
   const url = userId
     ? `${API_URLS.KAVITHAI_BY_ID}/${poemId}?userId=${userId}`
     : `${API_URLS.KAVITHAI_BY_ID}/${poemId}`;
-
-  console.log("userId : ", userId);
 
   const res = await fetch(url, { cache: "no-store" });
 
