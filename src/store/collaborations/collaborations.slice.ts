@@ -2,9 +2,8 @@ import { createSlice } from "@reduxjs/toolkit";
 import { ApiCollaboration } from "@/types/api";
 import {
   addCollab,
-  approveCollab,
+  decisionCollab,
   loadCollabs,
-  rejectCollab,
 } from "./collaborations.thunks";
 
 type CollabsState = {
@@ -53,18 +52,9 @@ const collabsSlice = createSlice({
       .addCase(addCollab.rejected, (state, action) => {
         state.addLoading = false;
         state.error = action.payload as string;
-      }) // APPROVE COLLAB
-      .addCase(approveCollab.fulfilled, (state, action) => {
-        state.collabs = state.collabs.filter(
-          (c) => c.id !== action.payload.collabId
-        );
-      })
-
-      // REJECT COLLAB
-      .addCase(rejectCollab.fulfilled, (state, action) => {
-        state.collabs = state.collabs.filter(
-          (c) => c.id !== action.payload.collabId
-        );
+      }) // DECISION COLLAB
+      .addCase(decisionCollab.fulfilled, (state, action) => {
+        state.collabs = state.collabs.filter((c) => c.id !== action.payload.id);
       });
   },
 });

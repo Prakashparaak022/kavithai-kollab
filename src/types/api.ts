@@ -85,4 +85,6 @@ export type AddCollabPayload = {
 export type DecisionCollabPayload = {
   collabId: number;
   ownerId: number;
+  updatedContent?: string;
+  status: string;
 };

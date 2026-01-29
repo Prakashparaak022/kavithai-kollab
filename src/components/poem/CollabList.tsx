@@ -7,25 +7,22 @@ import { usePlayerDetails } from "@/utils/UserSession";
 import useRequireAuth from "@/hooks/useRequireAuth";
 import { useSelector } from "react-redux";
 import { RootState, useAppDispatch } from "@/store";
-import {
-  addCollab,
-  approveCollab,
-  loadCollabs,
-  rejectCollab,
-} from "@/store/collaborations";
+import { addCollab, decisionCollab, loadCollabs } from "@/store/collaborations";
 import { toast } from "react-toastify";
 import { ApiCollaboration, ApiPoem } from "@/types/api";
 import { getUserImageSrc } from "@/utils/imageUtils";
 import Loader from "../ui/Loader";
 import CustomModal from "../ui/CustomModal";
 import CollabApproveCard from "./CollabApproveCard";
+import { fetchPoemById } from "@/services/api/poems.service";
 
 type Props = {
   poem: ApiPoem;
+  onPoemRefresh: (updatedPoem: ApiPoem) => void;
   onInvite: () => void;
 };
 
-const CollaborationsList = ({ poem, onInvite }: Props) => {
+const CollaborationsList = ({ poem, onPoemRefresh, onInvite }: Props) => {
   const [selectedCollab, setSelectedCollab] = useState<ApiCollaboration | null>(
     null
   );
@@ -62,16 +59,28 @@ const CollaborationsList = ({ poem, onInvite }: Props) => {
       .catch(() => toast.error("Failed to add collaboration"));
   };
 
-  const handleApproveCollab = () => {
+  const handleApproveCollab = (updatedContent: string) => {
     {
       if (!activeCollab || !playerDetails?.id) return;
 
       dispatch(
-        approveCollab({
+        decisionCollab({
           collabId: activeCollab.id,
           ownerId: playerDetails.id,
+          updatedContent,
+          status: "APPROVED",
         })
-      );
+      )
+        .unwrap()
+        .then(async () => {
+          const updatedPoem = await fetchPoemById({
+            poemId: poem.id,
+            userId: playerDetails.id,
+          });
+
+          onPoemRefresh(updatedPoem);
+        });
+
       setActiveCollab(null);
       setSelectedCollab(null);
     }
@@ -214,9 +223,10 @@ const CollaborationsList = ({ poem, onInvite }: Props) => {
                     onClick={(e) => {
                       e.stopPropagation();
                       dispatch(
-                        rejectCollab({
+                        decisionCollab({
                           collabId: collab.id,
                           ownerId: playerDetails.id,
+                          status: "REJECTED",
                         })
                       );
                     }}
@@ -239,8 +249,7 @@ const CollaborationsList = ({ poem, onInvite }: Props) => {
           <CollabApproveCard
             title={poem.title}
             poemContent={poem.content ?? ""}
-            collabContent={content}
-            imageUrl={poem.imageUrl}
+            collabContent={activeCollab.content}
             handleApprove={handleApproveCollab}
           />
         </CustomModal>

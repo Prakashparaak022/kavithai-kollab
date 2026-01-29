@@ -26,11 +26,11 @@ const initialNotifications: Notification[] = [
   },
 ];
 
-const Poem = ({ poem }: Props) => {
+const Poem = ({ poem: initialPoem }: Props) => {
+  const [poem, setPoem] = useState<ApiPoem>(initialPoem);
   const [showInviteModal, setShowInviteModal] = useState(false);
   const [notifications, setNotifications] =
     useState<Notification[]>(initialNotifications);
-    
 
   return (
     <AppBgLayout
@@ -48,11 +48,12 @@ const Poem = ({ poem }: Props) => {
           </PoemMotion>
           {/* Collaboration List */}
           {poem.isPublish ? (
-            <CommentsList postId={poem.id}/>
+            <CommentsList postId={poem.id} />
           ) : (
             <CollaborationsList
               poem={poem}
               onInvite={() => setShowInviteModal(true)}
+              onPoemRefresh={(updatedPoem) => setPoem(updatedPoem)}
             />
           )}
         </div>

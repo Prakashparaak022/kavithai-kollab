@@ -1,8 +1,7 @@
 import {
   AddCollabService,
-  ApproveCollabService,
+  decisionCollabService,
   fetchPostCollabs,
-  rejectCollabService,
 } from "@/services/api/collaboration.service";
 import { AddCollabPayload, DecisionCollabPayload } from "@/types/api";
 import { createAsyncThunk } from "@reduxjs/toolkit";
@@ -31,26 +30,14 @@ export const addCollab = createAsyncThunk(
   }
 );
 
-export const approveCollab = createAsyncThunk(
-  "collabs/approveCollab",
+export const decisionCollab = createAsyncThunk(
+  "collabs/decisionCollab",
   async (payload: DecisionCollabPayload, { rejectWithValue }) => {
     try {
-      await ApproveCollabService(payload);
-      return payload;
+       const response = await decisionCollabService(payload);
+      return response;
     } catch {
-      return rejectWithValue("Failed to approve collaboration");
-    }
-  }
-);
-
-export const rejectCollab = createAsyncThunk(
-  "collabs/rejectCollab",
-  async (payload: DecisionCollabPayload, { rejectWithValue }) => {
-    try {
-      await rejectCollabService(payload);
-      return payload;
-    } catch {
-      return rejectWithValue("Failed to reject collaboration");
+      return rejectWithValue("Failed to approve/reject collaboration");
     }
   }
 );

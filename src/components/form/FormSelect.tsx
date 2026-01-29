@@ -25,6 +25,8 @@ type FormSelectProps<
   prefix?: string;
   loading?: boolean;
   loaderColor?: string;
+  variant?: string;
+  textColor?: string;
 };
 
 function FormSelect<
@@ -42,6 +44,8 @@ function FormSelect<
   prefix,
   loading = false,
   loaderColor = "#E5E7EB",
+  variant = "primary",
+  textColor = "text-secondary",
 }: FormSelectProps<TForm, TOption>) {
   const error = errors[name];
 
@@ -53,18 +57,17 @@ function FormSelect<
       render={({ field }) => (
         <div className="relative">
           {prefix && (
-            <span className="absolute left-3 top-1/2 -translate-y-1/2 text-gray-400 pointer-events-none">
+            <span
+              className={`absolute left-3 top-1/2 -translate-y-1/2 ${textColor} pointer-events-none`}>
               {prefix}
             </span>
           )}
 
           <select
             {...field}
-            className={`w-full h-9 rounded-lg text-gray-200 text-sm border ${
-              error ? "border-red-500" : "border-primary"
-            } bg-secondary focus:outline-none ${
-              prefix ? "pl-8" : "pl-4"
-            } pr-4`}
+            className={`w-full h-9 rounded-lg ${textColor} text-sm border ${
+              error ? "border-red-500" : `border-${variant}`
+            } focus:outline-none ${prefix ? "pl-8" : "pl-4"} pr-4`}
             disabled={loading || field.disabled}>
             {loading ? (
               <option value="" disabled>
