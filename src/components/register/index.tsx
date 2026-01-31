@@ -88,8 +88,7 @@ const Register = ({ handleClose }: RegisterProps) => {
           toast.error(
             errorData?.errors?.[0]?.defaultMessage ||
               Object.values(errorData?.data || {})[0] ||
-              formatErrorMessage(errorData) ||
-              "Registration failed"
+              formatErrorMessage(errorData, "Registration failed")
           );
         }
       } catch (error) {

@@ -79,3 +79,22 @@ export const AddLikeService = async ({
 
   return res.json();
 };
+
+export const fetchMyPoems = async ({
+  userId,
+  page = 0,
+  size = 10,
+}: {
+  userId: number;
+  page?: number;
+  size?: number;
+}): Promise<ApiResponse<ApiPoem[]>> => {
+  const url = `${API_URLS.MY_POSTS}?userId=${userId}&page=${page}&size=${size}`;
+  const res = await fetch(url);
+
+  if (!res.ok) {
+    throw new Error("Failed to fetch my poems");
+  }
+
+  return res.json();
+};

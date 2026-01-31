@@ -4,6 +4,7 @@ import {
   fetchPostCollabs,
 } from "@/services/api/collaboration.service";
 import { AddCollabPayload, DecisionCollabPayload } from "@/types/api";
+import { formatErrorMessage } from "@/utils/errorMessage";
 import { createAsyncThunk } from "@reduxjs/toolkit";
 
 export const loadCollabs = createAsyncThunk(
@@ -12,8 +13,10 @@ export const loadCollabs = createAsyncThunk(
     try {
       const response = await fetchPostCollabs({ postId });
       return response.content;
-    } catch {
-      return rejectWithValue("failed to load collaborations");
+    } catch (error: unknown) {
+      return rejectWithValue(
+        formatErrorMessage(error, "failed to load collaborations")
+      );
     }
   }
 );
@@ -24,8 +27,10 @@ export const addCollab = createAsyncThunk(
     try {
       const response = await AddCollabService(payload);
       return response;
-    } catch {
-      return rejectWithValue("Failed to add collaboration");
+    } catch (error: unknown) {
+      return rejectWithValue(
+        formatErrorMessage(error, "Failed to add collaboration")
+      );
     }
   }
 );
@@ -34,10 +39,12 @@ export const decisionCollab = createAsyncThunk(
   "collabs/decisionCollab",
   async (payload: DecisionCollabPayload, { rejectWithValue }) => {
     try {
-       const response = await decisionCollabService(payload);
+      const response = await decisionCollabService(payload);
       return response;
-    } catch {
-      return rejectWithValue("Failed to approve/reject collaboration");
+    } catch (error: unknown) {
+      return rejectWithValue(
+        formatErrorMessage(error, "Failed to approve/reject collaboration")
+      );
     }
   }
 );

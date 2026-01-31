@@ -1,6 +1,12 @@
 import { createSlice } from "@reduxjs/toolkit";
 import { ApiPoem } from "@/types/api";
-import { createPoem, loadPoems, togglePoemLike } from "./poems.thunks";
+import {
+  createPoem,
+  loadMyPoems,
+  loadPoemById,
+  loadPoems,
+  togglePoemLike,
+} from "./poems.thunks";
 
 type PoemsState = {
   poems: ApiPoem[];
@@ -8,6 +14,11 @@ type PoemsState = {
   likeLoading: number | null;
   createLoading: boolean;
   createError: string | null;
+  selectedPoem: ApiPoem | null;
+  selectedPoemLoading: boolean;
+  myPoems: ApiPoem[];
+  myPoemLoading: boolean;
+  myPoemError: string | null;
 };
 
 const initialState: PoemsState = {
@@ -16,6 +27,11 @@ const initialState: PoemsState = {
   likeLoading: null,
   createLoading: false,
   createError: null,
+  selectedPoem: null,
+  selectedPoemLoading: false,
+  myPoemLoading: false,
+  myPoems: [],
+  myPoemError: null,
 };
 
 const poemsSlice = createSlice({
@@ -42,6 +58,7 @@ const poemsSlice = createSlice({
       })
       .addCase(createPoem.fulfilled, (state, action) => {
         state.poems.push(action.payload);
+        state.myPoems.push(action.payload);
         state.createLoading = false;
       })
       .addCase(createPoem.rejected, (state, action) => {
@@ -55,16 +72,43 @@ const poemsSlice = createSlice({
       .addCase(togglePoemLike.fulfilled, (state, action) => {
         const { id, isLiked, likesCount } = action.payload;
 
-        const poem = state.poems.find((p) => p.id === id);
-        if (poem) {
-          poem.isLiked = isLiked;
-          poem.likesCount = likesCount;
-        }
+        const update = (list: ApiPoem[]) => {
+          const poem = list.find((p) => p.id === id);
+          if (poem) {
+            poem.isLiked = isLiked;
+            poem.likesCount = likesCount;
+          }
+        };
+
+        update(state.poems);
+        update(state.myPoems);
 
         state.likeLoading = null;
       })
       .addCase(togglePoemLike.rejected, (state) => {
         state.likeLoading = null;
+      })
+      //LOAD POEM BY ID
+      .addCase(loadPoemById.pending, (state) => {
+        state.selectedPoemLoading = true;
+      })
+      .addCase(loadPoemById.fulfilled, (state, action) => {
+        state.selectedPoem = action.payload;
+        state.selectedPoemLoading = false;
+      })
+      .addCase(loadPoemById.rejected, (state) => {
+        state.selectedPoemLoading = false;
+      })
+      //GET MY POEMS
+      .addCase(loadMyPoems.pending, (state) => {
+        state.myPoemLoading = true;
+      })
+      .addCase(loadMyPoems.fulfilled, (state, action) => {
+        state.myPoems = action.payload;
+        state.myPoemLoading = false;
+      })
+      .addCase(loadMyPoems.rejected, (state) => {
+        state.myPoemLoading = false;
       });
   },
 });

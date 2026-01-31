@@ -18,8 +18,11 @@ export const useISDCode = (dependencies = []) => {
         setData(jsonData);
       } else {
         const errrorResponse = await response.text();
-        const errorMsg = formatErrorMessage(errrorResponse);
-        toast.error(errorMsg || "Error while fetching ISD Code details");
+        const errorMsg = formatErrorMessage(
+          errrorResponse,
+          "Error while fetching ISD Code details"
+        );
+        toast.error(errorMsg);
         console.error("Error while fetching ISD Code details:", errrorResponse);
         setError(errorMsg);
       }
