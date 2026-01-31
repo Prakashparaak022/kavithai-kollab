@@ -30,13 +30,13 @@ const AboutPoem = () => {
         ))}
 
         {/* Poet Approval */}
-        <div className="flex justify-between items-center">
+        {/* <div className="flex justify-between items-center">
           <p className="text-[#6a7a78] text-sm">Original Poet Approval</p>
           <CustomSwitch
             checked={requireApproval}
             onChange={() => setRequireApproval((prev) => !prev)}
           />
-        </div>
+        </div> */}
       </div>
     </div>
   );
