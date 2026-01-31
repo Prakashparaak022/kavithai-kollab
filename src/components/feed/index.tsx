@@ -67,7 +67,7 @@ const Feed = () => {
         </div>
       }
       right={
-        <div className="p-4 space-y-2">
+        <div className="p-4 flex flex-col gap-2">
           <Link
             href={"/post"}
             onClick={requireAuth}

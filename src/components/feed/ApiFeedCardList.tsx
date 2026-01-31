@@ -14,6 +14,7 @@ import CommentsList from "./CommentsList";
 import { getBase64ImageSrc, getUserImageSrc } from "@/utils/imageUtils";
 import Loader from "../ui/Loader";
 import Link from "next/link";
+import { PoemCardSkeleton } from "../poem/PoemCardSkeleton";
 
 type Props = {
   filter: FilterType;
@@ -79,9 +80,10 @@ const ApiFeedCardList = ({ filter, feedType }: Props) => {
 
   if (loading) {
     return (
-      <div className="w-full flex flex-col items-center justify-center py-6">
-        <Loader />
-        <p className="text-green text-sm font-semibold">Loading poems...</p>
+      <div className="grid grid-cols-12 gap-5">
+        {Array.from({ length: 8 }).map((_, index) => (
+          <PoemCardSkeleton key={index} />
+        ))}
       </div>
     );
   }
@@ -167,6 +169,7 @@ const ApiFeedCardList = ({ filter, feedType }: Props) => {
           </Link>
         );
       })}
+
       {commentsOpen && activePoemId && (
         <CustomModal
           title="Add a comment"
