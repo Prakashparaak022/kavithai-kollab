@@ -36,7 +36,7 @@ const Header = () => {
   ];
 
   return (
-    <header className="bg-secondary relative z-50">
+    <header className="bg-secondary relative z-50 h-[60px]">
       <nav className="px-4 py-3 flex items-center justify-between">
         <Link href="/" className="flex items-center">
           <Image
