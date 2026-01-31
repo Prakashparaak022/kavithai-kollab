@@ -1,20 +1,16 @@
 "use client";
 
-import { useEffect, useMemo, useState } from "react";
-import { FeedType, FilterType } from "./index";
-import Image from "next/image";
-import { useSelector } from "react-redux";
-import { RootState, useAppDispatch } from "@/store";
-import { Heart, MessageCircle } from "lucide-react";
-import { usePlayerDetails } from "@/utils/UserSession";
 import useRequireAuth from "@/hooks/useRequireAuth";
+import { RootState, useAppDispatch } from "@/store";
 import { loadPoems, togglePoemLike } from "@/store/poems";
+import { usePlayerDetails } from "@/utils/UserSession";
+import { useEffect, useMemo, useState } from "react";
+import { useSelector } from "react-redux";
+import PoemCard from "../common/PoemCard";
+import { PoemCardSkeleton } from "../poem/PoemCardSkeleton";
 import CustomModal from "../ui/CustomModal";
 import CommentsList from "./CommentsList";
-import { getBase64ImageSrc, getUserImageSrc } from "@/utils/imageUtils";
-import Loader from "../ui/Loader";
-import Link from "next/link";
-import { PoemCardSkeleton } from "../poem/PoemCardSkeleton";
+import { FeedType, FilterType } from "./index";
 
 type Props = {
   filter: FilterType;
@@ -89,86 +85,24 @@ const ApiFeedCardList = ({ filter, feedType }: Props) => {
   }
 
   return (
-    <div className="grid grid-cols-12 gap-5">
-      {filteredPoems.map((poem, index) => {
-        return (
-          <Link
+    <>
+      <div className="grid grid-cols-12 gap-5">
+        {filteredPoems.map((poem, index) => (
+          <PoemCard
             key={poem.id}
-            href={
-              poem.isPublish
-                ? `/poem/${poem.id}`
-                : `/poem/${poem.id}?userId=${playerDetails?.id}`
+            poem={poem}
+            index={index}
+            userId={playerDetails?.id}
+            onLike={(id, liked) => withAuth(() => handleLike(id, liked))()}
+            onComment={(id) =>
+              withAuth(() => {
+                setActivePoemId(id);
+                setCommentsOpen(true);
+              })()
             }
-            className="col-span-12 sm:col-span-6 md:col-span-4 lg:col-span-3 bg-card rounded-2xl flex flex-col">
-            <div className="relative h-44 w-full">
-              <Image
-                src={getBase64ImageSrc(poem.imageUrl ?? "")}
-                alt={poem.title || ""}
-                fill
-                unoptimized
-                className="object-cover rounded-t-2xl p-2"
-                priority={index === 0}
-              />
-            </div>
-
-            <div className="pt-2 px-4 pb-4 flex flex-col h-40 space-y-1">
-              <h3 className="text-base font-semibold text-gray-800 line-clamp-1">
-                {poem.title}
-              </h3>
-
-              <div className="flex items-center gap-1">
-                <Image
-                  src={getUserImageSrc(poem.authorImage)}
-                  alt={poem.author}
-                  width={20}
-                  height={20}
-                  className="rounded-full object-cover"
-                />
-                <span className="text-xs text-blue-500 font-medium line-clamp-1">
-                  {poem.author}
-                </span>
-              </div>
-
-              <p className="text-sm text-gray-600 line-clamp-2">
-                {poem.content}
-              </p>
-
-              <div className="mt-auto flex items-center justify-between text-gray-500">
-                <button
-                  onClick={(e) => {
-                    e.preventDefault();
-                    withAuth(() => handleLike(poem.id, poem.isLiked))();
-                  }}
-                  className={`flex items-center gap-1 text-xs transition ${
-                    poem.isLiked
-                      ? "text-red-500"
-                      : "text-gray-500 hover:text-red-500"
-                  }`}>
-                  <Heart
-                    size={16}
-                    fill={poem.isLiked ? "currentColor" : "none"}
-                  />
-                  {poem.likesCount}
-                </button>
-
-                <div
-                  className="flex items-center gap-1 text-xs hover:text-blue-500 transition"
-                  onClick={(e) => {
-                    e.preventDefault();
-                    if (poem.isPrivate) return;
-                    withAuth(() => {
-                      setActivePoemId(poem.id);
-                      setCommentsOpen(true);
-                    })();
-                  }}>
-                  <MessageCircle size={16} />
-                  {poem.commentsCount}
-                </div>
-              </div>
-            </div>
-          </Link>
-        );
-      })}
+          />
+        ))}
+      </div>
 
       {commentsOpen && activePoemId && (
         <CustomModal
@@ -177,7 +111,7 @@ const ApiFeedCardList = ({ filter, feedType }: Props) => {
           <CommentsList postId={activePoemId} />
         </CustomModal>
       )}
-    </div>
+    </>
   );
 };
 
