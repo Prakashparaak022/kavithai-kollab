@@ -45,6 +45,7 @@ export type ApiPoem = {
 
   likesCount: number;
   commentsCount: number;
+  collaborationCount: number;
   isLiked: boolean;
   createdAt: string;
 };

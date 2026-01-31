@@ -1,9 +1,13 @@
+"use client";
 import { myCollaborations } from "@/data/myCollaborations";
 import AboutPoem from "../poem/AboutPoem";
 import Collaborations from "./Collaborations";
 import AppBgLayout from "../layouts/AppBgLayout";
+import { usePlayerDetails } from "@/utils/UserSession";
 
 const MyCollaborations = () => {
+  const { displayName } = usePlayerDetails();
+
   return (
     <AppBgLayout
       layout="9/3"
@@ -14,7 +18,7 @@ const MyCollaborations = () => {
       }
       right={
         <div className="p-4">
-          <AboutPoem />
+          <AboutPoem poetName={displayName || ""} />
         </div>
       }
     />

@@ -60,7 +60,7 @@ const Poem = ({ poem: initialPoem }: Props) => {
       }
       right={
         <div className="p-4 space-y-4">
-          <AboutPoem />
+          <AboutPoem participants={poem.collaborationCount} poetName={poem.author} />
           {showInviteModal && (
             <InviteModal onClose={() => setShowInviteModal(false)} />
           )}

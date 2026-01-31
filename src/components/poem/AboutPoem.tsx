@@ -8,13 +8,18 @@ type InfoItem = {
   inline?: boolean;
 };
 
-const AboutPoem = () => {
+type Props = {
+  participants?: number;
+  poetName: string;
+};
+
+const AboutPoem = ({ participants, poetName }: Props) => {
   const [requireApproval, setRequireApproval] = useState(true);
 
   const infoList: InfoItem[] = [
-    { label: "Poet", value: "@Bhronohi" },
+    { label: "Poet", value: `@${poetName}` },
     { label: "Time Remaining", value: "11 hours", inline: true },
-    { label: "Participants", value: 6 },
+    ...(participants ? [{ label: "Participants", value: participants }] : []),
   ];
 
   return (
