@@ -1,62 +1,64 @@
 "use client";
 
 import { useState } from "react";
-import { Collaboration } from "@/types/poem";
 import { motion } from "framer-motion";
 import { Check, ChevronDown, X } from "lucide-react";
 import { usePlayerDetails } from "@/utils/UserSession";
+import { ApiCollaboration } from "@/types/api";
+import { getUserImageSrc } from "@/utils/imageUtils";
+import { useAppDispatch } from "@/store";
+import { acceptCollab, rejectCollab } from "@/store/collaborations";
+import CollabSkeleton from "./CollabsSkeleton";
 
 type Props = {
-  collaborations: Collaboration[];
+  collaborations: ApiCollaboration[];
+  loading: boolean;
 };
 
-const Collaborations = ({ collaborations }: Props) => {
-  const [selectedCollab, setSelectedCollab] = useState<Collaboration | null>(
+const Collaborations = ({ collaborations, loading }: Props) => {
+  const [selectedCollab, setSelectedCollab] = useState<ApiCollaboration | null>(
     null
   );
-  const [collaborationsList, setCollaborationsList] =
-    useState<Collaboration[]>(collaborations);
-  const [showInput, setShowInput] = useState(false);
-  const [newLine, setNewLine] = useState("");
 
   const { playerDetails } = usePlayerDetails();
+  const dispatch = useAppDispatch();
 
-  const handleToggle = (collab: Collaboration) => {
-    setSelectedCollab((prev) => (prev?.id === collab.id ? null : collab));
-  };
-
-  const handleAddCollaboration = () => {
-    if (!newLine.trim()) return;
-
-    const newCollab: Collaboration = {
-      id: Date.now(),
-      author: "@you",
-      content: newLine,
-      imageUrl: "https://randomuser.me/api/portraits/men/32.jpg",
-    };
-
-    setCollaborationsList((prev) => [newCollab, ...prev]);
-    setNewLine("");
-    setShowInput(false);
-  };
-
-  const handleReject = (id: number) => {
-    setCollaborationsList((prev) => prev.filter((c) => c.id !== id));
+  const handleAccept = (collabId: number) => {
+    if (!playerDetails?.id) return;
+    dispatch(acceptCollab({ collabId, userId: playerDetails?.id }));
     setSelectedCollab(null);
   };
 
-  return (
-    <div className="space-y-2">
-      <h3 className="text-lg font-semibold text-green">Pending Contibutions</h3>
+  const handleReject = (collabId: number) => {
+    if (!playerDetails?.id) return;
+    dispatch(rejectCollab({ collabId, userId: playerDetails?.id }));
+    setSelectedCollab(null);
+  };
 
+  
+    if (loading) {
+      return (
+        <div className="space-y-3">
+          {Array.from({ length: 8 }).map((_, index) => (
+            <CollabSkeleton key={index} />
+          ))}
+        </div>
+      );
+    }
+
+  return (
       <div className="space-y-3">
-        {collaborationsList.map((collab) => {
+        {collaborations.map((collab) => {
           const isOpen = selectedCollab?.id === collab.id;
 
           return (
             <div
               key={collab.id}
-              onClick={() => handleToggle(collab)}
+              onClick={() =>
+                setSelectedCollab((prev) =>
+                  prev?.id === collab.id ? null : collab
+                )
+              }
               role="button"
               tabIndex={0}
               className="p-3 rounded-lg bg-card cursor-pointer
@@ -66,7 +68,7 @@ const Collaborations = ({ collaborations }: Props) => {
                 <div className="flex-1">
                   <div className="flex items-center gap-2">
                     <img
-                      src={collab.imageUrl}
+                      src={getUserImageSrc(collab.authorImage)}
                       alt={collab.author}
                       className="w-8 h-8 rounded-full object-cover"
                     />
@@ -99,10 +101,7 @@ const Collaborations = ({ collaborations }: Props) => {
                 <div className="mt-3 flex gap-2">
                   <button
                     type="button"
-                    onClick={(e) => {
-                      e.stopPropagation();
-                      setSelectedCollab(null);
-                    }}
+                    onClick={() => handleAccept(collab.id)}
                     className="flex items-center gap-1 px-3 h-6 text-xs rounded-full
                     bg-green-700 text-white
                     hover:bg-green-800 transition">
@@ -112,10 +111,7 @@ const Collaborations = ({ collaborations }: Props) => {
 
                   <button
                     type="button"
-                    onClick={(e) => {
-                      e.stopPropagation();
-                      handleReject(collab.id);
-                    }}
+                    onClick={() => handleReject(collab.id)}
                     className="flex items-center gap-1 px-3 h-6 text-xs rounded-full
                     bg-red-700 text-white
                     hover:bg-red-800 transition">
@@ -128,7 +124,6 @@ const Collaborations = ({ collaborations }: Props) => {
           );
         })}
       </div>
-    </div>
   );
 };
 

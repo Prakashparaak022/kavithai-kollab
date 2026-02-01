@@ -3,12 +3,14 @@ import { poemsReducer } from "./poems";
 import { useDispatch } from "react-redux";
 import { commentsReducer } from "./comments";
 import { collabsReducer } from "./collaborations";
+import { userProfileReducer } from "./userProfile";
 
 export const store = configureStore({
   reducer: {
     poems: poemsReducer,
     comments: commentsReducer,
-    collabs: collabsReducer
+    collabs: collabsReducer,
+    userProfile: userProfileReducer
   },
 });
 
