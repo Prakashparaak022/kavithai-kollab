@@ -1,18 +1,19 @@
 "use client";
 
 import { Check, Copy, Search, X } from "lucide-react";
-import { useEffect, useRef, useState } from "react";
+import { useEffect, useState } from "react";
 import { toast } from "react-toastify";
 import { motion } from "framer-motion";
-import { useDispatch, useSelector } from "react-redux";
+import { useSelector } from "react-redux";
 import InviteUserSkeleton from "./InviteUserSkeleton";
 import { loadUserProfiles } from "@/store/userProfile/userProfile.thunks";
-import { RootState, AppDispatch } from "@/store";
+import { RootState,  useAppDispatch } from "@/store";
 import { inviteCollab } from "@/store/collaborations";
 import { ApiPoem } from "@/types/api";
 import { usePlayerDetails } from "@/utils/UserSession";
 import { resetUserProfiles } from "@/store/userProfile";
 import { useDebounce } from "@/hooks/useDebounce";
+import InfiniteScroll from "../common/InfiniteScroll";
 
 type Props = {
   poem: ApiPoem;
@@ -22,7 +23,7 @@ type Props = {
 const PAGE_SIZE = 25;
 
 const InviteModal = ({ poem, onClose }: Props) => {
-  const dispatch = useDispatch<AppDispatch>();
+  const dispatch = useAppDispatch();
   const { playerDetails } = usePlayerDetails();
 
   const {
@@ -37,8 +38,6 @@ const InviteModal = ({ poem, onClose }: Props) => {
   const [invited, setInvited] = useState<Set<number>>(new Set());
   const debouncedSearch = useDebounce(searchQuery, 400);
 
-  const isFetchingRef = useRef(false);
-
   // Initial load
   useEffect(() => {
     dispatch(resetUserProfiles());
@@ -52,24 +51,6 @@ const InviteModal = ({ poem, onClose }: Props) => {
       })
     );
   }, [dispatch, debouncedSearch]);
-
-  const loadMoreUsers = () => {
-    if (loading || !hasMore || isFetchingRef.current) return;
-
-    isFetchingRef.current = true;
-
-    dispatch(
-      loadUserProfiles({
-        role: "USER",
-        status: 1,
-        page: page + 1,
-        size: PAGE_SIZE,
-        firstName: debouncedSearch,
-      })
-    ).finally(() => {
-      isFetchingRef.current = false;
-    });
-  };
 
   const handleInvite = async (userId: number, name: string) => {
     if (!playerDetails?.id || invited.has(userId)) return;
@@ -125,14 +106,30 @@ const InviteModal = ({ poem, onClose }: Props) => {
             />
           </div>
 
-          <div
+          <InfiniteScroll
             className="space-y-3 mb-6 max-h-[300px] overflow-y-auto"
-            onScroll={(e) => {
-              const t = e.currentTarget;
-              if (t.scrollTop + t.clientHeight >= t.scrollHeight - 40) {
-                loadMoreUsers();
-              }
-            }}>
+            loading={loading}
+            hasMore={hasMore}
+            list={userProfiles}
+            onLoadMore={() =>
+              dispatch(
+                loadUserProfiles({
+                  role: "USER",
+                  status: 1,
+                  page: page + 1,
+                  size: PAGE_SIZE,
+                  firstName: debouncedSearch,
+                })
+              )
+            }
+            loader={Array.from({ length: 4 }).map((_, i) => (
+              <InviteUserSkeleton key={i} />
+            ))}
+            emptyMessage={
+              <p className="text-center text-sm text-gray-500">
+                No users found
+              </p>
+            }>
             {userProfiles.map((user) => {
               const isInvited = invited.has(user.id);
 
@@ -170,18 +167,7 @@ const InviteModal = ({ poem, onClose }: Props) => {
                 </div>
               );
             })}
-
-            {loading &&
-              Array.from({ length: 4 }).map((_, i) => (
-                <InviteUserSkeleton key={i} />
-              ))}
-
-            {!loading && userProfiles.length === 0 && (
-              <p className="text-center text-sm text-gray-500">
-                No users found
-              </p>
-            )}
-          </div>
+          </InfiniteScroll>
 
           <div>
             <h3 className="text-[#3a4a48] mb-3">Copy Invite Link</h3>
