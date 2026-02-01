@@ -1,23 +1,20 @@
 import { createSlice } from "@reduxjs/toolkit";
 import { ApiUserProfile } from "@/types/api";
 import { loadUserProfiles } from "./userProfile.thunks";
-
-type UserProfileState = {
-  userProfiles: ApiUserProfile[];
-  loading: boolean;
-  error: string | null;
-};
-
-const initialState: UserProfileState = {
-  userProfiles: [],
-  loading: false,
-  error: null,
-};
+import { createInitialPaginatedState } from "@/types/pagination";
 
 const userProfileSlice = createSlice({
   name: "userProfiles",
-  initialState,
-  reducers: {},
+  initialState: createInitialPaginatedState<ApiUserProfile>(10),
+  reducers: {
+    resetUserProfiles(state) {
+      state.items = [];
+      state.page = 0;
+      state.total = 0;
+      state.hasMore = true;
+      state.error = null;
+    },
+  },
   extraReducers: (builder) => {
     builder
       .addCase(loadUserProfiles.pending, (state) => {
@@ -25,8 +22,15 @@ const userProfileSlice = createSlice({
         state.error = null;
       })
       .addCase(loadUserProfiles.fulfilled, (state, action) => {
+        const { content, totalElements, number } = action.payload;
+
         state.loading = false;
-        state.userProfiles = action.payload;
+
+        state.items = number === 0 ? content : [...state.items, ...content];
+
+        state.page = number;
+        state.total = totalElements;
+        state.hasMore = state.items.length < totalElements;
       })
       .addCase(loadUserProfiles.rejected, (state, action) => {
         state.loading = false;
@@ -35,4 +39,5 @@ const userProfileSlice = createSlice({
   },
 });
 
+export const { resetUserProfiles } = userProfileSlice.actions;
 export default userProfileSlice.reducer;

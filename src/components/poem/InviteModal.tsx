@@ -1,7 +1,7 @@
 "use client";
 
 import { Check, Copy, Search, X } from "lucide-react";
-import { useEffect, useMemo, useState } from "react";
+import { useEffect, useRef, useState } from "react";
 import { toast } from "react-toastify";
 import { motion } from "framer-motion";
 import { useDispatch, useSelector } from "react-redux";
@@ -11,57 +11,81 @@ import { RootState, AppDispatch } from "@/store";
 import { inviteCollab } from "@/store/collaborations";
 import { ApiPoem } from "@/types/api";
 import { usePlayerDetails } from "@/utils/UserSession";
+import { resetUserProfiles } from "@/store/userProfile";
+import { useDebounce } from "@/hooks/useDebounce";
 
 type Props = {
   poem: ApiPoem;
   onClose: () => void;
 };
 
+const PAGE_SIZE = 25;
+
 const InviteModal = ({ poem, onClose }: Props) => {
   const dispatch = useDispatch<AppDispatch>();
   const { playerDetails } = usePlayerDetails();
 
-  const { userProfiles, loading } = useSelector(
-    (state: RootState) => state.userProfile
-  );
+  const {
+    items: userProfiles,
+    loading,
+    page,
+    hasMore,
+  } = useSelector((state: RootState) => state.userProfile);
 
   const [searchQuery, setSearchQuery] = useState("");
   const [copiedLink, setCopiedLink] = useState(false);
   const [invited, setInvited] = useState<Set<number>>(new Set());
+  const debouncedSearch = useDebounce(searchQuery, 400);
 
+  const isFetchingRef = useRef(false);
+
+  // Initial load
   useEffect(() => {
+    dispatch(resetUserProfiles());
     dispatch(
       loadUserProfiles({
         role: "USER",
         status: 1,
         page: 0,
-        size: 25,
+        size: PAGE_SIZE,
+        firstName: debouncedSearch,
       })
     );
-  }, [dispatch]);
+  }, [dispatch, debouncedSearch]);
 
-  const filteredUsers = useMemo(() => {
-    return userProfiles.filter(
-      (u) =>
-        u.firstName.toLowerCase().includes(searchQuery.toLowerCase()) ||
-        u.penName?.toLowerCase().includes(searchQuery.toLowerCase())
-    );
-  }, [userProfiles, searchQuery]);
+  const loadMoreUsers = () => {
+    if (loading || !hasMore || isFetchingRef.current) return;
+
+    isFetchingRef.current = true;
+
+    dispatch(
+      loadUserProfiles({
+        role: "USER",
+        status: 1,
+        page: page + 1,
+        size: PAGE_SIZE,
+        firstName: debouncedSearch,
+      })
+    ).finally(() => {
+      isFetchingRef.current = false;
+    });
+  };
 
   const handleInvite = async (userId: number, name: string) => {
-    if (invited.has(userId) || !playerDetails?.id) return;
+    if (!playerDetails?.id || invited.has(userId)) return;
+
     try {
       await dispatch(
         inviteCollab({
           postId: poem.id,
-          ownerId: playerDetails?.id,
+          ownerId: playerDetails.id,
           invitedUserId: userId,
         })
       ).unwrap();
 
       setInvited((prev) => new Set(prev).add(userId));
       toast.success(`Invite sent to ${name}`);
-    } catch (error) {
+    } catch {
       toast.error("Failed to send invite");
     }
   };
@@ -101,53 +125,58 @@ const InviteModal = ({ poem, onClose }: Props) => {
             />
           </div>
 
-          <div className="space-y-3 mb-6 max-h-[300px] overflow-y-auto">
+          <div
+            className="space-y-3 mb-6 max-h-[300px] overflow-y-auto"
+            onScroll={(e) => {
+              const t = e.currentTarget;
+              if (t.scrollTop + t.clientHeight >= t.scrollHeight - 40) {
+                loadMoreUsers();
+              }
+            }}>
+            {userProfiles.map((user) => {
+              const isInvited = invited.has(user.id);
+
+              return (
+                <div
+                  key={user.id}
+                  className="flex items-center justify-between bg-card p-4 rounded-xl">
+                  <div className="flex items-center gap-3">
+                    <div className="w-11 h-11 rounded-full bg-[#2c5f5d] text-white flex items-center justify-center font-semibold">
+                      {user.firstName[0].toUpperCase()}
+                    </div>
+
+                    <div>
+                      <div className="font-semibold text-gray-700">
+                        {user.firstName} {user.lastName}
+                      </div>
+                      <div className="text-xs text-[#6a7a78]">
+                        @{user.penName || user.firstName}
+                      </div>
+                    </div>
+                  </div>
+
+                  <button
+                    disabled={isInvited}
+                    onClick={() =>
+                      handleInvite(user.id, user.penName || user.firstName)
+                    }
+                    className={`px-4 h-8 rounded-full text-sm text-white transition ${
+                      isInvited
+                        ? "bg-highlight cursor-not-allowed"
+                        : "bg-secondary hover:bg-[#2c5f5d]"
+                    }`}>
+                    {isInvited ? "Invited" : "Invite"}
+                  </button>
+                </div>
+              );
+            })}
+
             {loading &&
-              Array.from({ length: 5 }).map((_, i) => (
+              Array.from({ length: 4 }).map((_, i) => (
                 <InviteUserSkeleton key={i} />
               ))}
 
-            {!loading &&
-              filteredUsers.map((user) => {
-                const isInvited = invited.has(user.id);
-
-                return (
-                  <div
-                    key={user.id}
-                    className="flex items-center justify-between bg-card p-4 rounded-xl">
-                    <div className="flex items-center gap-3">
-                      <div className="w-11 h-11 rounded-full bg-[#2c5f5d] text-white flex items-center justify-center font-semibold">
-                        {user.firstName[0].toUpperCase()}
-                      </div>
-
-                      <div>
-                        <div className="font-semibold text-gray-700">
-                          {user.firstName} {user.lastName}
-                        </div>
-                        <div className="text-xs text-[#6a7a78]">
-                          @{user.penName || user.firstName}
-                        </div>
-                      </div>
-                    </div>
-
-                    <button
-                      disabled={isInvited}
-                      onClick={() =>
-                        handleInvite(user.id, user.penName || user.firstName)
-                      }
-                      className={`px-4 h-8 rounded-full text-sm text-white transition
-                        ${
-                          isInvited
-                            ? "bg-highlight cursor-not-allowed"
-                            : "bg-secondary hover:bg-[#2c5f5d]"
-                        }`}>
-                      {isInvited ? "Invited" : "Invite"}
-                    </button>
-                  </div>
-                );
-              })}
-
-            {!loading && filteredUsers.length === 0 && (
+            {!loading && userProfiles.length === 0 && (
               <p className="text-center text-sm text-gray-500">
                 No users found
               </p>

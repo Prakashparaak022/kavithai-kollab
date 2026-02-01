@@ -6,8 +6,8 @@ export const loadUserProfiles = createAsyncThunk(
   "userProfiles/load",
   async (params: any, { rejectWithValue }) => {
     try {
-      const res = await fetchUserProfiles(params);
-      return res.content;
+      const response = await fetchUserProfiles(params);
+      return response;
     } catch (error: unknown) {
       return rejectWithValue(
         formatErrorMessage(error, "Failed to load user profiles")

@@ -58,6 +58,9 @@ export type ApiCategory = {
 
 export interface ApiResponse<T = unknown> {
   content: T;
+  totalElements: number;
+  totalPages: number;
+  number: number;
 }
 
 export type AddLikePayload = {
