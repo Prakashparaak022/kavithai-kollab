@@ -5,7 +5,7 @@ import { useState } from "react";
 import { useForm } from "react-hook-form";
 import { toast } from "react-toastify";
 
-import Logo from "@/assets/img/logo-full.webp";
+import Logo from "@/assets/img/logo-green.webp";
 import { useAuth } from "@/context/AuthContext";
 import { useModal } from "@/context/ModalContext";
 import { API_URLS } from "@/constants/apiUrls";
@@ -61,7 +61,7 @@ const LoginContainer = ({ handleClose }: LoginContainerProps) => {
         toast.success("Login successful");
       } else {
         const err = await response.text();
-        toast.error(formatErrorMessage(err) || "Login failed");
+        toast.error(formatErrorMessage(err, "Login failed"));
       }
     } catch (error) {
       console.error("An error occurred during login.", error);
@@ -72,13 +72,13 @@ const LoginContainer = ({ handleClose }: LoginContainerProps) => {
   };
 
   return (
-    <div className="flex flex-col items-center p-8 bg-secondary">
+    <div className="flex flex-col items-center p-8 bg-app">
       <Image src={Logo} className="h-20 w-auto" alt="logo" />
 
       <div className="mt-4 w-full max-w-lg md:flex md:gap-6">
         {/* form */}
         <div className="w-full mx-auto">
-          <h2 className="text-2xl font-extrabold text-[#d4a574] text-center">
+          <h2 className="text-2xl font-extrabold text-green text-center">
             Login
           </h2>
 
@@ -96,6 +96,8 @@ const LoginContainer = ({ handleClose }: LoginContainerProps) => {
                   message: "Enter a valid email",
                 },
               }}
+              variant="secondary"
+              textColor="text-green"
             />
 
             {/* Password */}
@@ -114,9 +116,12 @@ const LoginContainer = ({ handleClose }: LoginContainerProps) => {
                     "8–15 chars with upper, lower, number & special char",
                 },
               }}
+              variant="secondary"
+              textColor="text-green"
             />
 
             <SubmitButton
+              background="bg-secondary"
               text="Login Now"
               loadingText="Logging in…"
               isLoading={loading}
@@ -125,16 +130,16 @@ const LoginContainer = ({ handleClose }: LoginContainerProps) => {
           </form>
 
           <div className="flex items-center my-3">
-            <div className="flex-1 h-px bg-gray-600" />
-            <span className="px-2 text-gray-400 text-sm">or</span>
-            <div className="flex-1 h-px bg-gray-600" />
+            <div className="flex-1 h-px bg-secondary" />
+            <span className="px-2 text-green text-sm">or</span>
+            <div className="flex-1 h-px bg-secondary" />
           </div>
 
-          <p className="text-center text-gray-400 text-sm">
+          <p className="text-center text-green text-sm font-semibold">
             Don’t have an account?{" "}
             <span
               onClick={openRegister}
-              className="text-orange-500 font-bold cursor-pointer">
+              className="text-orange-700 font-bold cursor-pointer">
               Register
             </span>
           </p>

@@ -8,14 +8,18 @@ type InfoItem = {
   inline?: boolean;
 };
 
-const AboutPoem = () => {
+type Props = {
+  participants?: number;
+  poetName: string;
+};
+
+const AboutPoem = ({ participants, poetName }: Props) => {
   const [requireApproval, setRequireApproval] = useState(true);
 
   const infoList: InfoItem[] = [
-    { label: "Poem Name", value: "Eternal Echoes" },
-    { label: "Original Poet", value: "@Bhronohi" },
+    { label: "Poet", value: `@${poetName}` },
     { label: "Time Remaining", value: "11 hours", inline: true },
-    { label: "Participants", value: 6 },
+    ...(participants ? [{ label: "Participants", value: participants }] : []),
   ];
 
   return (
@@ -31,13 +35,13 @@ const AboutPoem = () => {
         ))}
 
         {/* Poet Approval */}
-        <div className="flex justify-between items-center">
+        {/* <div className="flex justify-between items-center">
           <p className="text-[#6a7a78] text-sm">Original Poet Approval</p>
           <CustomSwitch
             checked={requireApproval}
             onChange={() => setRequireApproval((prev) => !prev)}
           />
-        </div>
+        </div> */}
       </div>
     </div>
   );

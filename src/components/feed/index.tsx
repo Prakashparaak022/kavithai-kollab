@@ -7,6 +7,7 @@ import Link from "next/link";
 import useRequireAuth from "@/hooks/useRequireAuth";
 import AppBgLayout from "../layouts/AppBgLayout";
 import { usePlayerDetails } from "@/utils/UserSession";
+import ApiFeedCardList from "./ApiFeedCardList";
 
 export type FilterType = "all" | "liked" | "recent";
 export type FeedType = "private" | "public";
@@ -18,9 +19,9 @@ export type FilterItem = {
 
 const Feed = () => {
   const { requireAuth } = useRequireAuth();
-  const { playerDetails } = usePlayerDetails();
+  const { playerDetails, loading } = usePlayerDetails();
   const [showFilters, setShowFilters] = useState(false);
-  const [feedType, setFeedType] = useState<FeedType>("public");
+  const [isPrivate, setIsPrivate] = useState<boolean>(false);
   const [filter, setFilter] = useState<FilterType>("all");
   const filterList: FilterItem[] = [
     {
@@ -66,7 +67,7 @@ const Feed = () => {
         </div>
       }
       right={
-        <div className="p-4 space-y-2">
+        <div className="p-4 flex flex-col gap-2">
           <Link
             href={"/post"}
             onClick={requireAuth}
@@ -76,37 +77,47 @@ const Feed = () => {
           </Link>
 
           {/* Publish filter badges */}
-          {playerDetails && (
-            <div className="flex gap-2 mb-4">
-              <button
-                onClick={() => setFeedType("public")}
-                className={`px-3 py-1 rounded-full text-xs font-semibold transition
+          {loading ? (
+            <div className="flex gap-2 mb-4 animate-pulse">
+              <div className="h-6 w-17 rounded-full bg-secondary" />
+              <div className="h-6 w-17 rounded-full bg-gray-200" />
+            </div>
+          ) : (
+            playerDetails && (
+              <div className="flex gap-2 mb-4">
+                <button
+                  onClick={() => setIsPrivate(false)}
+                  className={`px-3 py-1 rounded-full text-xs font-semibold transition
               ${
-                feedType === "public"
+                !isPrivate
                   ? "bg-secondary text-white"
                   : "bg-green-100 text-green-700 hover:bg-green-200"
               }`}>
-                PUBLIC
-              </button>
+                  PUBLIC
+                </button>
 
-              <button
-                onClick={() => setFeedType("private")}
-                className={`px-3 py-1 rounded-full text-xs font-semibold transition
+                <button
+                  onClick={() => setIsPrivate(true)}
+                  className={`px-3 py-1 rounded-full text-xs font-semibold transition
               ${
-                feedType === "private"
+                isPrivate
                   ? "bg-secondary text-white"
                   : "bg-gray-200 text-gray-700 hover:bg-gray-300"
               }`}>
-                PRIVATE
-              </button>
-            </div>
+                  PRIVATE
+                </button>
+              </div>
+            )
           )}
 
           <p className="px-2 text-green text-sm font-semibold">
             {filterList.find((item) => item.value === filter)?.helperText}
           </p>
 
-          <FeedCardList feedType={feedType} filter={filter} />
+          {/* <FeedCardList feedType={feedType} filter={filter} /> */}
+
+          {/* APi */}
+          <ApiFeedCardList filter={filter} isPrivate={isPrivate} />
         </div>
       }
     />

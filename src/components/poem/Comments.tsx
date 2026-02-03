@@ -46,6 +46,47 @@ const Comments = ({ comments }: Props) => {
         Comments ({commentList.length})
       </h3>
 
+      {/* ADD COMMENT */}
+      <div className="p-3 rounded-xl bg-card">
+        {!showInput ? (
+          <button
+            onClick={withAuth(() => setShowInput(true))}
+            className="text-sm text-blue-600 hover:underline">
+            + Add a comment
+          </button>
+        ) : (
+          <div className="space-y-3">
+            <textarea
+              value={newComment}
+              onChange={(e) => setNewComment(e.target.value)}
+              rows={3}
+              placeholder="Write your comment..."
+              className="w-full text-sm  text-gray-700 p-3 rounded-md
+                         border border-gray-300 focus:outline-none
+                         focus:ring-1 focus:ring-green-700"
+            />
+
+            <div className="flex gap-2">
+              <button
+                onClick={handleAddComment}
+                className="px-4 py-1.5 text-sm rounded-md
+                           bg-secondary text-white">
+                Submit
+              </button>
+
+              <button
+                onClick={() => {
+                  setShowInput(false);
+                  setNewComment("");
+                }}
+                className="px-4 py-1.5 text-sm rounded-md
+                           bg-highlight text-white">
+                Cancel
+              </button>
+            </div>
+          </div>
+        )}
+      </div>
       {commentList.map((comment) => {
         const isOpen = selectedComment === comment.id;
 
@@ -88,48 +129,6 @@ const Comments = ({ comments }: Props) => {
           </div>
         );
       })}
-
-      {/* ADD COMMENT */}
-      <div className="p-3 rounded-xl bg-card">
-        {!showInput ? (
-          <button
-            onClick={withAuth(() => setShowInput(true))}
-            className="text-sm text-blue-600 hover:underline">
-            + Add a comment
-          </button>
-        ) : (
-          <div className="space-y-3">
-            <textarea
-              value={newComment}
-              onChange={(e) => setNewComment(e.target.value)}
-              rows={3}
-              placeholder="Write your comment..."
-              className="w-full text-sm  text-gray-700 p-3 rounded-md
-                         border border-gray-300 focus:outline-none
-                         focus:ring-1 focus:ring-green-700"
-            />
-
-            <div className="flex gap-2">
-              <button
-                onClick={handleAddComment}
-                className="px-4 py-1.5 text-sm rounded-md
-                           bg-secondary text-white">
-                Submit
-              </button>
-
-              <button
-                onClick={() => {
-                  setShowInput(false);
-                  setNewComment("");
-                }}
-                className="px-4 py-1.5 text-sm rounded-md
-                           bg-highlight text-white">
-                Cancel
-              </button>
-            </div>
-          </div>
-        )}
-      </div>
     </div>
   );
 };

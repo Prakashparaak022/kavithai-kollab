@@ -10,7 +10,7 @@ type CurvedDotsProps = {
 export const CurvedDots: React.FC<CurvedDotsProps> = ({
   className = "",
   size = 48,
-  color = "#d4a574",
+  color = "var(--bg-primary)",
   rotate = 0,
 }) => (
   <div

@@ -3,7 +3,7 @@
 import { useEffect, useState } from "react";
 
 export type PlayerDetails = {
-  id?: string | number;
+  id: number;
   firstName: string;
   lastName: string;
   penName?: string;

@@ -12,12 +12,12 @@ const Post = () => {
     <AppBgLayout
       layout="9/3"
       left={
-        <div className="p-4">
+        <div className="p-4 min-w-0">
           <WriteKavidhai allowCollab={allowCollab} isPrivate={isPrivate} />
         </div>
       }
       right={
-        <div className="p-4">
+        <div className="p-4 min-w-0">
           <PostSettings
             allowCollab={allowCollab}
             setAllowCollab={setAllowCollab}

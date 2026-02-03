@@ -16,9 +16,10 @@
   --text-primary: #171717;
   --text-secondary: #ffffff;
   --text-highlight: #e8dcc8;
-  --text-green: #1C474E;
+  --text-green: #1c474e;
 
   --border-primary: #d4a574;
+  --border-secondary: #1e494f;
 
   --toastify-color-success: #d4a574;
 }
@@ -134,6 +135,10 @@ p {
   border: 1px solid var(--border-primary);
 }
 
+.border-secondary {
+  border: 1px solid var(--border-secondary);
+}
+
 /* ================================
    Buttons
 ================================ */
@@ -143,6 +148,16 @@ p {
 
 .btn:hover {
   background-color: var(--bg-primary);
+  cursor: pointer;
+  transition: background-color 0.2s ease-in-out, color 0.2s ease-in-out;
+}
+
+.btn-secondary {
+  background-color: var(--bg-secondary);
+}
+
+.btn-secondary:hover {
+  background-color: var(--bg-highlight);
   cursor: pointer;
   transition: background-color 0.2s ease-in-out, color 0.2s ease-in-out;
 }
@@ -159,6 +174,48 @@ p {
   font-size: large;
   font-weight: bolder;
 }
+
+/* ========================
+   SCROLLBAR
+   ======================== */
+::-webkit-scrollbar {
+  width: 6px;
+  height: 10px;
+}
+
+::-webkit-scrollbar-track {
+  background: transparent;
+}
+
+::-webkit-scrollbar-thumb {
+  background: var(--bg-secondary);
+  border-radius: 8px;
+}
+
+::-webkit-scrollbar-thumb:hover {
+  background: var(--bg-secondary);
+}
+
+.no-scrollbar::-webkit-scrollbar {
+  display: none;
+}
+.no-scrollbar {
+  -ms-overflow-style: none; /* IE and Edge */
+  scrollbar-width: none; /* Firefox */
+}
+
+/* Spinner */
+.thick-spinner {
+  -webkit-animation: spinner 1s infinite linear;
+  animation: spinner 1s infinite linear;
+  border-radius: 50%;
+  border: 6px solid rgba(2, 109, 255, 0.2);
+  border-top-color: var(--border-secondary);
+  height: 80px;
+  margin: 30px auto;
+  width: 80px;
+}
+
 /* ================================
    Animations
 ================================ */
@@ -182,5 +239,11 @@ p {
   }
   100% {
     box-shadow: 0 0 0 0 rgba(245, 193, 108, 0);
+  }
+}
+
+@keyframes spinner {
+  to {
+    transform: rotateZ(360deg);
   }
 }

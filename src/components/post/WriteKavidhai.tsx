@@ -1,17 +1,17 @@
 "use client";
 
-import { useState, useRef } from "react";
+import { useState, useRef, useEffect } from "react";
 import { useForm } from "react-hook-form";
 import { Camera, X } from "lucide-react";
 import { toast } from "react-toastify";
-import { API_URLS } from "@/constants/apiUrls";
 import { usePlayerDetails } from "@/utils/UserSession";
-import { createPoemService } from "@/services/api/poems.service";
-import { useDispatch } from "react-redux";
-import { addPoem } from "@/store/slices/poemsSlice";
-import { useCategories } from "@/hooks/useCategories";
-import { ApiCategory } from "@/types/api";
 import LoadingSpinner from "../ui/LoadingSpinner";
+import { createPoem } from "@/store/poems";
+import { RootState, useAppDispatch } from "@/store";
+import { useSelector } from "react-redux";
+import { loadCategories, resetCategories } from "@/store/categories";
+import CategorySkeleton from "./CategorySkeleton";
+import InfiniteScroll from "../common/InfiniteScroll";
 
 const TAG_REGEX = /^#[a-z0-9]+$/;
 
@@ -27,14 +27,20 @@ type FormValues = {
   image: File | null;
 };
 
+const PAGE_SIZE = 15;
+
 export default function WriteKavidhai({ allowCollab, isPrivate }: Props) {
   const fileRef = useRef<HTMLInputElement | null>(null);
   const { playerDetails, accessToken } = usePlayerDetails();
+
   const {
-    data: categoryData,
+    items: categories,
+    hasMore,
     loading: categoryLoading,
-    error,
-  } = useCategories();
+    page,
+    size,
+    total,
+  } = useSelector((state: RootState) => state.category);
 
   const { register, handleSubmit, setValue, watch, reset } =
     useForm<FormValues>({
@@ -45,7 +51,7 @@ export default function WriteKavidhai({ allowCollab, isPrivate }: Props) {
       },
     });
 
-  const dispatch = useDispatch();
+  const dispatch = useAppDispatch();
   const isSaveMode = allowCollab || isPrivate;
 
   const [tags, setTags] = useState<string[]>([]);
@@ -75,6 +81,17 @@ export default function WriteKavidhai({ allowCollab, isPrivate }: Props) {
     setTagInput("");
   };
 
+  // Initial load
+  useEffect(() => {
+    dispatch(resetCategories());
+    dispatch(
+      loadCategories({
+        page: 0,
+        size: PAGE_SIZE,
+      })
+    );
+  }, [dispatch]);
+
   const onSubmit = async (data: FormValues) => {
     if (!playerDetails?.id) {
       toast.error("Player not found");
@@ -100,12 +117,9 @@ export default function WriteKavidhai({ allowCollab, isPrivate }: Props) {
 
       if (imageFile) formData.append("image", imageFile, imageFile.name);
 
-      const response = await createPoemService(formData);
+      await dispatch(createPoem(formData)).unwrap();
 
       toast.success("Kavidhai created successfully");
-
-      dispatch(addPoem(response.content));
-
       reset();
       setTags([]);
       setImagePreview(null);
@@ -118,7 +132,8 @@ export default function WriteKavidhai({ allowCollab, isPrivate }: Props) {
   };
 
   return (
-    <form onSubmit={handleSubmit(onSubmit)} className="w-full space-y-2">
+    <form onSubmit={handleSubmit(onSubmit)} className="w-full space-y-3">
+      {/* Image upload */}
       <input
         type="file"
         accept="image/*"
@@ -141,6 +156,7 @@ export default function WriteKavidhai({ allowCollab, isPrivate }: Props) {
         }}
       />
 
+      {/* Title Badge */}
       <div className="flex items-center gap-2">
         <button
           type="button"
@@ -150,118 +166,146 @@ export default function WriteKavidhai({ allowCollab, isPrivate }: Props) {
         <span className="text-sm text-gray-600">• Seed Collaboration</span>
       </div>
 
-      <p className="text-xs text-gray-500">7 minutes</p>
+      {/* Title */}
+      <div className="flex items-center rounded-xl bg-card px-3 py-2">
+        <input
+          {...register("title")}
+          placeholder="Title (Optional)"
+          className="flex-1 bg-transparent outline-none text-sm text-primary"
+        />
+        <button type="button" onClick={() => fileRef.current?.click()}>
+          <Camera className="text-green" fill="currentColor" stroke="white" />
+        </button>
+      </div>
 
-      <div className="space-y-3">
-        <div className="flex items-center rounded-xl bg-card px-3 py-2">
-          <input
-            {...register("title")}
-            placeholder="Title (Optional)"
-            className="flex-1 bg-transparent outline-none text-sm text-primary"
+      {/* Image Preview */}
+      {imagePreview && (
+        <div className="relative w-full rounded-xl bg-card p-2">
+          <img
+            src={imagePreview}
+            alt="preview"
+            className="max-h-80 w-auto mx-auto object-contain rounded-lg"
           />
-          <button type="button" onClick={() => fileRef.current?.click()}>
-            <Camera className="text-green" fill="currentColor" stroke="white" />
+          <button
+            type="button"
+            onClick={() => {
+              setImagePreview(null);
+              setValue("image", null);
+              if (fileRef.current) fileRef.current.value = "";
+            }}
+            className="absolute right-2 top-2 rounded-full bg-black/60 p-1 text-white">
+            <X size={14} />
           </button>
         </div>
+      )}
 
-        {imagePreview && (
-          <div className="relative w-full rounded-xl bg-card p-2">
-            <img
-              src={imagePreview}
-              alt="preview"
-              className="max-h-80 w-auto mx-auto object-contain rounded-lg"
-            />
-            <button
-              type="button"
-              onClick={() => {
-                setImagePreview(null);
-                setValue("image", null);
-                if (fileRef.current) fileRef.current.value = "";
-              }}
-              className="absolute right-2 top-2 rounded-full bg-black/60 p-1 text-white">
-              <X size={14} />
-            </button>
-          </div>
-        )}
+      {/* Text Area */}
+      <div className="space-y-6 rounded-xl p-3 bg-card">
+        <textarea
+          {...register("content")}
+          placeholder="Write your thoughts..."
+          onInput={(e) => autoGrow(e.currentTarget)}
+          className="w-full h-36 resize-none bg-transparent outline-none text-sm text-primary"
+        />
 
-        <div className="space-y-6 rounded-xl p-3 bg-card">
-          <textarea
-            {...register("content")}
-            placeholder="Write your thoughts..."
-            onInput={(e) => autoGrow(e.currentTarget)}
-            className="w-full h-36 resize-none bg-transparent outline-none text-sm text-primary"
-          />
+        <div>
+          <p className="mb-2 text-sm font-medium text-gray-600">Category</p>
 
-          <div>
-            <p className="mb-2 text-sm font-medium text-gray-600">Category</p>
-            <div className="flex flex-wrap gap-2">
-              {categoryLoading ? (
-                <LoadingSpinner color="var(--bg-secondary)"  />
-              ) : (
-                categoryData?.map((cat) => (
-                  <button
-                    key={cat.id}
-                    type="button"
-                    onClick={() => setValue("category", cat.id)}
-                    className={`px-3 py-1 rounded-full text-xs transition ${
-                      selectedCategory === cat.id
-                        ? "bg-secondary text-white"
-                        : "bg-card text-gray-700 hover:bg-[#CCE0AB]"
-                    }`}>
-                    {cat.name}
-                  </button>
-                ))
-              )}
-            </div>
-          </div>
+          <div className="relative">
+            <InfiniteScroll
+              className="flex gap-2 overflow-x-auto pb-2 pr-8 no-scrollbar"
+              loading={categoryLoading}
+              hasMore={hasMore}
+              list={categories}
+              onLoadMore={() =>
+                dispatch(
+                  loadCategories({
+                    page: page + 1,
+                    size: PAGE_SIZE,
+                  })
+                )
+              }
+              loader={
+                <div className="flex gap-2">
+                  {Array.from({ length: 15 }).map((_, i) => (
+                    <CategorySkeleton key={i} />
+                  ))}
+                </div>
+              }
+              emptyMessage={
+                <p className="text-center text-sm text-gray-500">
+                  No categories found
+                </p>
+              }>
+              {categories.map((cat, index) => (
+                <button
+                  key={index}
+                  type="button"
+                  onClick={() => setValue("category", cat.id)}
+                  className={`whitespace-nowrap px-3 py-1 rounded-full text-xs transition ${
+                    selectedCategory === cat.id
+                      ? "bg-secondary text-white"
+                      : "bg-card text-gray-700 hover:bg-[#CCE0AB]"
+                  }`}>
+                  {cat.name}
+                </button>
+              ))}
+            </InfiniteScroll>
 
-          <div className="space-y-2">
-            <p className="mb-2 text-sm font-medium text-gray-600">#Tags</p>
-            <div className="border-t border-black/10" />
-
-            <div className="flex items-end gap-2">
-              <textarea
-                rows={1}
-                placeholder="Add optional tags..."
-                value={tagInput}
-                onChange={(e) => {
-                  setTagInput(e.target.value);
-                }}
-                onKeyDown={(e) => {
-                  if (e.key === "Enter" || e.key === " ") {
-                    e.preventDefault();
-                    addTags();
-                  }
-                }}
-                onBlur={addTags}
-                className="w-full resize-none bg-transparent outline-none text-sm text-primary py-[6px]"
-              />
-              <span className="text-xs text-gray-500">{tags.length}</span>
-            </div>
-
-            {tags.length > 0 && (
-              <div className="flex flex-wrap gap-2">
-                {tags.map((tag) => (
-                  <span
-                    key={tag}
-                    className="flex items-center gap-1 px-2 py-1 text-xs bg-secondary text-white rounded-full">
-                    {tag}
-                    <button
-                      type="button"
-                      onClick={() =>
-                        setTags((prev) => prev.filter((t) => t !== tag))
-                      }>
-                      <X size={12} />
-                    </button>
-                  </span>
-                ))}
-              </div>
+            {/* Gradient fade indicator */}
+            {hasMore && (
+              <div className="pointer-events-none absolute right-0 top-0 h-full w-10 bg-gradient-to-l from-[rgba(243,233,216,0.8)] to-transparent" />
             )}
           </div>
         </div>
+
+        <div className="space-y-2">
+          <p className="mb-2 text-sm font-medium text-gray-600">#Tags</p>
+          <div className="border-t border-black/10" />
+
+          <div className="flex items-end gap-2">
+            <textarea
+              rows={1}
+              placeholder="Add optional tags..."
+              value={tagInput}
+              onChange={(e) => {
+                setTagInput(e.target.value);
+              }}
+              onKeyDown={(e) => {
+                if (e.key === "Enter" || e.key === " ") {
+                  e.preventDefault();
+                  addTags();
+                }
+              }}
+              onBlur={addTags}
+              className="w-full resize-none bg-transparent outline-none text-sm text-primary py-[6px]"
+            />
+            <span className="text-xs text-gray-500">{tags.length}</span>
+          </div>
+
+          {tags.length > 0 && (
+            <div className="flex flex-wrap gap-2">
+              {tags.map((tag) => (
+                <span
+                  key={tag}
+                  className="flex items-center gap-1 px-2 py-1 text-xs bg-secondary text-white rounded-full">
+                  {tag}
+                  <button
+                    type="button"
+                    onClick={() =>
+                      setTags((prev) => prev.filter((t) => t !== tag))
+                    }>
+                    <X size={12} />
+                  </button>
+                </span>
+              ))}
+            </div>
+          )}
+        </div>
       </div>
 
-      <div className="flex items-center gap-3 pt-2">
+      {/* Bottom Buttons */}
+      <div className="flex items-center gap-3">
         <button
           type="button"
           className="flex-1 rounded-xl border border-gray-300 bg-card py-2 text-sm text-gray-600">
