@@ -20,6 +20,8 @@ export type ApiCollaboration = {
   author: string;
   content: string;
   authorImage: string | null;
+  postTitle?: string;
+  status: string;
 };
 
 export type ApiPoem = {
@@ -45,6 +47,7 @@ export type ApiPoem = {
 
   likesCount: number;
   commentsCount: number;
+  collaborationCount: number;
   isLiked: boolean;
   createdAt: string;
 };
@@ -56,6 +59,9 @@ export type ApiCategory = {
 
 export interface ApiResponse<T = unknown> {
   content: T;
+  totalElements: number;
+  totalPages: number;
+  number: number;
 }
 
 export type AddLikePayload = {
@@ -87,4 +93,58 @@ export type DecisionCollabPayload = {
   ownerId: number;
   updatedContent?: string;
   status: string;
+};
+
+export type InviteCollabPayload = {
+  postId: number;
+  ownerId: number;
+  invitedUserId: number;
+};
+
+export type ApiUserProfile = {
+  id: number;
+  email: string;
+  penName: string;
+  phoneNo: string;
+  gender: string;
+  status: boolean;
+  firstName: string;
+  lastName: string;
+  dob: string | null;
+  address: string;
+  city: string;
+  state: string;
+  zipCode: string;
+  realUser: boolean;
+  registrationDate: string;
+};
+
+export type ApiUsersParams = {
+  firstName?: string;
+  penName?: string;
+  lastName?: string;
+  state?: string;
+  city?: string;
+  gender?: string;
+  email?: string;
+  role?: string;
+  status?: number;
+  phoneNo?: string;
+  page?: number;
+  size?: number;
+};
+
+export type ProfileForm = {
+  email: string;
+  password: string;
+  penName: string;
+  phoneNo: string;
+  gender: string;
+  phoneCountryIsdcodeId: string;
+  countryId: string;
+  dob: string;
+  address: string;
+  city: string;
+  state: string;
+  zipCode: string;
 };

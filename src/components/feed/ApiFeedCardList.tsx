@@ -1,29 +1,31 @@
 "use client";
 
-import { useEffect, useMemo, useState } from "react";
-import { FeedType, FilterType } from "./index";
-import Image from "next/image";
-import { useSelector } from "react-redux";
-import { RootState, useAppDispatch } from "@/store";
-import { Heart, MessageCircle } from "lucide-react";
-import { usePlayerDetails } from "@/utils/UserSession";
 import useRequireAuth from "@/hooks/useRequireAuth";
-import { loadPoems, togglePoemLike } from "@/store/poems";
+import { RootState, useAppDispatch } from "@/store";
+import { loadPoems, resetPoems, togglePoemLike } from "@/store/poems";
+import { usePlayerDetails } from "@/utils/UserSession";
+import { useEffect, useMemo, useState } from "react";
+import { useSelector } from "react-redux";
+import PoemCard from "../common/PoemCard";
+import { PoemCardSkeleton } from "../poem/PoemCardSkeleton";
 import CustomModal from "../ui/CustomModal";
-import CommentsList from "./CommentsList";
-import { getBase64ImageSrc, getUserImageSrc } from "@/utils/imageUtils";
-import Loader from "../ui/Loader";
-import Link from "next/link";
+import CommentsList from "../poem/CommentsList";
+import { FilterType } from "./index";
+import InfiniteScroll from "../common/InfiniteScroll";
 
 type Props = {
   filter: FilterType;
-  feedType: FeedType;
+  isPrivate: boolean;
 };
-const ApiFeedCardList = ({ filter, feedType }: Props) => {
+
+const PAGE_SIZE = 10;
+
+const ApiFeedCardList = ({ filter, isPrivate }: Props) => {
   const dispatch = useAppDispatch();
-  const { poems, loading, likeLoading } = useSelector(
-    (state: RootState) => state.poems
-  );
+  const {
+    poems: { items: poems, loading, hasMore, page },
+    likeLoading,
+  } = useSelector((state: RootState) => state.poems);
   const { withAuth } = useRequireAuth();
   const {
     playerDetails,
@@ -33,10 +35,19 @@ const ApiFeedCardList = ({ filter, feedType }: Props) => {
   const [activePoemId, setActivePoemId] = useState<number | null>(null);
   const [commentsOpen, setCommentsOpen] = useState(false);
 
+  // Initial load
   useEffect(() => {
     if (playerLoading) return;
-    dispatch(loadPoems({ userId: playerDetails?.id }));
-  }, [dispatch, playerDetails?.id, playerLoading]);
+    dispatch(resetPoems());
+    dispatch(
+      loadPoems({
+        userId: playerDetails?.id,
+        isPrivate: isPrivate,
+        page: 0,
+        size: PAGE_SIZE,
+      })
+    );
+  }, [dispatch, playerDetails?.id, playerLoading, isPrivate]);
 
   const handleLike = (id: number, isLiked: boolean) => {
     if (!playerDetails?.id) return;
@@ -65,108 +76,49 @@ const ApiFeedCardList = ({ filter, feedType }: Props) => {
           new Date(b.createdAt).getTime() - new Date(a.createdAt).getTime()
       );
     }
-
-    if (feedType === "public") {
-      list = list.filter((p) => p.isPublish === true);
-    }
-
-    if (feedType === "private") {
-      list = list.filter((p) => p.isPrivate === true);
-    }
-
     return list;
-  }, [filter, poems, feedType]);
-
-  if (loading) {
-    return (
-      <div className="w-full flex flex-col items-center justify-center py-6">
-        <Loader />
-        <p className="text-green text-sm font-semibold">Loading poems...</p>
-      </div>
-    );
-  }
+  }, [filter, poems]);
 
   return (
-    <div className="grid grid-cols-12 gap-5">
-      {filteredPoems.map((poem, index) => {
-        return (
-          <Link
-            key={poem.id}
-            href={
-              poem.isPublish
-                ? `/poem/${poem.id}`
-                : `/poem/${poem.id}?userId=${playerDetails?.id}`
+    <>
+      <InfiniteScroll
+        className="grid grid-cols-12 gap-5"
+        loading={loading}
+        hasMore={hasMore}
+        list={filteredPoems}
+        onLoadMore={() =>
+          dispatch(
+            loadPoems({
+              userId: playerDetails?.id,
+              isPrivate: isPrivate,
+              page: page + 1,
+              size: PAGE_SIZE,
+            })
+          )
+        }
+        loader={Array.from({ length: 8 }).map((_, index) => (
+          <PoemCardSkeleton key={index} />
+        ))}
+        emptyMessage={
+          <p className="text-center text-sm text-gray-500">No poems found</p>
+        }>
+        {filteredPoems.map((poem, index) => (
+          <PoemCard
+            key={index}
+            poem={poem}
+            index={index}
+            userId={playerDetails?.id}
+            onLike={(id, liked) => withAuth(() => handleLike(id, liked))()}
+            onComment={(id) =>
+              withAuth(() => {
+                setActivePoemId(id);
+                setCommentsOpen(true);
+              })()
             }
-            className="col-span-12 sm:col-span-6 md:col-span-4 lg:col-span-3 bg-card rounded-2xl flex flex-col">
-            <div className="relative h-44 w-full">
-              <Image
-                src={getBase64ImageSrc(poem.imageUrl ?? "")}
-                alt={poem.title || ""}
-                fill
-                unoptimized
-                className="object-cover rounded-t-2xl p-2"
-                priority={index === 0}
-              />
-            </div>
+          />
+        ))}
+      </InfiniteScroll>
 
-            <div className="pt-2 px-4 pb-4 flex flex-col h-40 space-y-1">
-              <h3 className="text-base font-semibold text-gray-800 line-clamp-1">
-                {poem.title}
-              </h3>
-
-              <div className="flex items-center gap-1">
-                <Image
-                  src={getUserImageSrc(poem.authorImage)}
-                  alt={poem.author}
-                  width={20}
-                  height={20}
-                  className="rounded-full object-cover"
-                />
-                <span className="text-xs text-blue-500 font-medium line-clamp-1">
-                  {poem.author}
-                </span>
-              </div>
-
-              <p className="text-sm text-gray-600 line-clamp-2">
-                {poem.content}
-              </p>
-
-              <div className="mt-auto flex items-center justify-between text-gray-500">
-                <button
-                  onClick={(e) => {
-                    e.preventDefault();
-                    withAuth(() => handleLike(poem.id, poem.isLiked))();
-                  }}
-                  className={`flex items-center gap-1 text-xs transition ${
-                    poem.isLiked
-                      ? "text-red-500"
-                      : "text-gray-500 hover:text-red-500"
-                  }`}>
-                  <Heart
-                    size={16}
-                    fill={poem.isLiked ? "currentColor" : "none"}
-                  />
-                  {poem.likesCount}
-                </button>
-
-                <div
-                  className="flex items-center gap-1 text-xs hover:text-blue-500 transition"
-                  onClick={(e) => {
-                    e.preventDefault();
-                    if (poem.isPrivate) return;
-                    withAuth(() => {
-                      setActivePoemId(poem.id);
-                      setCommentsOpen(true);
-                    })();
-                  }}>
-                  <MessageCircle size={16} />
-                  {poem.commentsCount}
-                </div>
-              </div>
-            </div>
-          </Link>
-        );
-      })}
       {commentsOpen && activePoemId && (
         <CustomModal
           title="Add a comment"
@@ -174,7 +126,7 @@ const ApiFeedCardList = ({ filter, feedType }: Props) => {
           <CommentsList postId={activePoemId} />
         </CustomModal>
       )}
-    </div>
+    </>
   );
 };
 

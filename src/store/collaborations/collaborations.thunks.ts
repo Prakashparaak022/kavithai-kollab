@@ -1,19 +1,34 @@
 import {
+  acceptCollabService,
   AddCollabService,
   decisionCollabService,
+  fetchMyCollabs,
   fetchPostCollabs,
+  inviteCollabService,
+  rejectCollabService,
 } from "@/services/api/collaboration.service";
-import { AddCollabPayload, DecisionCollabPayload } from "@/types/api";
+import {
+  AddCollabPayload,
+  DecisionCollabPayload,
+  InviteCollabPayload,
+} from "@/types/api";
+import { PaginationProps } from "@/types/pagination";
+import { formatErrorMessage } from "@/utils/errorMessage";
 import { createAsyncThunk } from "@reduxjs/toolkit";
 
 export const loadCollabs = createAsyncThunk(
   "collabs/loadCollabs",
-  async ({ postId }: { postId: number }, { rejectWithValue }) => {
+  async (
+    { postId, page, size }: PaginationProps<{ postId: number }>,
+    { rejectWithValue }
+  ) => {
     try {
-      const response = await fetchPostCollabs({ postId });
-      return response.content;
-    } catch {
-      return rejectWithValue("failed to load collaborations");
+      const response = await fetchPostCollabs({ postId, page, size });
+      return response;
+    } catch (error: unknown) {
+      return rejectWithValue(
+        formatErrorMessage(error, "failed to load collaborations")
+      );
     }
   }
 );
@@ -24,8 +39,10 @@ export const addCollab = createAsyncThunk(
     try {
       const response = await AddCollabService(payload);
       return response;
-    } catch {
-      return rejectWithValue("Failed to add collaboration");
+    } catch (error: unknown) {
+      return rejectWithValue(
+        formatErrorMessage(error, "Failed to add collaboration")
+      );
     }
   }
 );
@@ -34,10 +51,79 @@ export const decisionCollab = createAsyncThunk(
   "collabs/decisionCollab",
   async (payload: DecisionCollabPayload, { rejectWithValue }) => {
     try {
-       const response = await decisionCollabService(payload);
+      const response = await decisionCollabService(payload);
       return response;
-    } catch {
-      return rejectWithValue("Failed to approve/reject collaboration");
+    } catch (error: unknown) {
+      return rejectWithValue(
+        formatErrorMessage(error, "Failed to approve/reject collaboration")
+      );
+    }
+  }
+);
+
+export const inviteCollab = createAsyncThunk(
+  "collabs/inviteCollab",
+  async (payload: InviteCollabPayload, { rejectWithValue }) => {
+    try {
+      const response = await inviteCollabService(payload);
+      return response;
+    } catch (error: unknown) {
+      return rejectWithValue(
+        formatErrorMessage(error, "Failed to invite collaboration")
+      );
+    }
+  }
+);
+
+export const loadMyCollabs = createAsyncThunk(
+  "collabs/myCollabs",
+  async (
+    { userId, page, size }: PaginationProps<{ userId: number }>,
+    { rejectWithValue }
+  ) => {
+    try {
+      const response = await fetchMyCollabs({ userId, page, size });
+      return response;
+    } catch (error: unknown) {
+      if (error instanceof Error) {
+        return rejectWithValue(error.message);
+      }
+      return rejectWithValue("Failed to load collaborations");
+    }
+  }
+);
+
+export const acceptCollab = createAsyncThunk(
+  "collabs/accept",
+  async (
+    { collabId, userId }: { collabId: number; userId: number },
+    { rejectWithValue }
+  ) => {
+    try {
+      return await acceptCollabService({ collabId, userId });
+    } catch (error: unknown) {
+      if (error instanceof Error) {
+        return rejectWithValue(error.message);
+      }
+      return rejectWithValue("Failed to accept collaboration");
+    }
+  }
+);
+
+export const rejectCollab = createAsyncThunk(
+  "collabs/reject",
+  async (
+    { collabId, userId }: { collabId: number; userId: number },
+    { rejectWithValue }
+  ) => {
+    try {
+      await rejectCollabService({ collabId, userId });
+      return collabId;
+    } catch (error: unknown) {
+      if (error instanceof Error) {
+        return rejectWithValue(error.message);
+      }
+      return rejectWithValue("Failed to reject collaboration");
     }
   }
 );

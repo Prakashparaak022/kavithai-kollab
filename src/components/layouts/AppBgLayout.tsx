@@ -12,15 +12,17 @@ const layoutClasses: Record<string, string> = {
 
 const AppBgLayout = ({ left, right, layout = "2/10" }: Props) => {
   return (
-    <div className="bg-secondary p-4">
+    <div
+      className="
+          m-4 
+          bg-app 
+          rounded-xl
+          overflow-hidden">
       <div
         className={`
           grid
           grid-cols-1
-          min-h-[80vh]
-          bg-app
-          rounded-xl
-          overflow-hidden
+          min-h-[78vh]
           ${layoutClasses[layout]}
         `}>
         {left}

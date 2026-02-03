@@ -3,18 +3,24 @@ import {
   AddLikeService,
   createPoemService,
   fetchAllPoems,
+  fetchMyPoems,
   fetchPoemById,
 } from "@/services/api/poems.service";
 import { AddLikePayload } from "@/types/api";
+import { formatErrorMessage } from "@/utils/errorMessage";
+import { PaginationProps } from "@/types/pagination";
 
 export const loadPoems = createAsyncThunk(
   "poems/loadPoems",
-  async ({ userId }: { userId?: number }, { rejectWithValue }) => {
+  async (
+    { userId, isPrivate, page, size }: PaginationProps<{ userId?: number, isPrivate?:boolean }>,
+    { rejectWithValue }
+  ) => {
     try {
-      const response = await fetchAllPoems({ userId });
-      return response.content;
-    } catch {
-      return rejectWithValue("Failed to load poems");
+      const response = await fetchAllPoems({ userId, isPrivate, page, size });
+      return response;
+    } catch (error: unknown) {
+      return rejectWithValue(formatErrorMessage(error, "Failed to load poems"));
     }
   }
 );
@@ -28,8 +34,10 @@ export const loadPoemById = createAsyncThunk(
     try {
       const response = await fetchPoemById({ poemId, userId });
       return response;
-    } catch {
-      return rejectWithValue("Failed to fetch poem");
+    } catch (error: unknown) {
+      return rejectWithValue(
+        formatErrorMessage(error, "Failed to fetch poem by ID")
+      );
     }
   }
 );
@@ -40,8 +48,10 @@ export const createPoem = createAsyncThunk(
     try {
       const response = await createPoemService(formData);
       return response;
-    } catch {
-      return rejectWithValue("Failed to create poem");
+    } catch (error: unknown) {
+      return rejectWithValue(
+        formatErrorMessage(error, "Failed to create poem")
+      );
     }
   }
 );
@@ -52,8 +62,25 @@ export const togglePoemLike = createAsyncThunk(
     try {
       const response = await AddLikeService({ poemId, userId, isLiked });
       return response;
-    } catch {
-      return rejectWithValue("Failed to like poem");
+    } catch (error: unknown) {
+      return rejectWithValue(formatErrorMessage(error, "Failed to like poem"));
+    }
+  }
+);
+
+export const loadMyPoems = createAsyncThunk(
+  "poems/loadMyPoems",
+  async (
+    { userId, isPrivate, page, size }: PaginationProps<{ userId: number, isPrivate?:boolean }>,
+    { rejectWithValue }
+  ) => {
+    try {
+      const response = await fetchMyPoems({ userId, isPrivate, page, size });
+      return response;
+    } catch (error: unknown) {
+      return rejectWithValue(
+        formatErrorMessage(error, "Failed to load my poems")
+      );
     }
   }
 );
