@@ -20,6 +20,7 @@ export type ApiCollaboration = {
   author: string;
   content: string;
   authorImage: string | null;
+  postTitle?: string;
   status: string;
 };
 

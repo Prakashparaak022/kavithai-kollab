@@ -115,9 +115,15 @@ const MyCollaborationsList = ({ userId }: Props) => {
                 <motion.p
                   initial={false}
                   animate={{ opacity: 1 }}
-                  className={`text-sm mt-2 text-gray-700
-                      ${isOpen ? "" : "line-clamp-1"}`}>
-                  {collab.content}
+                  className={`text-sm mt-2 text-gray-700 ${
+                    isOpen ? "" : "line-clamp-1"
+                  }`}>
+                  <span className="text-gray-600">
+                    You’ve been invited to&nbsp;
+                  </span>
+                  <span className="font-semibold text-green">
+                    {collab.postTitle}
+                  </span>
                 </motion.p>
               </div>
 
