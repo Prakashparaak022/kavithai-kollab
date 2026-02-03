@@ -92,15 +92,17 @@ export const inviteCollabService = async ({
 
 export const fetchMyCollabs = async ({
   userId,
+  status,
   page = 0,
   size = 10,
 }: {
   userId: number;
+  status?: string;
   page?: number;
   size?: number;
 }): Promise<ApiResponse<ApiCollaboration[]>> => {
   const res = await fetch(
-    `${API_URLS.MY_COLLABS}?userId=${userId}&page=${page}&size=${size}`
+    `${API_URLS.MY_COLLABS}?userId=${userId}&status=${status}&page=${page}&size=${size}`
   );
 
   if (!res.ok) {

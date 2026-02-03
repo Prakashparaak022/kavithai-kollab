@@ -2,7 +2,7 @@
 
 import useRequireAuth from "@/hooks/useRequireAuth";
 import { RootState, useAppDispatch } from "@/store";
-import { loadMyPoems, togglePoemLike } from "@/store/poems";
+import { loadMyPoems, resetMyPoems, togglePoemLike } from "@/store/poems";
 import { usePlayerDetails } from "@/utils/UserSession";
 import { useEffect, useState } from "react";
 import { useSelector } from "react-redux";
@@ -10,8 +10,13 @@ import PoemCard from "../common/PoemCard";
 import CommentsList from "../poem/CommentsList";
 import { PoemCardSkeleton } from "../poem/PoemCardSkeleton";
 import CustomModal from "../ui/CustomModal";
+import InfiniteScroll from "../common/InfiniteScroll";
+import { useModal } from "@/context/ModalContext";
+
+const PAGE_SIZE = 10;
 
 const MyPoemsList = () => {
+  const { openLogin } = useModal();
   const dispatch = useAppDispatch();
   const {
     myPoems: { items: myPoems, loading, hasMore, page },
@@ -19,14 +24,24 @@ const MyPoemsList = () => {
   } = useSelector((state: RootState) => state.poems);
 
   const { withAuth } = useRequireAuth();
-  const { playerDetails } = usePlayerDetails();
+  const { playerDetails, loading: playerLoading } = usePlayerDetails();
+  const [isPrivate, setIsPrivate] = useState<boolean>(false);
   const [activePoemId, setActivePoemId] = useState<number | null>(null);
   const [commentsOpen, setCommentsOpen] = useState(false);
 
+  // Initial load
   useEffect(() => {
-    if (!playerDetails?.id) return;
-    dispatch(loadMyPoems({ userId: playerDetails?.id }));
-  }, [dispatch, playerDetails?.id]);
+    if (playerLoading || !playerDetails) return;
+    dispatch(resetMyPoems());
+    dispatch(
+      loadMyPoems({
+        userId: playerDetails.id,
+        isPrivate: isPrivate,
+        page: 0,
+        size: PAGE_SIZE,
+      })
+    );
+  }, [dispatch, playerDetails?.id, playerLoading, isPrivate]);
 
   const handleLike = (id: number, isLiked: boolean) => {
     if (!playerDetails?.id) return;
@@ -42,19 +57,65 @@ const MyPoemsList = () => {
     );
   };
 
-  if (loading) {
-    return (
-      <div className="grid grid-cols-12 gap-5">
-        {Array.from({ length: 8 }).map((_, index) => (
-          <PoemCardSkeleton key={index} />
-        ))}
-      </div>
-    );
-  }
+  const handleLoadMore = async () => {
+    if (!playerDetails) return;
+
+    await dispatch(
+      loadMyPoems({
+        userId: playerDetails.id,
+        isPrivate,
+        page: page + 1,
+        size: PAGE_SIZE,
+      })
+    ).unwrap();
+  };
 
   return (
-    <>
-      <div className="grid grid-cols-12 gap-5">
+    <div className="space-y-2">
+      {/* Publish filter badges */}
+      {playerLoading ? (
+        <div className="flex gap-2 mb-4 animate-pulse">
+          <div className="h-6 w-17 rounded-full bg-secondary" />
+          <div className="h-6 w-17 rounded-full bg-gray-200" />
+        </div>
+      ) : (
+        playerDetails && (
+          <div className="flex gap-2 mb-4">
+            <button
+              onClick={() => setIsPrivate(false)}
+              className={`px-3 py-1 rounded-full text-xs font-semibold transition
+              ${
+                !isPrivate
+                  ? "bg-secondary text-white"
+                  : "bg-green-100 text-green-700 hover:bg-green-200"
+              }`}>
+              PUBLIC
+            </button>
+
+            <button
+              onClick={() => setIsPrivate(true)}
+              className={`px-3 py-1 rounded-full text-xs font-semibold transition
+              ${
+                isPrivate
+                  ? "bg-secondary text-white"
+                  : "bg-gray-200 text-gray-700 hover:bg-gray-300"
+              }`}>
+              PRIVATE
+            </button>
+          </div>
+        )
+      )}
+
+      <InfiniteScroll
+        className="grid grid-cols-12 gap-5"
+        loading={loading}
+        hasMore={hasMore}
+        list={myPoems}
+        onLoadMore={handleLoadMore}
+        loader={Array.from({ length: 8 }).map((_, index) => (
+          <PoemCardSkeleton key={index} />
+        ))}
+        emptyMessage={<p className="text-center text-green">No poems found</p>}>
         {myPoems.map((poem, index) => (
           <PoemCard
             key={poem.id}
@@ -70,7 +131,7 @@ const MyPoemsList = () => {
             }
           />
         ))}
-      </div>
+      </InfiniteScroll>
 
       {commentsOpen && activePoemId && (
         <CustomModal
@@ -79,7 +140,7 @@ const MyPoemsList = () => {
           <CommentsList postId={activePoemId} />
         </CustomModal>
       )}
-    </>
+    </div>
   );
 };
 

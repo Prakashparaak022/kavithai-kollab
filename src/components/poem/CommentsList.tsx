@@ -106,7 +106,7 @@ const CommentsList = ({ postId }: Props) => {
           <CommentSkeleton key={i} />
         ))}
         emptyMessage={
-          <p className="text-xs text-gray-500 text-center py-4">
+          <p className="text-green text-center py-4">
             No comments yet. Be the first to comment.
           </p>
         }>

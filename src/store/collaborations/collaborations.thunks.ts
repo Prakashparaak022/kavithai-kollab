@@ -78,11 +78,16 @@ export const inviteCollab = createAsyncThunk(
 export const loadMyCollabs = createAsyncThunk(
   "collabs/myCollabs",
   async (
-    { userId, page, size }: PaginationProps<{ userId: number }>,
+    {
+      userId,
+      status,
+      page,
+      size,
+    }: PaginationProps<{ userId: number; status?: string }>,
     { rejectWithValue }
   ) => {
     try {
-      const response = await fetchMyCollabs({ userId, page, size });
+      const response = await fetchMyCollabs({ userId, status, page, size });
       return response;
     } catch (error: unknown) {
       if (error instanceof Error) {

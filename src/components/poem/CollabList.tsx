@@ -65,8 +65,8 @@ const CollaborationsList = ({ poem, onPoemRefresh, onInvite }: Props) => {
 
     dispatch(
       addCollab({
-        postId: 37,
-        userId: 42,
+        postId: poem.id,
+        userId: playerDetails?.id,
         content,
       })
     )
@@ -130,34 +130,32 @@ const CollaborationsList = ({ poem, onPoemRefresh, onInvite }: Props) => {
                 + Add your line to this poem
               </button>
             ) : (
-              <div className="space-y-1">
+              <div className="flex items-center gap-3">
                 <textarea
                   value={content}
                   onChange={(e) => setContent(e.target.value)}
-                  rows={3}
+                  onInput={(e) => {
+                    const target = e.currentTarget;
+                    target.style.height = "auto";
+                    target.style.height = `${target.scrollHeight}px`;
+                  }}
+                  rows={1}
                   placeholder="Write your line..."
-                  className="w-full text-sm text-gray-700 p-3 rounded-md border-primary
-                   focus:outline-none focus:ring-1 focus:ring-green-700"
+                  className="w-full resize-none bg-transparent text-sm text-gray-800
+               placeholder-gray-500 focus:outline-none"
                 />
 
-                <div className="flex gap-2">
-                  <button
-                    onClick={handleAddCollaboration}
-                    className="px-4 py-1.5 text-sm rounded-md
-                     bg-secondary text-white">
-                    Submit
-                  </button>
-
-                  <button
-                    onClick={() => {
-                      setShowInput(false);
-                      setContent("");
-                    }}
-                    className="px-4 py-1.5 text-sm rounded-md
-                     bg-highlight text-white">
-                    Cancel
-                  </button>
-                </div>
+                <button
+                  onClick={withAuth(handleAddCollaboration)}
+                  disabled={createLoading || !content.trim()}
+                  className={`text-sm font-semibold
+                  ${
+                    content.trim()
+                      ? "text-green-800 hover:text-green"
+                      : "text-green cursor-default"
+                  }`}>
+                  {createLoading ? "Posting..." : "Post"}
+                </button>
               </div>
             )}
           </div>
@@ -182,8 +180,9 @@ const CollaborationsList = ({ poem, onPoemRefresh, onInvite }: Props) => {
             <CollabSkeleton key={i} />
           ))}
           emptyMessage={
-            <p className="text-xs text-gray-500 text-center py-4">
-              No collaborations yet. Be the first to collaborate.
+            <p className="text-green text-center py-4">
+              No collaborations yet.{" "}
+              {!isPoemOwner && "Be the first to collaborate."}
             </p>
           }>
           {collabs.map((collab) => {
@@ -234,7 +233,7 @@ const CollaborationsList = ({ poem, onPoemRefresh, onInvite }: Props) => {
                     <ChevronDown className="w-3.5 h-3.5 text-gray-600" />
                   </motion.div>
                 </div>
-                {isOpen && playerDetails?.id && (
+                {isOpen && isPoemOwner && (
                   <div className="mt-3 flex gap-2">
                     <button
                       type="button"

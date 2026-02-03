@@ -17,6 +17,7 @@ export type ApiComment = {
 export type ApiCollaboration = {
   id: number;
   userId: number;
+  postId: number;
   author: string;
   content: string;
   authorImage: string | null;

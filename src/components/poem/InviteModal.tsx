@@ -127,7 +127,7 @@ const InviteModal = ({ poem, onClose }: Props) => {
               <InviteUserSkeleton key={i} />
             ))}
             emptyMessage={
-              <p className="text-center text-sm text-gray-500">
+              <p className="text-green text-center">
                 No users found
               </p>
             }>

@@ -19,6 +19,14 @@ type PoemsState = {
   selectedPoemLoading: boolean;
 };
 
+const buildPoemsKey = ({
+  userId,
+  isPrivate,
+}: {
+  userId?: number;
+  isPrivate?: boolean;
+}) => `${userId ?? "all"}-${isPrivate ?? false}`;
+
 const initialState: PoemsState = {
   poems: createPaginatedState<ApiPoem>(10),
   myPoems: createPaginatedState<ApiPoem>(10),
@@ -46,10 +54,14 @@ const poemsSlice = createSlice({
   extraReducers: (builder) => {
     builder
       //GET POEMS
-      .addCase(loadPoems.pending, (state) => {
+      .addCase(loadPoems.pending, (state, action) => {
         state.poems.loading = true;
+        state.poems.activeKey = buildPoemsKey(action.meta.arg);
       })
       .addCase(loadPoems.fulfilled, (state, action) => {
+        const key = buildPoemsKey(action.meta.arg);
+        if (state.poems.activeKey !== key) return;
+
         const { content, number, totalElements } = action.payload;
 
         state.poems.loading = false;
@@ -112,10 +124,14 @@ const poemsSlice = createSlice({
         state.selectedPoemLoading = false;
       })
       //GET MY POEMS
-      .addCase(loadMyPoems.pending, (state) => {
+      .addCase(loadMyPoems.pending, (state, action) => {
         state.myPoems.loading = true;
+        state.myPoems.activeKey = buildPoemsKey(action.meta.arg);
       })
       .addCase(loadMyPoems.fulfilled, (state, action) => {
+        const key = buildPoemsKey(action.meta.arg);
+        if (state.myPoems.activeKey !== key) return;
+
         const { content, number, totalElements } = action.payload;
 
         state.myPoems.loading = false;

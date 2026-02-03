@@ -6,6 +6,7 @@ export type PaginatedState<T> = {
   size: number;
   total: number;
   hasMore: boolean;
+  activeKey?: string;
 };
 
 export const createPaginatedState = <T>(size = 10): PaginatedState<T> => ({

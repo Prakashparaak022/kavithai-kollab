@@ -100,7 +100,7 @@ const ApiFeedCardList = ({ filter, isPrivate }: Props) => {
           <PoemCardSkeleton key={index} />
         ))}
         emptyMessage={
-          <p className="text-center text-sm text-gray-500">No poems found</p>
+          <p className="text-center text-green">No poems found</p>
         }>
         {filteredPoems.map((poem, index) => (
           <PoemCard

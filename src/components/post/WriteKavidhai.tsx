@@ -233,7 +233,7 @@ export default function WriteKavidhai({ allowCollab, isPrivate }: Props) {
                 </div>
               }
               emptyMessage={
-                <p className="text-center text-sm text-gray-500">
+                <p className="text-center text-green">
                   No categories found
                 </p>
               }>

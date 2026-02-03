@@ -6,7 +6,7 @@ import AutoResizeTextarea from "../ui/AutoResizeTextarea";
 type ApproveCardProps = {
   title?: string;
   poemContent: string;
-  collabContent: string;
+  collabContent?: string;
   handleApprove: (updatedContent: string) => void;
 };
 
