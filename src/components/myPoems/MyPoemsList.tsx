@@ -59,15 +59,14 @@ const MyPoemsList = () => {
 
   const handleLoadMore = async () => {
     if (!playerDetails) return;
-
-    await dispatch(
+    dispatch(
       loadMyPoems({
         userId: playerDetails.id,
         isPrivate,
         page: page + 1,
         size: PAGE_SIZE,
       })
-    ).unwrap();
+    );
   };
 
   return (
