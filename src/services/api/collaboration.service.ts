@@ -9,10 +9,16 @@ import {
 
 export const fetchPostCollabs = async ({
   postId,
+  page = 0,
+  size = 10,
 }: {
   postId: number;
+  page?: number;
+  size?: number;
 }): Promise<ApiResponse<ApiCollaboration[]>> => {
-  const res = await fetch(`${API_URLS.COLLABS}${postId}`);
+  const res = await fetch(
+    `${API_URLS.COLLABS}${postId}?page=${page}&size=${size}`
+  );
   if (!res.ok) {
     throw new Error("Failed to fetch collaborations");
   }

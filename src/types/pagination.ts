@@ -1,4 +1,4 @@
-export type PaginatedState<T> = {
+export type PaginatedState<T, ExtraProps = {}> = {
   items: T[];
   loading: boolean;
   error: string | null;
@@ -6,16 +6,23 @@ export type PaginatedState<T> = {
   size: number;
   total: number;
   hasMore: boolean;
-};
+} & ExtraProps;
 
-export const createInitialPaginatedState = <T>(
-  size = 10
-): PaginatedState<T> => ({
+export const createPaginatedState = <T, ExtraProps = {}>(
+  size = 10,
+  extraProps: ExtraProps = {} as ExtraProps
+): PaginatedState<T, ExtraProps> => ({
   items: [],
-  loading: false,
+  loading: true,
   error: null,
   page: 0,
   size,
   total: 0,
   hasMore: true,
+  ...extraProps,
 });
+
+export type PaginationProps<T = {}> = {
+  page?: number;
+  size?: number;
+} & T;

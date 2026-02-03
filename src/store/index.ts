@@ -4,13 +4,15 @@ import { useDispatch } from "react-redux";
 import { commentsReducer } from "./comments";
 import { collabsReducer } from "./collaborations";
 import { userProfileReducer } from "./userProfile";
+import { categoryReducer } from "./categories";
 
 export const store = configureStore({
   reducer: {
     poems: poemsReducer,
     comments: commentsReducer,
     collabs: collabsReducer,
-    userProfile: userProfileReducer
+    userProfile: userProfileReducer,
+    category: categoryReducer
   },
 });
 

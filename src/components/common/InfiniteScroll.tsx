@@ -1,55 +1,70 @@
-"use client";
-import { useRef } from "react";
+import { useEffect, useRef } from "react";
 
-type InfiniteScrollProps<T = unknown> = {
-  className: string;
-  loading: boolean;
-  hasMore: boolean;
-  onLoadMore: () => Promise<unknown>;
-  rootMargin?: number;
+type InfiniteScrollProps<T> = {
   children: React.ReactNode;
   list: T[];
+  hasMore: boolean;
+  loading: boolean;
+  onLoadMore: () => Promise<any>;
   loader?: React.ReactNode;
   emptyMessage?: React.ReactNode;
+  rootMargin?: string;
+  className?: string;
+  useWindowScroll?: boolean;
 };
 
-const InfiniteScroll = ({
-  className,
-  loading,
-  hasMore,
-  onLoadMore,
-  rootMargin = 40,
+const InfiniteScroll = <T,>({
   children,
   list,
+  hasMore,
+  loading,
+  onLoadMore,
   loader,
   emptyMessage,
-}: InfiniteScrollProps) => {
+  rootMargin = "100px 0px",
+  className,
+  useWindowScroll = true,
+}: InfiniteScrollProps<T>) => {
+  const sentinelRef = useRef<HTMLDivElement | null>(null);
+  const containerRef = useRef<HTMLDivElement | null>(null);
   const isFetchingRef = useRef(false);
 
-  const loadMore = () => {
-    if (loading || !hasMore || isFetchingRef.current) return;
+  useEffect(() => {
+    if (!sentinelRef.current) return;
+    if (!hasMore || loading || isFetchingRef.current) return;
 
-    isFetchingRef.current = true;
+    const observer = new IntersectionObserver(
+      ([entry]) => {
+        if (!entry.isIntersecting) return;
+        if (isFetchingRef.current) return;
+        isFetchingRef.current = true;
 
-    onLoadMore().finally(() => {
-      isFetchingRef.current = false;
-    });
-  };
+        observer.disconnect();
+        onLoadMore().finally(() => {
+          isFetchingRef.current = false;
+        });
+      },
+      {
+        root: useWindowScroll ? null : containerRef.current,
+        rootMargin,
+        threshold: 0,
+      }
+    );
+
+    observer.observe(sentinelRef.current);
+
+    return () => observer.disconnect();
+  }, [hasMore, loading, onLoadMore, rootMargin, useWindowScroll]);
 
   return (
-    <div
-      className={className}
-      onScroll={(e) => {
-        const t = e.currentTarget;
-        if (t.scrollTop + t.clientHeight >= t.scrollHeight - rootMargin) {
-          loadMore();
-        }
-      }}>
+    <div ref={containerRef} className={className}>
       {children}
 
       {loading && loader}
 
       {!loading && list.length === 0 && emptyMessage}
+
+      {hasMore && <div ref={sentinelRef} className="h-1 w-full" />}
     </div>
   );
 };

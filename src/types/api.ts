@@ -132,3 +132,18 @@ export type ApiUsersParams = {
   page?: number;
   size?: number;
 };
+
+export type ProfileForm = {
+  email: string;
+  password: string;
+  penName: string;
+  phoneNo: string;
+  gender: string;
+  phoneCountryIsdcodeId: string;
+  countryId: string;
+  dob: string;
+  address: string;
+  city: string;
+  state: string;
+  zipCode: string;
+};

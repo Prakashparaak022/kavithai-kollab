@@ -8,12 +8,27 @@ import {
 
 export const fetchAllPoems = async ({
   userId,
+  isPrivate,
+  page = 0,
+  size = 10,
 }: {
   userId?: number;
+  isPrivate?: boolean;
+  page?: number;
+  size?: number;
 }): Promise<ApiResponse<ApiPoem[]>> => {
-  const url = userId
-    ? `${API_URLS.KAVITHAI_ALL}?userId=${userId}`
-    : `${API_URLS.KAVITHAI_ALL}`;
+  const params = new URLSearchParams({
+    page: String(page),
+    size: String(size),
+  });
+  if (userId !== undefined) {
+    params.append("userId", String(userId));
+  }
+
+  if (isPrivate !== undefined) {
+    params.append("isPrivate", String(isPrivate));
+  }
+  const url = `${API_URLS.KAVITHAI_ALL}?${params.toString()}`;
 
   const res = await fetch(url);
 
@@ -34,6 +49,9 @@ export const fetchPoemById = async ({
   const url = userId
     ? `${API_URLS.KAVITHAI_BY_ID}/${poemId}?userId=${userId}`
     : `${API_URLS.KAVITHAI_BY_ID}/${poemId}`;
+
+    console.log("url : ", url);
+    
 
   const res = await fetch(url, { cache: "no-store" });
 
@@ -82,14 +100,24 @@ export const AddLikeService = async ({
 
 export const fetchMyPoems = async ({
   userId,
+  isPrivate,
   page = 0,
   size = 10,
 }: {
   userId: number;
+  isPrivate?: boolean;
   page?: number;
   size?: number;
 }): Promise<ApiResponse<ApiPoem[]>> => {
-  const url = `${API_URLS.MY_POSTS}?userId=${userId}&page=${page}&size=${size}`;
+  const params = new URLSearchParams({
+    page: String(page),
+    size: String(size),
+  });
+
+  if (isPrivate !== undefined) {
+    params.append("isPrivate", String(isPrivate));
+  }
+  const url = `${API_URLS.KAVITHAI_ALL}?userId=${userId}&${params.toString()}`;
   const res = await fetch(url);
 
   if (!res.ok) {

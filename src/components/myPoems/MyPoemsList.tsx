@@ -7,15 +7,17 @@ import { usePlayerDetails } from "@/utils/UserSession";
 import { useEffect, useState } from "react";
 import { useSelector } from "react-redux";
 import PoemCard from "../common/PoemCard";
-import CommentsList from "../feed/CommentsList";
+import CommentsList from "../poem/CommentsList";
 import { PoemCardSkeleton } from "../poem/PoemCardSkeleton";
 import CustomModal from "../ui/CustomModal";
 
 const MyPoemsList = () => {
   const dispatch = useAppDispatch();
-  const { myPoems, myPoemLoading, likeLoading } = useSelector(
-    (state: RootState) => state.poems
-  );
+  const {
+    myPoems: { items: myPoems, loading, hasMore, page },
+    likeLoading,
+  } = useSelector((state: RootState) => state.poems);
+
   const { withAuth } = useRequireAuth();
   const { playerDetails } = usePlayerDetails();
   const [activePoemId, setActivePoemId] = useState<number | null>(null);
@@ -40,7 +42,7 @@ const MyPoemsList = () => {
     );
   };
 
-  if (myPoemLoading) {
+  if (loading) {
     return (
       <div className="grid grid-cols-12 gap-5">
         {Array.from({ length: 8 }).map((_, index) => (

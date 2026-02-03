@@ -8,13 +8,17 @@ import {
 } from "@/services/api/poems.service";
 import { AddLikePayload } from "@/types/api";
 import { formatErrorMessage } from "@/utils/errorMessage";
+import { PaginationProps } from "@/types/pagination";
 
 export const loadPoems = createAsyncThunk(
   "poems/loadPoems",
-  async ({ userId }: { userId?: number }, { rejectWithValue }) => {
+  async (
+    { userId, isPrivate, page, size }: PaginationProps<{ userId?: number, isPrivate?:boolean }>,
+    { rejectWithValue }
+  ) => {
     try {
-      const response = await fetchAllPoems({ userId });
-      return response.content;
+      const response = await fetchAllPoems({ userId, isPrivate, page, size });
+      return response;
     } catch (error: unknown) {
       return rejectWithValue(formatErrorMessage(error, "Failed to load poems"));
     }
@@ -66,10 +70,13 @@ export const togglePoemLike = createAsyncThunk(
 
 export const loadMyPoems = createAsyncThunk(
   "poems/loadMyPoems",
-  async ({ userId }: { userId: number }, { rejectWithValue }) => {
+  async (
+    { userId, isPrivate, page, size }: PaginationProps<{ userId: number, isPrivate?:boolean }>,
+    { rejectWithValue }
+  ) => {
     try {
-      const response = await fetchMyPoems({ userId });
-      return response.content;
+      const response = await fetchMyPoems({ userId, isPrivate, page, size });
+      return response;
     } catch (error: unknown) {
       return rejectWithValue(
         formatErrorMessage(error, "Failed to load my poems")

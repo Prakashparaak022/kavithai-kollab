@@ -2,25 +2,30 @@
 
 import useRequireAuth from "@/hooks/useRequireAuth";
 import { RootState, useAppDispatch } from "@/store";
-import { loadPoems, togglePoemLike } from "@/store/poems";
+import { loadPoems, resetPoems, togglePoemLike } from "@/store/poems";
 import { usePlayerDetails } from "@/utils/UserSession";
 import { useEffect, useMemo, useState } from "react";
 import { useSelector } from "react-redux";
 import PoemCard from "../common/PoemCard";
 import { PoemCardSkeleton } from "../poem/PoemCardSkeleton";
 import CustomModal from "../ui/CustomModal";
-import CommentsList from "./CommentsList";
-import { FeedType, FilterType } from "./index";
+import CommentsList from "../poem/CommentsList";
+import { FilterType } from "./index";
+import InfiniteScroll from "../common/InfiniteScroll";
 
 type Props = {
   filter: FilterType;
-  feedType: FeedType;
+  isPrivate: boolean;
 };
-const ApiFeedCardList = ({ filter, feedType }: Props) => {
+
+const PAGE_SIZE = 10;
+
+const ApiFeedCardList = ({ filter, isPrivate }: Props) => {
   const dispatch = useAppDispatch();
-  const { poems, loading, likeLoading } = useSelector(
-    (state: RootState) => state.poems
-  );
+  const {
+    poems: { items: poems, loading, hasMore, page },
+    likeLoading,
+  } = useSelector((state: RootState) => state.poems);
   const { withAuth } = useRequireAuth();
   const {
     playerDetails,
@@ -30,10 +35,19 @@ const ApiFeedCardList = ({ filter, feedType }: Props) => {
   const [activePoemId, setActivePoemId] = useState<number | null>(null);
   const [commentsOpen, setCommentsOpen] = useState(false);
 
+  // Initial load
   useEffect(() => {
     if (playerLoading) return;
-    dispatch(loadPoems({ userId: playerDetails?.id }));
-  }, [dispatch, playerDetails?.id, playerLoading]);
+    dispatch(resetPoems());
+    dispatch(
+      loadPoems({
+        userId: playerDetails?.id,
+        isPrivate: isPrivate,
+        page: 0,
+        size: PAGE_SIZE,
+      })
+    );
+  }, [dispatch, playerDetails?.id, playerLoading, isPrivate]);
 
   const handleLike = (id: number, isLiked: boolean) => {
     if (!playerDetails?.id) return;
@@ -62,34 +76,35 @@ const ApiFeedCardList = ({ filter, feedType }: Props) => {
           new Date(b.createdAt).getTime() - new Date(a.createdAt).getTime()
       );
     }
-
-    if (feedType === "public") {
-      list = list.filter((p) => p.isPublish === true);
-    }
-
-    if (feedType === "private") {
-      list = list.filter((p) => p.isPrivate === true);
-    }
-
     return list;
-  }, [filter, poems, feedType]);
-
-  if (loading) {
-    return (
-      <div className="grid grid-cols-12 gap-5">
-        {Array.from({ length: 8 }).map((_, index) => (
-          <PoemCardSkeleton key={index} />
-        ))}
-      </div>
-    );
-  }
+  }, [filter, poems]);
 
   return (
     <>
-      <div className="grid grid-cols-12 gap-5">
+      <InfiniteScroll
+        className="grid grid-cols-12 gap-5"
+        loading={loading}
+        hasMore={hasMore}
+        list={filteredPoems}
+        onLoadMore={() =>
+          dispatch(
+            loadPoems({
+              userId: playerDetails?.id,
+              isPrivate: isPrivate,
+              page: page + 1,
+              size: PAGE_SIZE,
+            })
+          )
+        }
+        loader={Array.from({ length: 8 }).map((_, index) => (
+          <PoemCardSkeleton key={index} />
+        ))}
+        emptyMessage={
+          <p className="text-center text-sm text-gray-500">No poems found</p>
+        }>
         {filteredPoems.map((poem, index) => (
           <PoemCard
-            key={poem.id}
+            key={index}
             poem={poem}
             index={index}
             userId={playerDetails?.id}
@@ -102,7 +117,7 @@ const ApiFeedCardList = ({ filter, feedType }: Props) => {
             }
           />
         ))}
-      </div>
+      </InfiniteScroll>
 
       {commentsOpen && activePoemId && (
         <CustomModal

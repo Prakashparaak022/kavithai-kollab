@@ -1,14 +1,17 @@
 "use client";
 
-import { useState, useRef } from "react";
+import { useState, useRef, useEffect } from "react";
 import { useForm } from "react-hook-form";
 import { Camera, X } from "lucide-react";
 import { toast } from "react-toastify";
 import { usePlayerDetails } from "@/utils/UserSession";
-import { useCategories } from "@/hooks/useCategories";
 import LoadingSpinner from "../ui/LoadingSpinner";
 import { createPoem } from "@/store/poems";
-import { useAppDispatch } from "@/store";
+import { RootState, useAppDispatch } from "@/store";
+import { useSelector } from "react-redux";
+import { loadCategories, resetCategories } from "@/store/categories";
+import CategorySkeleton from "./CategorySkeleton";
+import InfiniteScroll from "../common/InfiniteScroll";
 
 const TAG_REGEX = /^#[a-z0-9]+$/;
 
@@ -24,14 +27,20 @@ type FormValues = {
   image: File | null;
 };
 
+const PAGE_SIZE = 15;
+
 export default function WriteKavidhai({ allowCollab, isPrivate }: Props) {
   const fileRef = useRef<HTMLInputElement | null>(null);
   const { playerDetails, accessToken } = usePlayerDetails();
+
   const {
-    data: categoryData,
+    items: categories,
+    hasMore,
     loading: categoryLoading,
-    error,
-  } = useCategories();
+    page,
+    size,
+    total,
+  } = useSelector((state: RootState) => state.category);
 
   const { register, handleSubmit, setValue, watch, reset } =
     useForm<FormValues>({
@@ -71,6 +80,17 @@ export default function WriteKavidhai({ allowCollab, isPrivate }: Props) {
     setTags((prev) => [...prev, ...incoming.filter((t) => !prev.includes(t))]);
     setTagInput("");
   };
+
+  // Initial load
+  useEffect(() => {
+    dispatch(resetCategories());
+    dispatch(
+      loadCategories({
+        page: 0,
+        size: PAGE_SIZE,
+      })
+    );
+  }, [dispatch]);
 
   const onSubmit = async (data: FormValues) => {
     if (!playerDetails?.id) {
@@ -190,23 +210,51 @@ export default function WriteKavidhai({ allowCollab, isPrivate }: Props) {
 
         <div>
           <p className="mb-2 text-sm font-medium text-gray-600">Category</p>
-          <div className="flex flex-wrap gap-2">
-            {categoryLoading ? (
-              <LoadingSpinner color="var(--bg-secondary)" />
-            ) : (
-              categoryData?.map((cat) => (
+
+          <div className="relative">
+            <InfiniteScroll
+              className="flex gap-2 overflow-x-auto pb-2 pr-8 no-scrollbar"
+              loading={categoryLoading}
+              hasMore={hasMore}
+              list={categories}
+              onLoadMore={() =>
+                dispatch(
+                  loadCategories({
+                    page: page + 1,
+                    size: PAGE_SIZE,
+                  })
+                )
+              }
+              loader={
+                <div className="flex gap-2">
+                  {Array.from({ length: 15 }).map((_, i) => (
+                    <CategorySkeleton key={i} />
+                  ))}
+                </div>
+              }
+              emptyMessage={
+                <p className="text-center text-sm text-gray-500">
+                  No categories found
+                </p>
+              }>
+              {categories.map((cat, index) => (
                 <button
-                  key={cat.id}
+                  key={index}
                   type="button"
                   onClick={() => setValue("category", cat.id)}
-                  className={`px-3 py-1 rounded-full text-xs transition ${
+                  className={`whitespace-nowrap px-3 py-1 rounded-full text-xs transition ${
                     selectedCategory === cat.id
                       ? "bg-secondary text-white"
                       : "bg-card text-gray-700 hover:bg-[#CCE0AB]"
                   }`}>
                   {cat.name}
                 </button>
-              ))
+              ))}
+            </InfiniteScroll>
+
+            {/* Gradient fade indicator */}
+            {hasMore && (
+              <div className="pointer-events-none absolute right-0 top-0 h-full w-10 bg-gradient-to-l from-[rgba(243,233,216,0.8)] to-transparent" />
             )}
           </div>
         </div>

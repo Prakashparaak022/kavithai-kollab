@@ -108,6 +108,7 @@ const InviteModal = ({ poem, onClose }: Props) => {
 
           <InfiniteScroll
             className="space-y-3 mb-6 max-h-[300px] overflow-y-auto"
+            useWindowScroll={false}
             loading={loading}
             hasMore={hasMore}
             list={userProfiles}

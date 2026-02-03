@@ -1,24 +1,12 @@
 "use client";
-import { myCollaborations } from "@/data/myCollaborations";
 import AboutPoem from "../poem/AboutPoem";
-import Collaborations from "./Collaborations";
+import Collaborations from "./MyCollabList";
 import AppBgLayout from "../layouts/AppBgLayout";
 import { usePlayerDetails } from "@/utils/UserSession";
-import { useEffect } from "react";
-import { RootState, useAppDispatch } from "@/store";
-import { loadMyCollaborations } from "@/store/collaborations";
-import { useSelector } from "react-redux";
-
+import useRequireAuth from "@/hooks/useRequireAuth";
 const MyCollaborations = () => {
-  const { collabs, loading } = useSelector((state: RootState) => state.collabs);
   const { displayName, playerDetails } = usePlayerDetails();
-  const dispatch = useAppDispatch();
-
-  useEffect(() => {
-    if (playerDetails?.id) {
-      dispatch(loadMyCollaborations({ userId: playerDetails.id }));
-    }
-  }, [playerDetails?.id]);
+  const { withAuth } = useRequireAuth();
 
   return (
     <AppBgLayout
@@ -28,10 +16,7 @@ const MyCollaborations = () => {
           <h3 className="text-lg font-semibold text-green">
             Pending Contibutions
           </h3>
-          <Collaborations
-            collaborations={collabs.filter((c) => c.status === "PENDING")}
-            loading={loading}
-          />
+          {playerDetails?.id && <Collaborations userId={playerDetails?.id} />}
         </div>
       }
       right={

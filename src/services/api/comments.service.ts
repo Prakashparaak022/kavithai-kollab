@@ -3,10 +3,14 @@ import { AddCommentPayload, ApiComment, ApiResponse } from "@/types/api";
 
 export const fetchPostComments = async ({
   postId,
+  page = 0,
+  size = 10,
 }: {
   postId: number;
+  page?: number;
+  size?: number;
 }): Promise<ApiResponse<ApiComment[]>> => {
-  const res = await fetch(`${API_URLS.COMMENTS}${postId}`);
+  const res = await fetch(`${API_URLS.COMMENTS}${postId}?page=${page}&size=${size}`);
   if (!res.ok) {
     throw new Error("Failed to fetch comments");
   }

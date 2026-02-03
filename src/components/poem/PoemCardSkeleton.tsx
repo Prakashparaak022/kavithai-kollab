@@ -1,3 +1,5 @@
+import { getUserImageSrc } from "@/utils/imageUtils";
+
 export const PoemCardSkeleton = () => {
   return (
     <div className="col-span-12 sm:col-span-6 md:col-span-4 lg:col-span-3 bg-card rounded-2xl flex flex-col animate-pulse">
@@ -11,8 +13,13 @@ export const PoemCardSkeleton = () => {
         <div className="h-4 w-3/4 bg-gray-300 rounded" />
 
         <div className="flex items-center gap-2">
-          <div className="h-5 w-5 bg-gray-300 rounded-full" />
-          <div className="h-3 w-24 bg-gray-300 rounded" />
+          <img
+            src={getUserImageSrc("")}
+            alt="placeholder-user"
+            className="w-5 h-5 rounded-full object-cover"
+          />
+
+          <div className="h-3 w-24 bg-blue-200 rounded" />
         </div>
 
         <div className="space-y-1">
