@@ -24,7 +24,7 @@ export const API_URLS = {
   COLLABS_ADD: `${BASE_URL}/api/v1/posts/collaborations`,
   COLLAB_DECISION: `${BASE_URL}/api/v1/posts/collaborations/decision`,
   COLLAB_INVITE: `${BASE_URL}/api/v1/posts/collaborations/invite`,
-  MY_COLLABS: `${BASE_URL}/api/v1/posts/collaborations/my-collaboration1`,
+  MY_COLLABS: `${BASE_URL}/api/v1/posts/collaborations/my-collaborations`,
   COLLAB_ACCEPT: `${BASE_URL}/api/v1/posts/collaborations/accept/`,
   COLLAB_REJECT: `${BASE_URL}/api/v1/posts/collaborations/reject/`,
   USER_PROFILE_LIST: `${BASE_URL}/api/v1/user-profile/list`,
