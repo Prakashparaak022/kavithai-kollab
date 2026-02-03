@@ -5,7 +5,7 @@ type InfiniteScrollProps<T> = {
   list: T[];
   hasMore: boolean;
   loading: boolean;
-  onLoadMore: () => Promise<any>;
+  onLoadMore: () => Promise<unknown>;
   loader?: React.ReactNode;
   emptyMessage?: React.ReactNode;
   rootMargin?: string;

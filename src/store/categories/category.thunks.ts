@@ -5,7 +5,7 @@ import { PaginationProps } from "@/types/pagination";
 
 export const loadCategories = createAsyncThunk(
   "loadCategories/load",
-  async (params: PaginationProps, { rejectWithValue }) => {
+  async (params: PaginationProps<unknown>, { rejectWithValue }) => {
     try {
       const response = await fetchAllCategories(params);
       return response;

@@ -1,7 +1,8 @@
+import { ApiPoem } from "@/types/api";
 import { Heart, MessageCircle } from "lucide-react";
 
 type Props = {
-  poem: any;
+  poem: ApiPoem;
   onLike: (id: number, isLiked: boolean) => void;
   onComment: (id: number) => void;
 };

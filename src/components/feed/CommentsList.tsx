@@ -20,13 +20,9 @@ const PAGE_SIZE = 10;
 
 const CommentsList = ({ postId }: Props) => {
   const [content, setContent] = useState("");
-
   const {
-    items: comments,
-    loading,
-    page,
-    hasMore,
-    addLoading,
+    comments: { items: comments, loading, hasMore, page },
+    createLoading,
   } = useSelector((state: RootState) => state.comments);
 
   const dispatch = useAppDispatch();
@@ -46,7 +42,7 @@ const CommentsList = ({ postId }: Props) => {
   }, [dispatch, postId]);
 
   const handleAddComment = () => {
-    if (!content.trim() || addLoading || !playerDetails?.id) return;
+    if (!content.trim() || createLoading || !playerDetails?.id) return;
 
     dispatch(
       addComment({
@@ -80,14 +76,14 @@ const CommentsList = ({ postId }: Props) => {
 
         <button
           onClick={withAuth(handleAddComment)}
-          disabled={addLoading || !content.trim()}
+          disabled={createLoading || !content.trim()}
           className={`text-sm font-semibold
           ${
             content.trim()
               ? "text-green-800 hover:text-green"
               : "text-green cursor-default"
           }`}>
-          {addLoading ? "Posting..." : "Post"}
+          {createLoading ? "Posting..." : "Post"}
         </button>
       </div>
 

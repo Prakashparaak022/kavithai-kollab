@@ -2,9 +2,10 @@ import Image from "next/image";
 import Link from "next/link";
 import { getBase64ImageSrc, getUserImageSrc } from "@/utils/imageUtils";
 import PoemCardActions from "./PoemCardActions";
+import { ApiPoem } from "@/types/api";
 
 type Props = {
-  poem: any;
+  poem: ApiPoem;
   index: number;
   userId?: number;
   onLike: (id: number, isLiked: boolean) => void;

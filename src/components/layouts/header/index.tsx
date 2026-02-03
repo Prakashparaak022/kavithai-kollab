@@ -78,17 +78,6 @@ const Header = () => {
                   );
                 })}
               </div>
-              {/* Notification icon with badge */}
-              <div className="relative">
-                <BellDot
-                  size={24}
-                  className="text-highlight hover:text-secondary transition duration-300"
-                />
-                <span className="absolute top-0 right-0 block w-3 h-3 rounded-full bg-red-500 text-white text-xs font-semibold flex items-center justify-center">
-                  0
-                </span>
-              </div>
-
               {/* Notification */}
               <div className="relative h-9 flex items-center">
                 <Bell

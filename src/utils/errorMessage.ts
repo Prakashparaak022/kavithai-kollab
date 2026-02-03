@@ -8,7 +8,11 @@ export function formatErrorMessage(
     try {
       const parsed = JSON.parse(error);
       return (
-        parsed?.message || Object.values(parsed?.data || {})[0] || fallback
+        parsed?.message ||
+        (typeof parsed?.data === "object" && parsed?.data !== null
+          ? Object.values(parsed?.data)[0]
+          : fallback) ||
+        fallback
       );
     } catch {
       return error;
@@ -16,9 +20,16 @@ export function formatErrorMessage(
   }
 
   if (typeof error === "object" && error !== null) {
-    const err = error as any;
+    if ("message" in error) {
+      return (error as { message: string }).message || fallback;
+    }
 
-    return err.message || Object.values(err.data || {})[0] || fallback;
+    if ("data" in error) {
+      const data = (error as { data: Record<string, unknown> }).data;
+      return typeof data === "object" && data !== null
+        ? (Object.values(data)[0] as string) || fallback
+        : fallback;
+    }
   }
 
   return fallback;

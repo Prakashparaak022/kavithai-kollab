@@ -64,7 +64,7 @@ const ApiFeedCardList = ({ filter, isPrivate }: Props) => {
   };
 
   const filteredPoems = useMemo(() => {
-    let list = [...poems];
+    const list = [...poems];
 
     if (filter === "liked") {
       list.sort((a, b) => b.likesCount - a.likesCount);

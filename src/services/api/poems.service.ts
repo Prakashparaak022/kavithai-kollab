@@ -48,10 +48,7 @@ export const fetchPoemById = async ({
 }): Promise<ApiPoem> => {
   const url = userId
     ? `${API_URLS.KAVITHAI_BY_ID}/${poemId}?userId=${userId}`
-    : `${API_URLS.KAVITHAI_BY_ID}/${poemId}`;
-
-    console.log("url : ", url);
-    
+    : `${API_URLS.KAVITHAI_BY_ID}/${poemId}`;    
 
   const res = await fetch(url, { cache: "no-store" });
 

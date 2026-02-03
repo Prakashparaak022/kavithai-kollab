@@ -1,59 +1,60 @@
 import { createSlice } from "@reduxjs/toolkit";
 import { ApiComment } from "@/types/api";
 import { addComment, loadComments } from "./comments.thunks";
-import { createPaginatedState } from "@/types/pagination";
+import { createPaginatedState, PaginatedState } from "@/types/pagination";
 
-const initialState = createPaginatedState<ApiComment, { addLoading: boolean }>(10, {
-  addLoading: false,
-});
+type CommentsState = {
+  comments: PaginatedState<ApiComment>;
+  createLoading: boolean;
+  createError: string | null;
+};
+
+const initialState: CommentsState = {
+  comments: createPaginatedState<ApiComment>(10),
+  createLoading: false,
+  createError: null,
+};
 
 const commentsSlice = createSlice({
   name: "comments",
   initialState: initialState,
   reducers: {
-    resetComments(state) {
-      state.items = [];
-      state.page = 0;
-      state.total = 0;
-      state.hasMore = true;
-      state.error = null;
-      state.addLoading = false;
+    resetComments: (state) => {
+      state.comments = createPaginatedState<ApiComment>(state.comments.size);
     },
   },
   extraReducers: (builder) => {
     builder
       // LOAD COMMENTS
       .addCase(loadComments.pending, (state) => {
-        state.loading = true;
-        state.error = null;
+        state.comments.loading = true;
       })
       .addCase(loadComments.fulfilled, (state, action) => {
-        const { content, totalElements, number } = action.payload;
+        const { content, number, totalElements } = action.payload;
 
-        state.loading = false;
-
-        state.items = number === 0 ? content : [...state.items, ...content];
-
-        state.page = number;
-        state.total = totalElements;
-        state.hasMore = state.items.length < totalElements;
+        state.comments.loading = false;
+        state.comments.items =
+          number === 0 ? content : [...state.comments.items, ...content];
+        state.comments.page = number;
+        state.comments.total = totalElements;
+        state.comments.hasMore = state.comments.items.length < totalElements;
       })
       .addCase(loadComments.rejected, (state, action) => {
-        state.loading = false;
-        state.error = action.payload as string;
+        state.comments.loading = false;
+        state.comments.error = action.payload as string;
       })
       // ADD COMMENT
       .addCase(addComment.pending, (state) => {
-        state.addLoading = true;
-        state.error = null;
+        state.createLoading = true;
+        state.createError = null;
       })
       .addCase(addComment.fulfilled, (state, action) => {
-        state.addLoading = false;
-        state.items.push(action.payload);
+        state.comments.items.push(action.payload);
+        state.createLoading = false;
       })
       .addCase(addComment.rejected, (state, action) => {
-        state.addLoading = false;
-        state.error = action.payload as string;
+        state.createLoading = false;
+        state.createError = action.payload as string;
       });
   },
 });
