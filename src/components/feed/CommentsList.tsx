@@ -1,31 +1,48 @@
 "use client";
 
 import { RootState, useAppDispatch } from "@/store";
-import { addComment, loadComments } from "@/store/comments";
+import { addComment, loadComments, resetComments } from "@/store/comments";
 import { useEffect, useState } from "react";
 import { useSelector } from "react-redux";
 import { usePlayerDetails } from "@/utils/UserSession";
 import { toast } from "react-toastify";
 import { getUserImageSrc } from "@/utils/imageUtils";
-import Loader from "../ui/Loader";
 import { formatTimeAgo } from "@/utils";
+import useRequireAuth from "@/hooks/useRequireAuth";
+import InfiniteScroll from "../common/InfiniteScroll";
+import CommentSkeleton from "../poem/CommentSkeleton";
 
 type Props = {
   postId: number;
 };
 
+const PAGE_SIZE = 10;
+
 const CommentsList = ({ postId }: Props) => {
   const [content, setContent] = useState("");
 
-  const { comments, loading, addLoading } = useSelector(
-    (state: RootState) => state.comments
-  );
+  const {
+    items: comments,
+    loading,
+    page,
+    hasMore,
+    addLoading,
+  } = useSelector((state: RootState) => state.comments);
 
   const dispatch = useAppDispatch();
   const { playerDetails } = usePlayerDetails();
+  const { withAuth } = useRequireAuth();
 
+  // Initial load
   useEffect(() => {
-    dispatch(loadComments({ postId }));
+    dispatch(resetComments());
+    dispatch(
+      loadComments({
+        postId,
+        page: 0,
+        size: PAGE_SIZE,
+      })
+    );
   }, [dispatch, postId]);
 
   const handleAddComment = () => {
@@ -42,14 +59,6 @@ const CommentsList = ({ postId }: Props) => {
       .then(() => setContent(""))
       .catch(() => toast.error("Failed to add comment"));
   };
-
-  if (loading) {
-    return (
-      <div className="flex justify-center py-6">
-        <Loader />
-      </div>
-    );
-  }
 
   return (
     <div className="space-y-4">
@@ -70,7 +79,7 @@ const CommentsList = ({ postId }: Props) => {
         />
 
         <button
-          onClick={handleAddComment}
+          onClick={withAuth(handleAddComment)}
           disabled={addLoading || !content.trim()}
           className={`text-sm font-semibold
           ${
@@ -83,7 +92,28 @@ const CommentsList = ({ postId }: Props) => {
       </div>
 
       {/* Comments */}
-      <div className="space-y-3">
+      <InfiniteScroll
+        className="space-y-3"
+        loading={loading}
+        hasMore={hasMore}
+        list={comments}
+        onLoadMore={() =>
+          dispatch(
+            loadComments({
+              postId,
+              page: page + 1,
+              size: PAGE_SIZE,
+            })
+          )
+        }
+        loader={Array.from({ length: 10 }).map((_, i) => (
+          <CommentSkeleton key={i} />
+        ))}
+        emptyMessage={
+          <p className="text-xs text-gray-500 text-center py-4">
+            No comments yet. Be the first to comment.
+          </p>
+        }>
         {comments.map((comment) => (
           <div key={comment.id} className="flex gap-3">
             {/* Avatar */}
@@ -109,13 +139,7 @@ const CommentsList = ({ postId }: Props) => {
             </div>
           </div>
         ))}
-
-        {comments.length === 0 && (
-          <p className="text-xs text-gray-500 text-center py-4">
-            No comments yet. Be the first to comment.
-          </p>
-        )}
-      </div>
+      </InfiniteScroll>
     </div>
   );
 };
