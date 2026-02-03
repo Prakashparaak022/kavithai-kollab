@@ -114,7 +114,7 @@ export const fetchMyPoems = async ({
   if (isPrivate !== undefined) {
     params.append("isPrivate", String(isPrivate));
   }
-  const url = `${API_URLS.KAVITHAI_ALL}?userId=${userId}&${params.toString()}`;
+  const url = `${API_URLS.MY_POSTS}?userId=${userId}&${params.toString()}`;
   const res = await fetch(url);
 
   if (!res.ok) {
