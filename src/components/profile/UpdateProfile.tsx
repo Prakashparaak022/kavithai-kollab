@@ -3,6 +3,7 @@
 import { useState } from "react";
 import { API_URLS } from "@/constants/apiUrls";
 import { usePlayerDetails } from "@/utils/UserSession";
+import { toast } from "react-toastify";
 
 export type ProfileForm = {
   email: string;
@@ -37,13 +38,29 @@ const initialForm: ProfileForm = {
 export default function UpdateProfile() {
   const [form, setForm] = useState<ProfileForm>(initialForm);
   const [loading, setLoading] = useState(false);
-  const { playerDetails } = usePlayerDetails();
+
+  const { playerDetails, displayName } = usePlayerDetails();
+  const [profileImage, setProfileImage] = useState(playerDetails?.authorImage);
 
   const handleChange = (
     e: React.ChangeEvent<HTMLInputElement | HTMLSelectElement>
   ) => {
     const { name, value } = e.target;
     setForm((prev) => ({ ...prev, [name]: value }));
+  };
+
+  const handleProfileImageChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+    const file = e.target.files?.[0] || null;
+    if (!file) return;
+
+    if (file.size > 1 * 1024 * 1024) {
+      toast.error("File size exceeds 1MB limit.");
+      return;
+    }
+
+    if (file) {
+      setProfileImage(URL.createObjectURL(file));
+    }
   };
 
   const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
@@ -75,17 +92,34 @@ export default function UpdateProfile() {
   return (
     <div className="min-h-screen flex items-center justify-center bg-app p-4">
       <div className="w-full max-w-4xl rounded-2xl bg-card shadow-2xl overflow-hidden">
-        <div className="relative bg-teal-800 px-6 py-14 text-center text-white overflow-hidden">
+        <div className="relative overflow-hidden bg-teal-800 px-6 py-16 text-center text-white">
           <img
             src="/ribbon.svg"
             alt="ribbon"
-            className="absolute top-0 left-1/2 -translate-x-1/2 w-[420px] max-w-full"
+            className="absolute top-0 left-1/2 w-[420px] max-w-full -translate-x-1/2"
           />
-          <div className="relative z-10">
-            <div className="mx-auto flex h-24 w-24 items-center justify-center rounded-full bg-white text-3xl font-bold text-teal-700 shadow-lg">
-              U
-            </div>
-            <h2 className="mt-8 text-2xl font-semibold">Update Profile</h2>
+
+          <div className="relative z-10 flex flex-col items-center">
+            <label className="group relative cursor-pointer">
+              <div className="flex h-24 w-24 items-center justify-center overflow-hidden rounded-full bg-white text-4xl font-bold text-teal-700 shadow-xl">
+                {!playerDetails?.authorImage && <span>{displayName?.[0]}</span>}
+              </div>
+
+              <div className="absolute inset-0 flex items-center justify-center rounded-full bg-black/50 opacity-0 transition group-hover:opacity-100">
+                <span className="text-xs font-semibold uppercase tracking-wide">
+                  Edit
+                </span>
+              </div>
+
+              <input
+                type="file"
+                accept="image/*"
+                className="hidden"
+                onChange={handleProfileImageChange}
+              />
+            </label>
+
+            <h2 className="mt-5 text-2xl font-semibold">Update Profile</h2>
             <p className="text-sm opacity-80">
               Manage your personal information
             </p>
@@ -94,9 +128,13 @@ export default function UpdateProfile() {
 
         <form
           onSubmit={handleSubmit}
-          className="grid grid-cols-1 gap-5 p-6 md:grid-cols-2 text-green"
-        >
-          <Input label="Email" name="email" value={form.email} onChange={handleChange} />
+          className="grid grid-cols-1 gap-5 p-6 md:grid-cols-2 text-green">
+          <Input
+            label="Email"
+            name="email"
+            value={form.email}
+            onChange={handleChange}
+          />
           <Input
             label="Password"
             name="password"
@@ -104,8 +142,18 @@ export default function UpdateProfile() {
             value={form.password}
             onChange={handleChange}
           />
-          <Input label="Pen Name" name="penName" value={form.penName} onChange={handleChange} />
-          <Input label="Phone Number" name="phoneNo" value={form.phoneNo} onChange={handleChange} />
+          <Input
+            label="Pen Name"
+            name="penName"
+            value={form.penName}
+            onChange={handleChange}
+          />
+          <Input
+            label="Phone Number"
+            name="phoneNo"
+            value={form.phoneNo}
+            onChange={handleChange}
+          />
 
           <div>
             <label className="text-sm font-medium">Gender</label>
@@ -113,8 +161,7 @@ export default function UpdateProfile() {
               name="gender"
               value={form.gender}
               onChange={handleChange}
-              className="mt-1 w-full rounded-lg border border-teal-600 bg-transparent px-3 py-2 focus:outline-none focus:ring-2 focus:ring-teal-600"
-            >
+              className="mt-1 w-full rounded-lg border border-teal-600 bg-transparent px-3 py-2 focus:outline-none focus:ring-2 focus:ring-teal-600">
               <option value="">Select</option>
               <option value="male">Male</option>
               <option value="female">Female</option>
@@ -139,15 +186,29 @@ export default function UpdateProfile() {
             />
           </div>
 
-          <Input label="City" name="city" value={form.city} onChange={handleChange} />
-          <Input label="State" name="state" value={form.state} onChange={handleChange} />
-          <Input label="Zip Code" name="zipCode" value={form.zipCode} onChange={handleChange} />
+          <Input
+            label="City"
+            name="city"
+            value={form.city}
+            onChange={handleChange}
+          />
+          <Input
+            label="State"
+            name="state"
+            value={form.state}
+            onChange={handleChange}
+          />
+          <Input
+            label="Zip Code"
+            name="zipCode"
+            value={form.zipCode}
+            onChange={handleChange}
+          />
 
           <div className="md:col-span-2 flex justify-center pt-4">
             <button
               disabled={loading}
-              className="rounded-full bg-teal-700 px-12 py-2 font-semibold text-white transition hover:bg-teal-800 disabled:opacity-60"
-            >
+              className="rounded-full bg-teal-700 px-12 py-2 font-semibold text-white transition hover:bg-teal-800 disabled:opacity-60">
               {loading ? "Saving..." : "Save Changes"}
             </button>
           </div>
