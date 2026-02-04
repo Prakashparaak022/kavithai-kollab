@@ -7,7 +7,18 @@ export type PlayerDetails = {
   firstName: string;
   lastName: string;
   penName?: string;
+  email?: string;
+  phoneNo?: string;
+  gender?: string;
+  dob?: string;
+  address?: string;
+  city?: string;
+  state?: string;
+  zipCode?: string;
+  phoneCountryIsdcodeId?: string;
+  countryId?: string;
   accessToken?: string;
+  authorImage?: string;
 };
 
 export function useSessionStorage<T = string | null>(key: string): T | null {

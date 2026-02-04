@@ -20,6 +20,7 @@ import CollabApproveCard from "./CollabApproveCard";
 import { fetchPoemById } from "@/services/api/poems.service";
 import InfiniteScroll from "../common/InfiniteScroll";
 import CollabSkeleton from "../myCollaborations/CollabsSkeleton";
+import { useInfiniteLoader } from "@/hooks/useInfiniteLoader";
 
 type Props = {
   poem: ApiPoem;
@@ -59,6 +60,14 @@ const CollaborationsList = ({ poem, onPoemRefresh, onInvite }: Props) => {
       })
     );
   }, [dispatch, poem.id]);
+
+  const loadMoreCollabs = useInfiniteLoader(
+    (page, size) => {
+      dispatch(loadCollabs({ postId: poem.id, page, size }));
+    },
+    page,
+    PAGE_SIZE
+  );
 
   const handleAddCollaboration = () => {
     if (!content.trim() || createLoading || !playerDetails?.id) return;
@@ -167,15 +176,7 @@ const CollaborationsList = ({ poem, onPoemRefresh, onInvite }: Props) => {
           loading={loading}
           hasMore={hasMore}
           list={collabs}
-          onLoadMore={() =>
-            dispatch(
-              loadCollabs({
-                postId: poem.id,
-                page: page + 1,
-                size: PAGE_SIZE,
-              })
-            )
-          }
+          onLoadMore={loadMoreCollabs}
           loader={Array.from({ length: 10 }).map((_, i) => (
             <CollabSkeleton key={i} />
           ))}

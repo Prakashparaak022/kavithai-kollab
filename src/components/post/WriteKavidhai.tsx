@@ -12,6 +12,7 @@ import { useSelector } from "react-redux";
 import { loadCategories, resetCategories } from "@/store/categories";
 import CategorySkeleton from "./CategorySkeleton";
 import InfiniteScroll from "../common/InfiniteScroll";
+import { useInfiniteLoader } from "@/hooks/useInfiniteLoader";
 
 const TAG_REGEX = /^#[a-z0-9]+$/;
 
@@ -91,6 +92,14 @@ export default function WriteKavidhai({ allowCollab, isPrivate }: Props) {
       })
     );
   }, [dispatch]);
+  
+  const loadMoreCategories = useInfiniteLoader(
+    (page, size) => {
+      dispatch(loadCategories({ page, size }));
+    },
+    page,
+    PAGE_SIZE
+  );
 
   const onSubmit = async (data: FormValues) => {
     if (!playerDetails?.id) {
@@ -217,14 +226,7 @@ export default function WriteKavidhai({ allowCollab, isPrivate }: Props) {
               loading={categoryLoading}
               hasMore={hasMore}
               list={categories}
-              onLoadMore={() =>
-                dispatch(
-                  loadCategories({
-                    page: page + 1,
-                    size: PAGE_SIZE,
-                  })
-                )
-              }
+              onLoadMore={loadMoreCategories}
               loader={
                 <div className="flex gap-2">
                   {Array.from({ length: 15 }).map((_, i) => (
@@ -233,9 +235,7 @@ export default function WriteKavidhai({ allowCollab, isPrivate }: Props) {
                 </div>
               }
               emptyMessage={
-                <p className="text-center text-green">
-                  No categories found
-                </p>
+                <p className="text-center text-green">No categories found</p>
               }>
               {categories.map((cat, index) => (
                 <button

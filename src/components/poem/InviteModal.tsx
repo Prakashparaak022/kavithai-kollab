@@ -7,13 +7,14 @@ import { motion } from "framer-motion";
 import { useSelector } from "react-redux";
 import InviteUserSkeleton from "./InviteUserSkeleton";
 import { loadUserProfiles } from "@/store/userProfile/userProfile.thunks";
-import { RootState,  useAppDispatch } from "@/store";
+import { RootState, useAppDispatch } from "@/store";
 import { inviteCollab } from "@/store/collaborations";
 import { ApiPoem } from "@/types/api";
 import { usePlayerDetails } from "@/utils/UserSession";
 import { resetUserProfiles } from "@/store/userProfile";
 import { useDebounce } from "@/hooks/useDebounce";
 import InfiniteScroll from "../common/InfiniteScroll";
+import { useInfiniteLoader } from "@/hooks/useInfiniteLoader";
 
 type Props = {
   poem: ApiPoem;
@@ -45,12 +46,28 @@ const InviteModal = ({ poem, onClose }: Props) => {
       loadUserProfiles({
         role: "USER",
         status: 1,
+        firstName: debouncedSearch,
         page: 0,
         size: PAGE_SIZE,
-        firstName: debouncedSearch,
       })
     );
   }, [dispatch, debouncedSearch]);
+
+  const loadMoreUserProfiles = useInfiniteLoader(
+    (page, size) => {
+      dispatch(
+        loadUserProfiles({
+          role: "USER",
+          status: 1,
+          firstName: debouncedSearch,
+          page,
+          size,
+        })
+      );
+    },
+    page,
+    PAGE_SIZE
+  );
 
   const handleInvite = async (userId: number, name: string) => {
     if (!playerDetails?.id || invited.has(userId)) return;
@@ -112,24 +129,12 @@ const InviteModal = ({ poem, onClose }: Props) => {
             loading={loading}
             hasMore={hasMore}
             list={userProfiles}
-            onLoadMore={() =>
-              dispatch(
-                loadUserProfiles({
-                  role: "USER",
-                  status: 1,
-                  page: page + 1,
-                  size: PAGE_SIZE,
-                  firstName: debouncedSearch,
-                })
-              )
-            }
+            onLoadMore={loadMoreUserProfiles}
             loader={Array.from({ length: 4 }).map((_, i) => (
               <InviteUserSkeleton key={i} />
             ))}
             emptyMessage={
-              <p className="text-green text-center">
-                No users found
-              </p>
+              <p className="text-green text-center">No users found</p>
             }>
             {userProfiles.map((user) => {
               const isInvited = invited.has(user.id);

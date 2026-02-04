@@ -11,12 +11,15 @@ import CommentsList from "../poem/CommentsList";
 import { PoemCardSkeleton } from "../poem/PoemCardSkeleton";
 import CustomModal from "../ui/CustomModal";
 import InfiniteScroll from "../common/InfiniteScroll";
-import { useModal } from "@/context/ModalContext";
+import { useInfiniteLoader } from "@/hooks/useInfiniteLoader";
+
+type Props = {
+  userId: number;
+};
 
 const PAGE_SIZE = 10;
 
-const MyPoemsList = () => {
-  const { openLogin } = useModal();
+const MyPoemsList = ({ userId }: Props) => {
   const dispatch = useAppDispatch();
   const {
     myPoems: { items: myPoems, loading, hasMore, page },
@@ -31,40 +34,43 @@ const MyPoemsList = () => {
 
   // Initial load
   useEffect(() => {
-    if (playerLoading || !playerDetails) return;
+    if (!userId) return;
     dispatch(resetMyPoems());
     dispatch(
       loadMyPoems({
-        userId: playerDetails.id,
+        userId,
         isPrivate: isPrivate,
         page: 0,
         size: PAGE_SIZE,
       })
     );
-  }, [dispatch, playerDetails?.id, playerLoading, isPrivate]);
+  }, [dispatch, userId, playerLoading, isPrivate]);
+
+  const loadMoreMyPoems = useInfiniteLoader(
+    (page, size) => {
+      dispatch(
+        loadMyPoems({
+          userId,
+          isPrivate,
+          page,
+          size,
+        })
+      );
+    },
+    page,
+    PAGE_SIZE
+  );
 
   const handleLike = (id: number, isLiked: boolean) => {
-    if (!playerDetails?.id) return;
+    if (!userId) return;
 
     if (likeLoading === id) return;
 
     dispatch(
       togglePoemLike({
         poemId: id,
-        userId: playerDetails.id,
+        userId,
         isLiked: !isLiked,
-      })
-    );
-  };
-
-  const handleLoadMore = async () => {
-    if (!playerDetails) return;
-    dispatch(
-      loadMyPoems({
-        userId: playerDetails.id,
-        isPrivate,
-        page: page + 1,
-        size: PAGE_SIZE,
       })
     );
   };
@@ -110,7 +116,7 @@ const MyPoemsList = () => {
         loading={loading}
         hasMore={hasMore}
         list={myPoems}
-        onLoadMore={handleLoadMore}
+        onLoadMore={loadMoreMyPoems}
         loader={Array.from({ length: 8 }).map((_, index) => (
           <PoemCardSkeleton key={index} />
         ))}
@@ -120,7 +126,7 @@ const MyPoemsList = () => {
             key={poem.id}
             poem={poem}
             index={index}
-            userId={playerDetails?.id}
+            userId={userId}
             onLike={(id, liked) => withAuth(() => handleLike(id, liked))()}
             onComment={(id) =>
               withAuth(() => {

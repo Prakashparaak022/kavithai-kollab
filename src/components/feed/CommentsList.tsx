@@ -11,6 +11,7 @@ import { formatTimeAgo } from "@/utils";
 import useRequireAuth from "@/hooks/useRequireAuth";
 import InfiniteScroll from "../common/InfiniteScroll";
 import CommentSkeleton from "../poem/CommentSkeleton";
+import { useInfiniteLoader } from "@/hooks/useInfiniteLoader";
 
 type Props = {
   postId: number;
@@ -40,6 +41,14 @@ const CommentsList = ({ postId }: Props) => {
       })
     );
   }, [dispatch, postId]);
+
+  const loadMoreComments = useInfiniteLoader(
+    (page, size) => {
+      dispatch(loadComments({ postId, page, size }));
+    },
+    page,
+    PAGE_SIZE
+  );
 
   const handleAddComment = () => {
     if (!content.trim() || createLoading || !playerDetails?.id) return;
@@ -93,15 +102,7 @@ const CommentsList = ({ postId }: Props) => {
         loading={loading}
         hasMore={hasMore}
         list={comments}
-        onLoadMore={() =>
-          dispatch(
-            loadComments({
-              postId,
-              page: page + 1,
-              size: PAGE_SIZE,
-            })
-          )
-        }
+        onLoadMore={loadMoreComments}
         loader={Array.from({ length: 10 }).map((_, i) => (
           <CommentSkeleton key={i} />
         ))}

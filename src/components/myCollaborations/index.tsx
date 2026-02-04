@@ -1,12 +1,11 @@
 "use client";
 import AboutPoem from "../poem/AboutPoem";
-import Collaborations from "./MyCollabList";
 import AppBgLayout from "../layouts/AppBgLayout";
 import { usePlayerDetails } from "@/utils/UserSession";
-import useRequireAuth from "@/hooks/useRequireAuth";
+import MyCollaborationsList from "./MyCollabList";
+
 const MyCollaborations = () => {
   const { displayName, playerDetails } = usePlayerDetails();
-  const { withAuth } = useRequireAuth();
 
   return (
     <AppBgLayout
@@ -16,7 +15,9 @@ const MyCollaborations = () => {
           <h3 className="text-lg font-semibold text-green">
             Pending Contibutions
           </h3>
-          {playerDetails?.id && <Collaborations userId={playerDetails?.id} />}
+          {playerDetails?.id && (
+            <MyCollaborationsList userId={playerDetails?.id} />
+          )}
         </div>
       }
       right={

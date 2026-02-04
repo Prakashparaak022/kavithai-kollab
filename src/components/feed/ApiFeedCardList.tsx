@@ -4,7 +4,7 @@ import useRequireAuth from "@/hooks/useRequireAuth";
 import { RootState, useAppDispatch } from "@/store";
 import { loadPoems, resetPoems, togglePoemLike } from "@/store/poems";
 import { usePlayerDetails } from "@/utils/UserSession";
-import { useEffect, useMemo, useState } from "react";
+import { useCallback, useEffect, useMemo, useState } from "react";
 import { useSelector } from "react-redux";
 import PoemCard from "../common/PoemCard";
 import { PoemCardSkeleton } from "../poem/PoemCardSkeleton";
@@ -12,6 +12,7 @@ import CustomModal from "../ui/CustomModal";
 import CommentsList from "../poem/CommentsList";
 import { FilterType } from "./index";
 import InfiniteScroll from "../common/InfiniteScroll";
+import { useInfiniteLoader } from "@/hooks/useInfiniteLoader";
 
 type Props = {
   filter: FilterType;
@@ -48,6 +49,21 @@ const ApiFeedCardList = ({ filter, isPrivate }: Props) => {
       })
     );
   }, [dispatch, playerDetails?.id, playerLoading, isPrivate]);
+
+  const loadMorePoems = useInfiniteLoader(
+  (page, size) => {
+    dispatch(
+      loadPoems({
+        userId: playerDetails?.id,
+        isPrivate,
+        page,
+        size,
+      })
+    );
+  },
+  page,
+  PAGE_SIZE
+);
 
   const handleLike = (id: number, isLiked: boolean) => {
     if (!playerDetails?.id) return;
@@ -86,22 +102,11 @@ const ApiFeedCardList = ({ filter, isPrivate }: Props) => {
         loading={loading}
         hasMore={hasMore}
         list={filteredPoems}
-        onLoadMore={() =>
-          dispatch(
-            loadPoems({
-              userId: playerDetails?.id,
-              isPrivate: isPrivate,
-              page: page + 1,
-              size: PAGE_SIZE,
-            })
-          )
-        }
+        onLoadMore={loadMorePoems}
         loader={Array.from({ length: 8 }).map((_, index) => (
           <PoemCardSkeleton key={index} />
         ))}
-        emptyMessage={
-          <p className="text-center text-green">No poems found</p>
-        }>
+        emptyMessage={<p className="text-center text-green">No poems found</p>}>
         {filteredPoems.map((poem, index) => (
           <PoemCard
             key={index}

@@ -5,7 +5,7 @@ type InfiniteScrollProps<T> = {
   list: T[];
   hasMore: boolean;
   loading: boolean;
-  onLoadMore: () => Promise<unknown>;
+  onLoadMore: () => Promise<unknown> | void;
   loader?: React.ReactNode;
   emptyMessage?: React.ReactNode;
   rootMargin?: string;
@@ -30,19 +30,23 @@ const InfiniteScroll = <T,>({
   const isFetchingRef = useRef(false);
 
   useEffect(() => {
-    if (!sentinelRef.current) return;
+    const sentinel = sentinelRef.current;
+    if (!sentinel) return;
     if (!hasMore || loading || isFetchingRef.current) return;
 
     const observer = new IntersectionObserver(
       ([entry]) => {
         if (!entry.isIntersecting) return;
         if (isFetchingRef.current) return;
-        isFetchingRef.current = true;
 
+        isFetchingRef.current = true;
         observer.disconnect();
-        onLoadMore().finally(() => {
-          isFetchingRef.current = false;
-        });
+
+        Promise.resolve(onLoadMore())
+          .catch(() => {})
+          .finally(() => {
+            isFetchingRef.current = false;
+          });
       },
       {
         root: useWindowScroll ? null : containerRef.current,
@@ -51,7 +55,7 @@ const InfiniteScroll = <T,>({
       }
     );
 
-    observer.observe(sentinelRef.current);
+    observer.observe(sentinel);
 
     return () => observer.disconnect();
   }, [hasMore, loading, onLoadMore, rootMargin, useWindowScroll]);

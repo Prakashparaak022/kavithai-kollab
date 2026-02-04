@@ -20,6 +20,7 @@ import CustomModal from "../ui/CustomModal";
 import { toast } from "react-toastify";
 import ViewPoemCard from "./ViewPoemCard";
 import { useRouter } from "next/navigation";
+import { useInfiniteLoader } from "@/hooks/useInfiniteLoader";
 
 type Props = {
   userId: number;
@@ -48,13 +49,21 @@ const MyCollaborationsList = ({ userId }: Props) => {
     dispatch(resetMyCollabs());
     dispatch(
       loadMyCollabs({
-        userId: userId,
+        userId,
         page: 0,
         size: PAGE_SIZE,
         status: "INVITED",
       })
     );
   }, [dispatch, userId]);
+
+  const loadMoreMyCollabs = useInfiniteLoader(
+    (page, size) => {
+      dispatch(loadMyCollabs({ userId, status: "INVITED", page, size }));
+    },
+    page,
+    PAGE_SIZE
+  );
 
   const handleAccept = async (collabId: number) => {
     if (!selectedCollab) return;
@@ -104,22 +113,12 @@ const MyCollaborationsList = ({ userId }: Props) => {
         loading={loading}
         hasMore={hasMore}
         list={collabs}
-        onLoadMore={() =>
-          dispatch(
-            loadMyCollabs({
-              userId: userId,
-              page: page + 1,
-              size: PAGE_SIZE,
-            })
-          )
-        }
+        onLoadMore={loadMoreMyCollabs}
         loader={Array.from({ length: 10 }).map((_, i) => (
           <CollabSkeleton key={i} />
         ))}
         emptyMessage={
-          <p className="text-green text-center py-4">
-            No Invites yet.
-          </p>
+          <p className="text-green text-center py-4">No Invites yet.</p>
         }>
         {collabs.map((collab) => {
           const isOpen = selectedCollab?.id === collab.id;
