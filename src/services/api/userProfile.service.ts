@@ -38,3 +38,19 @@ export const fetchUserProfiles = async ({
 
   return res.json();
 };
+
+export const fetchUserProfileById = async ({
+  userId,
+}: {
+  userId: number;
+}): Promise<ApiUserProfile> => {
+  const url = `${API_URLS.USER_PROFILE_BY_ID}${userId}`;
+
+  const res = await fetch(url, { cache: "no-store" });
+
+  if (!res.ok) {
+    throw new Error("Failed to fetch user");
+  }
+
+  return res.json();
+};

@@ -5,6 +5,11 @@ import { API_URLS } from "@/constants/apiUrls";
 import { usePlayerDetails } from "@/utils/UserSession";
 import { toast } from "react-toastify";
 import { useForm } from "react-hook-form";
+import { ApiUserProfile } from "@/types/api";
+
+type ProfileProps = {
+  userProfile: ApiUserProfile;
+};
 
 type FormValues = {
   email: string;
@@ -19,26 +24,29 @@ type FormValues = {
   zipCode: string;
 };
 
-export default function UpdateProfile() {
-  const { playerDetails, displayName } = usePlayerDetails();
+export default function UpdateProfile({ userProfile }: ProfileProps) {
+  const displayName = userProfile.penName || userProfile.firstName;
+
   const [profileImage, setProfileImage] = useState<string | undefined>(
-    playerDetails?.authorImage
+    userProfile.authorImage
   );
 
   const defaultValues = useMemo<FormValues>(
     () => ({
-      email: playerDetails?.email || "",
+      firstName: userProfile.firstName ?? "",
+      lastName: userProfile.lastName ?? "",
+      email: userProfile.email ?? "",
       password: "",
-      penName: playerDetails?.penName || "",
-      phoneNo: playerDetails?.phoneNo || "",
-      gender: playerDetails?.gender || "",
-      dob: playerDetails?.dob || "",
-      address: playerDetails?.address || "",
-      city: playerDetails?.city || "",
-      state: playerDetails?.state || "",
-      zipCode: playerDetails?.zipCode || "",
+      penName: userProfile.penName ?? "",
+      phoneNo: userProfile.phoneNo ?? "",
+      gender: userProfile.gender ?? "",
+      dob: userProfile.dob ?? "",
+      address: userProfile.address ?? "",
+      city: userProfile.city ?? "",
+      state: userProfile.state ?? "",
+      zipCode: userProfile.zipCode ?? "",
     }),
-    [playerDetails]
+    [userProfile]
   );
 
   const {
@@ -56,6 +64,32 @@ export default function UpdateProfile() {
 
   const fields = useMemo(
     () => [
+      {
+        name: "firstName",
+        label: "First Name",
+        rules: {
+          required: "Firstname is required",
+          minLength: { value: 3, message: "Min 3 characters" },
+          maxLength: { value: 20, message: "Max 20 characters" },
+          validate: (v: string) =>
+            typeof v === "string"
+              ? !/\s/.test(v) || "Spaces are not allowed"
+              : true,
+        },
+      },
+      {
+        name: "lastName",
+        label: "Last Name",
+        rules: {
+          required: "Lastname is required",
+          minLength: { value: 3, message: "Min 3 characters" },
+          maxLength: { value: 20, message: "Max 20 characters" },
+          validate: (v) =>
+            typeof v === "string"
+              ? !/\s/.test(v) || "Spaces are not allowed"
+              : true,
+        },
+      },
       {
         name: "email",
         label: "Email",
@@ -106,9 +140,9 @@ export default function UpdateProfile() {
         type: "select",
         options: [
           { label: "Select", value: "" },
-          { label: "Male", value: "male" },
-          { label: "Female", value: "female" },
-          { label: "Other", value: "other" },
+          { label: "Male", value: "Male" },
+          { label: "Female", value: "Female" },
+          { label: "Not to Reveal", value: "Not to Reveal" },
         ],
       },
       { name: "dob", label: "Date of Birth", type: "date" },
@@ -133,21 +167,17 @@ export default function UpdateProfile() {
   };
 
   const onSubmit = async (data: FormValues) => {
-    if (!playerDetails?.id) return;
-
     try {
-      // const res = await fetch(
-      //   `${API_URLS.USER_PROFILE_UPDATE}${playerDetails.id}`,
-      //   {
-      //     method: "PUT",
-      //     headers: { "Content-Type": "application/json" },
-      //     body: JSON.stringify(data),
-      //   }
-      // );
+      const res = await fetch(
+        `${API_URLS.USER_PROFILE_UPDATE}${userProfile.id}`,
+        {
+          method: "PUT",
+          headers: { "Content-Type": "application/json" },
+          body: JSON.stringify(data),
+        }
+      );
 
-      // if (!res.ok) throw new Error();
-      console.log("data: ", data);
-
+      if (!res.ok) throw new Error();
       toast.success("Profile updated successfully");
     } catch {
       toast.error("Failed to update profile");
@@ -205,7 +235,7 @@ export default function UpdateProfile() {
                 <label className="text-sm font-medium">{field.label}</label>
                 <select
                   {...register(field.name as keyof FormValues, field.rules)}
-                  className="mt-1 w-full rounded-lg border border-teal-600 bg-transparent px-3 py-2 focus:ring-2 focus:ring-teal-600">
+                  className="mt-1 w-full rounded-lg border border-teal-600 bg-transparent px-3 py-2 focus:outline-none focus:ring-2 focus:ring-teal-600">
                   {field?.options?.map((opt) => (
                     <option key={opt.value} value={opt.value}>
                       {opt.label}

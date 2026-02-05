@@ -28,5 +28,6 @@ export const API_URLS = {
   COLLAB_ACCEPT: `${BASE_URL}/api/v1/posts/collaborations/accept/`,
   COLLAB_REJECT: `${BASE_URL}/api/v1/posts/collaborations/reject/`,
   USER_PROFILE_LIST: `${BASE_URL}/api/v1/user-profile/list`,
-  USER_PROFILE_UPDATE: `${BASE_URL}/api/v1/user-profile/updateUserProfile/`
+  USER_PROFILE_BY_ID: `${BASE_URL}/api/v1/user-profile/`,
+  USER_PROFILE_UPDATE: `${BASE_URL}/api/v1/user-profile/updateUserProfile/`,
 };

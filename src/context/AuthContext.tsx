@@ -8,7 +8,7 @@ import {
   useState,
   ReactNode,
 } from "react";
-import { toast } from "react-toastify";
+import { useRouter } from "next/navigation";
 
 import { getDeviceDetails } from "@/utils/getDeviceDetails";
 import {
@@ -45,6 +45,7 @@ const AuthContext = createContext<AuthContextType | null>(null);
 
 export const AuthProvider = ({ children }: AuthProviderProps) => {
   const { playerDetails } = usePlayerDetails();
+  const router = useRouter();
 
   const [deviceDetails, setDeviceDetails] = useState<Record<
     string,
@@ -70,6 +71,7 @@ export const AuthProvider = ({ children }: AuthProviderProps) => {
         detail: { key: "playerDetails" },
       })
     );
+    router.push("/");
   };
 
   /* ------------------------------

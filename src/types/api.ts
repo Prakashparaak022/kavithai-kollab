@@ -118,6 +118,7 @@ export type ApiUserProfile = {
   zipCode: string;
   realUser: boolean;
   registrationDate: string;
+  authorImage: string;
 };
 
 export type ApiUsersParams = {
