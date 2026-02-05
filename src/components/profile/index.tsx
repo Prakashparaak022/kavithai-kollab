@@ -16,24 +16,24 @@ const Profile = () => {
 
   const playerId = playerDetails?.id;
 
+  const loadProfile = async () => {
+    if (!playerId) return;
+    try {
+      const profile = await fetchUserProfileById({ userId: playerId });
+      setUserProfile(profile);
+    } catch (err) {
+      console.error(err);
+    } finally {
+      setLoading(false);
+    }
+  };
+
   useEffect(() => {
     if (playerLoading) return;
     if (!playerId) {
       openLogin();
       return;
     }
-
-    const loadProfile = async () => {
-      try {
-        const profile = await fetchUserProfileById({ userId: playerId });
-        setUserProfile(profile);
-      } catch (err) {
-        console.error(err);
-      } finally {
-        setLoading(false);
-      }
-    };
-
     loadProfile();
   }, [playerId, playerLoading]);
 
@@ -62,7 +62,7 @@ const Profile = () => {
 
   return (
     <div className="m-4 p-4 bg-app min-h-[78vh] rounded-xl overflow-hidden">
-      <UpdateProfile userProfile={userProfile} />
+      <UpdateProfile userProfile={userProfile} profileRefresh={loadProfile} />
     </div>
   );
 };

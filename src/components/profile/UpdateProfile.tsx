@@ -2,16 +2,19 @@
 
 import { useEffect, useMemo, useState } from "react";
 import { API_URLS } from "@/constants/apiUrls";
-import { usePlayerDetails } from "@/utils/UserSession";
 import { toast } from "react-toastify";
 import { useForm } from "react-hook-form";
 import { ApiUserProfile } from "@/types/api";
+import { getUserImageSrc } from "@/utils/imageUtils";
 
 type ProfileProps = {
   userProfile: ApiUserProfile;
+  profileRefresh: () => Promise<void>;
 };
 
 type FormValues = {
+  firstName: string;
+  lastName: string;
   email: string;
   password: string;
   penName: string;
@@ -24,12 +27,17 @@ type FormValues = {
   zipCode: string;
 };
 
-export default function UpdateProfile({ userProfile }: ProfileProps) {
+export default function UpdateProfile({
+  userProfile,
+  profileRefresh,
+}: ProfileProps) {
   const displayName = userProfile.penName || userProfile.firstName;
 
   const [profileImage, setProfileImage] = useState<string | undefined>(
-    userProfile.authorImage
+    getUserImageSrc(userProfile.authorImage)
   );
+  const [imageDirty, setImageDirty] = useState(false);
+  const [profileImageFile, setProfileImageFile] = useState<File | null>(null);
 
   const defaultValues = useMemo<FormValues>(
     () => ({
@@ -53,7 +61,7 @@ export default function UpdateProfile({ userProfile }: ProfileProps) {
     register,
     handleSubmit,
     reset,
-    formState: { errors, isSubmitting },
+    formState: { errors, isSubmitting, isDirty },
   } = useForm<FormValues>({
     defaultValues,
   });
@@ -162,23 +170,40 @@ export default function UpdateProfile({ userProfile }: ProfileProps) {
       toast.error("File size exceeds 1MB limit");
       return;
     }
-
-    setProfileImage(URL.createObjectURL(file));
+    if (file) {
+      setProfileImageFile(file);
+      setProfileImage(URL.createObjectURL(file));
+      setImageDirty(true);
+    }
   };
 
   const onSubmit = async (data: FormValues) => {
     try {
+      const formData = new FormData();
+
+      Object.entries(data).forEach(([key, value]) => {
+        if (value !== undefined && value !== null) {
+          formData.append(key, value);
+        }
+      });
+
+      if (profileImageFile) {
+        formData.append("authorImage", profileImageFile);
+      }
+
       const res = await fetch(
         `${API_URLS.USER_PROFILE_UPDATE}${userProfile.id}`,
         {
           method: "PUT",
-          headers: { "Content-Type": "application/json" },
-          body: JSON.stringify(data),
+          body: formData,
         }
       );
 
       if (!res.ok) throw new Error();
       toast.success("Profile updated successfully");
+      reset(data);
+      setImageDirty(false);
+      profileRefresh();
     } catch {
       toast.error("Failed to update profile");
     }
@@ -187,7 +212,7 @@ export default function UpdateProfile({ userProfile }: ProfileProps) {
   return (
     <div className="min-h-screen flex items-center justify-center bg-app p-4">
       <div className="w-full max-w-4xl overflow-hidden rounded-2xl bg-card shadow-2xl">
-        <div className="relative bg-teal-800 px-6 py-16 text-center text-white overflow-hidden">
+        <div className="relative bg-secondary px-6 py-16 text-center text-white overflow-hidden">
           <img
             src="/ribbon.svg"
             alt="ribbon"
@@ -259,8 +284,8 @@ export default function UpdateProfile({ userProfile }: ProfileProps) {
 
           <div className="md:col-span-2 flex justify-center pt-4">
             <button
-              disabled={isSubmitting}
-              className="rounded-full bg-teal-700 px-12 py-2 font-semibold text-white hover:bg-teal-800 disabled:opacity-60">
+              disabled={(!isDirty && !imageDirty) || isSubmitting}
+              className="rounded-full bg-secondary px-12 py-2 font-semibold text-white hover:bg-teal-800 disabled:opacity-60">
               {isSubmitting ? "Saving..." : "Save Changes"}
             </button>
           </div>
