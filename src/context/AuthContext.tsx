@@ -7,6 +7,7 @@ import {
   useMemo,
   useState,
   ReactNode,
+  useCallback,
 } from "react";
 import { useRouter } from "next/navigation";
 
@@ -57,22 +58,27 @@ export const AuthProvider = ({ children }: AuthProviderProps) => {
      Login / Logout
   --------------------------------*/
 
-  const login = (userData: PlayerDetails) => {
+  const login = useCallback((userData: PlayerDetails) => {
     if (!userData) return;
-    setSessionStorage("playerDetails", JSON.stringify(userData));
-    if (userData?.accessToken)
-      setSessionStorage("accessToken", userData?.accessToken);
-  };
 
-  const logout = () => {
+    setSessionStorage("playerDetails", JSON.stringify(userData));
+
+    if (userData.accessToken) {
+      setSessionStorage("accessToken", userData.accessToken);
+    }
+  }, []);
+
+  const logout = useCallback(() => {
     sessionStorage.clear();
+
     window.dispatchEvent(
       new CustomEvent("sessionStorageUpdated", {
         detail: { key: "playerDetails" },
       })
     );
+
     router.push("/");
-  };
+  }, [router]);
 
   /* ------------------------------
      Brand + Device Setup
@@ -80,22 +86,6 @@ export const AuthProvider = ({ children }: AuthProviderProps) => {
 
   useEffect(() => {
     const fetchAllDetails = async () => {
-      // let storedBrandId = sessionStorage.getItem("brandId");
-
-      // if (storedBrandId) {
-      //   setBrandId(storedBrandId);
-      // } else {
-      //   storedBrandId = await fetchBrandID();
-
-      //   if (!storedBrandId) {
-      //     toast.error("Failed to retrieve brand ID.");
-      //     return;
-      //   }
-
-      //   sessionStorage.setItem("brandId", storedBrandId);
-      //   setBrandId(storedBrandId);
-      // }
-
       const details = getDeviceDetails({}, "");
       setDeviceDetails(details);
     };
@@ -115,7 +105,7 @@ export const AuthProvider = ({ children }: AuthProviderProps) => {
       login,
       logout,
     }),
-    [brandId, deviceDetails, playerDetails]
+    [brandId, deviceDetails, playerDetails, login, logout]
   );
 
   return <AuthContext.Provider value={value}>{children}</AuthContext.Provider>;
