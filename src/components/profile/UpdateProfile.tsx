@@ -226,6 +226,7 @@ export default function UpdateProfile({
                   <img
                     src={profileImage}
                     className="h-full w-full object-cover"
+                    alt="Profile Image"
                   />
                 ) : (
                   <span>{displayName?.[0]}</span>
