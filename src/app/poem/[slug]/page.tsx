@@ -11,7 +11,7 @@ export default async function PoemDetailPage({
   searchParams: Promise<{ userId: string }>;
 }) {
   const { slug } = await params;
-  const { userId } =  await searchParams;
+  const { userId } = await searchParams;
   const poem = await fetchPoemById({
     poemId: Number(slug),
     userId: userId ? Number(userId) : undefined,

@@ -9,11 +9,18 @@ type InfoItem = {
 };
 
 type Props = {
+  isPoemOwner: boolean;
   participants?: number;
   poetName: string;
+  handlePublish: () => void;
 };
 
-const AboutPoem = ({ participants, poetName }: Props) => {
+const AboutPoem = ({
+  isPoemOwner,
+  participants,
+  poetName,
+  handlePublish,
+}: Props) => {
   const [requireApproval, setRequireApproval] = useState(true);
 
   const infoList: InfoItem[] = [
@@ -33,6 +40,14 @@ const AboutPoem = ({ participants, poetName }: Props) => {
             <p className="text-[#3a4a48]">{value}</p>
           </div>
         ))}
+
+        {isPoemOwner && (
+          <button
+            onClick={handlePublish}
+            className="w-full mt-4 h-10 cursor-pointer rounded-full bg-secondary text-white font-semibold hover:bg-green-800 transition">
+            Publish
+          </button>
+        )}
 
         {/* Poet Approval */}
         {/* <div className="flex justify-between items-center">
