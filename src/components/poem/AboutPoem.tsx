@@ -5,10 +5,10 @@ type InfoItem = {
 };
 
 type Props = {
-  isPoemOwner: boolean;
+  isPoemOwner?: boolean;
   participants?: number;
   poetName: string;
-  handlePublish: () => void;
+  handlePublish?: () => void;
 };
 
 const AboutPoem = ({
