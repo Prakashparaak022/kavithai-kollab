@@ -2,6 +2,7 @@
 import { createAsyncThunk } from "@reduxjs/toolkit";
 import { loginService, registerService } from "@/services/api/auth.service";
 import { formatErrorMessage } from "@/utils/errorMessage";
+import { RegisterForm } from "@/types/api";
 
 export const loginUser = createAsyncThunk(
   "auth/login",
@@ -20,7 +21,7 @@ export const loginUser = createAsyncThunk(
 
 export const registerUser = createAsyncThunk(
   "auth/register",
-  async (userData: any, { rejectWithValue }) => {
+  async (userData: RegisterForm, { rejectWithValue }) => {
     try {
       const response = await registerService(userData);
       return response;

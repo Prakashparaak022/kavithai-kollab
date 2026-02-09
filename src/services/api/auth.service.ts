@@ -1,4 +1,5 @@
 import { API_URLS } from "@/constants/apiUrls";
+import { RegisterForm } from "@/types/api";
 
 type LoginCredentials = {
   email: string;
@@ -27,7 +28,7 @@ export const loginService = async (credentials: LoginCredentials) => {
   return response.json();
 };
 
-export const registerService = async (userData: any) => {
+export const registerService = async (userData: RegisterForm) => {
   const response = await fetch(API_URLS.REGISTER, {
     method: "POST",
     headers: {

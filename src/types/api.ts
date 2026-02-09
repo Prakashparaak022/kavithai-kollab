@@ -150,3 +150,13 @@ export type ProfileForm = {
   state: string;
   zipCode: string;
 };
+
+export type RegisterForm = {
+  firstName: string;
+  lastName: string;
+  penName: string;
+  email: string;
+  password: string;
+  phoneNo: number;
+  phoneCountryIsdcodeId: number;
+};

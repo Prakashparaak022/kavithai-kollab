@@ -4,7 +4,6 @@ import { useState, useCallback } from "react";
 import { useForm, Controller } from "react-hook-form";
 import { toast } from "react-toastify";
 import { useISDCode } from "@/hooks/useISDCode";
-import { API_URLS } from "@/constants/apiUrls";
 import { formatErrorMessage } from "@/utils/errorMessage";
 import Logo from "@/assets/img/logo-green.webp";
 import Image from "next/image";
@@ -14,24 +13,15 @@ import FormSelect from "../form/FormSelect";
 import { RootState, useAppDispatch } from "@/store";
 import { registerUser } from "@/store/auth/auth.thunks";
 import { useSelector } from "react-redux";
+import { RegisterForm } from "@/types/api";
 
 type RegisterProps = {
   handleClose?: () => void;
 };
 
-type RegisterFormValues = {
-  firstName: string;
-  lastName: string;
-  penName: string;
-  email: string;
-  password: string;
+type RegisterFormValues = RegisterForm & {
   confirmPassword: string;
-  promoCode?: string;
-  mobileNumber: string;
-  countryId: number;
-  isTermsAndConditions: boolean;
 };
-
 type CustomSwitchProps = {
   checked: boolean;
   onChange: () => void;
@@ -42,45 +32,41 @@ const Register = ({ handleClose }: RegisterProps) => {
     control,
     handleSubmit,
     watch,
+    getValues,
     formState: { errors, isValid },
   } = useForm<RegisterFormValues>({
     mode: "onChange",
     defaultValues: {
-      countryId: 95,
+      phoneCountryIsdcodeId: 95,
     },
   });
 
   const dispatch = useAppDispatch();
 
-  const { REGISTER } = API_URLS;
   const { data: isdCodeDetails, loading: isdCodeLoading } = useISDCode();
-    const loading = useSelector((state: RootState) => state.auth.loading);
+  const loading = useSelector((state: RootState) => state.auth.loading);
 
+  const onSubmit = async (data: RegisterForm) => {
+    try {
+      const profile = {
+        firstName: data.firstName.trim().replace(/\s+/g, ""),
+        lastName: data.lastName.trim().replace(/\s+/g, ""),
+        penName: data.penName?.trim().replace(/\s+/g, ""),
+        email: data.email,
+        password: data.password,
+        phoneNo: Number(data.phoneNo),
+        phoneCountryIsdcodeId: Number(data.phoneCountryIsdcodeId),
+      };
 
-  const onSubmit = useCallback(
-    async (data: RegisterFormValues) => {
-      try {
-        const profile = {
-          penName: data.penName?.trim().replace(/\s+/g, ""),
-          firstName: data.firstName.trim().replace(/\s+/g, ""),
-          lastName: data.lastName.trim().replace(/\s+/g, ""),
-          password: data.password,
-          email: data.email,
-          phoneNo: Number(data.mobileNumber),
-          phoneCountryIsdcodeId: Number(data.countryId),
-        };
+      await dispatch(registerUser(profile)).unwrap();
 
-        await dispatch(registerUser(profile)).unwrap();
-
-        toast.success("Registered Successfully");
-        handleClose?.();
-      } catch (error) {
-        console.error("An error occurred during registration.", error);
-        toast.error(formatErrorMessage(error as string));
-      }
-    },
-    [REGISTER, handleClose],
-  );
+      toast.success("Registered Successfully");
+      handleClose?.();
+    } catch (error) {
+      console.error("An error occurred during registration.", error);
+      toast.error(formatErrorMessage(error as string));
+    }
+  };
 
   return (
     <div className="flex flex-col items-center p-8 bg-app">
@@ -195,7 +181,7 @@ const Register = ({ handleClose }: RegisterProps) => {
             rules={{
               required: "Confirm Password is required",
               validate: (value: unknown) =>
-                value === watch("password") || "Passwords do not match",
+                value === getValues("password") || "Passwords do not match",
             }}
             variant="secondary"
             textColor="text-green"
@@ -205,7 +191,7 @@ const Register = ({ handleClose }: RegisterProps) => {
           <div className="w-full flex gap-2 mb-5">
             <div className="w-[100px]">
               <FormSelect
-                name="countryId"
+                name="phoneCountryIsdcodeId"
                 control={control}
                 errors={errors}
                 placeholder="Select your role"
@@ -220,7 +206,7 @@ const Register = ({ handleClose }: RegisterProps) => {
             </div>
             <div className="flex-1">
               <FormInput
-                name="mobileNumber"
+                name="phoneNo"
                 control={control}
                 errors={errors}
                 placeholder="Mobile number"
