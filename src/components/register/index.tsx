@@ -51,7 +51,7 @@ const Register = ({ handleClose }: RegisterProps) => {
   const [loading, setLoading] = useState(false);
 
   const { REGISTER } = API_URLS;
-  const { login, brandId } = useAuth();
+  const { login } = useAuth();
   const { data: isdCodeDetails, loading: isdCodeLoading } = useISDCode();
 
   const onSubmit = useCallback(
@@ -97,7 +97,7 @@ const Register = ({ handleClose }: RegisterProps) => {
         setLoading(false);
       }
     },
-    [REGISTER, brandId, login, handleClose]
+    [REGISTER, login, handleClose]
   );
 
   return (

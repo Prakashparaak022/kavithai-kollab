@@ -3,9 +3,7 @@
 import {
   createContext,
   useContext,
-  useEffect,
   useMemo,
-  useState,
   ReactNode,
   useCallback,
 } from "react";
@@ -21,7 +19,6 @@ import {
 --------------------------------*/
 
 type AuthContextType = {
-  brandId: string | null;
   playerDetails: PlayerDetails | null;
   login: (userData: PlayerDetails) => void;
   logout: () => void;
@@ -44,7 +41,6 @@ const AuthContext = createContext<AuthContextType | null>(null);
 export const AuthProvider = ({ children }: AuthProviderProps) => {
   const { playerDetails } = usePlayerDetails();
   const router = useRouter();
-  const [brandId, setBrandId] = useState<string | null>(null);
 
   /* ------------------------------
      Login / Logout
@@ -78,12 +74,11 @@ export const AuthProvider = ({ children }: AuthProviderProps) => {
 
   const value = useMemo<AuthContextType>(
     () => ({
-      brandId,
       playerDetails,
       login,
       logout,
     }),
-    [brandId, playerDetails, login, logout]
+    [playerDetails, login, logout]
   );
 
   return <AuthContext.Provider value={value}>{children}</AuthContext.Provider>;
