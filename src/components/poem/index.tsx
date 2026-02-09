@@ -76,7 +76,7 @@ const Poem = ({ poem: initialPoem }: Props) => {
       layout="9/3"
       left={
         <div className="p-4 space-y-4">
-          {/* Dynamic Poem Card */}
+          {/* Poem Card */}
           <PoemMotion motionKey={String(poem.id)}>
             <PoemDetailCard
               title={poem.title || ""}
