@@ -3,7 +3,6 @@
 import { useState, useCallback } from "react";
 import { useForm, Controller } from "react-hook-form";
 import { toast } from "react-toastify";
-import { useAuth } from "@/context/AuthContext";
 import { useISDCode } from "@/hooks/useISDCode";
 import { API_URLS } from "@/constants/apiUrls";
 import { formatErrorMessage } from "@/utils/errorMessage";
@@ -12,6 +11,9 @@ import Image from "next/image";
 import FormInput from "../form/FormInput";
 import SubmitButton from "../ui/SubmitButton";
 import FormSelect from "../form/FormSelect";
+import { RootState, useAppDispatch } from "@/store";
+import { registerUser } from "@/store/auth/auth.thunks";
+import { useSelector } from "react-redux";
 
 type RegisterProps = {
   handleClose?: () => void;
@@ -48,17 +50,16 @@ const Register = ({ handleClose }: RegisterProps) => {
     },
   });
 
-  const [loading, setLoading] = useState(false);
+  const dispatch = useAppDispatch();
 
   const { REGISTER } = API_URLS;
-  const { login } = useAuth();
   const { data: isdCodeDetails, loading: isdCodeLoading } = useISDCode();
+    const loading = useSelector((state: RootState) => state.auth.loading);
+
 
   const onSubmit = useCallback(
     async (data: RegisterFormValues) => {
       try {
-        setLoading(true);
-
         const profile = {
           penName: data.penName?.trim().replace(/\s+/g, ""),
           firstName: data.firstName.trim().replace(/\s+/g, ""),
@@ -69,35 +70,16 @@ const Register = ({ handleClose }: RegisterProps) => {
           phoneCountryIsdcodeId: Number(data.countryId),
         };
 
-        const response = await fetch(REGISTER, {
-          method: "POST",
-          headers: {
-            "Content-Type": "application/json",
-          },
-          body: JSON.stringify(profile),
-        });
+        await dispatch(registerUser(profile)).unwrap();
 
-        if (response.ok) {
-          const result = await response.json();
-          login(result);
-          toast.success("Registered Successfully");
-          handleClose?.();
-        } else {
-          const errorData = await response.json();
-          toast.error(
-            errorData?.errors?.[0]?.defaultMessage ||
-              Object.values(errorData?.data || {})[0] ||
-              formatErrorMessage(errorData, "Registration failed")
-          );
-        }
+        toast.success("Registered Successfully");
+        handleClose?.();
       } catch (error) {
         console.error("An error occurred during registration.", error);
-        toast.error("Unexpected error occurred during registration.");
-      } finally {
-        setLoading(false);
+        toast.error(formatErrorMessage(error as string));
       }
     },
-    [REGISTER, login, handleClose]
+    [REGISTER, handleClose],
   );
 
   return (

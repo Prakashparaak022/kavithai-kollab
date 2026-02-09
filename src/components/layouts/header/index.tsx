@@ -14,16 +14,22 @@ import {
   Menu,
   X,
   Book,
-  BellDot,
   Bell,
 } from "lucide-react";
 import LoadingSpinner from "../../ui/LoadingSpinner";
-import { usePlayerDetails } from "@/utils/UserSession";
+import { selectDisplayName, selectPlayerDetails } from "@/store/selectors";
+import { useSelector } from "react-redux";
+import { RootState } from "@/store";
 
 const Header = () => {
   const pathname = usePathname();
   const { openLogin, openRegister } = useModal();
-  const { playerDetails, displayName, loading } = usePlayerDetails();
+  const playerDetails = useSelector(selectPlayerDetails);
+  const displayName = useSelector(selectDisplayName);
+  const playerLoading = useSelector(
+    (state: RootState) => state.auth.playerLoading,
+  );
+
   const { logout } = useAuth();
 
   const [dropdownOpen, setDropdownOpen] = useState(false);
@@ -52,7 +58,7 @@ const Header = () => {
 
         {/* Right */}
         <div className="flex items-center gap-2">
-          {loading ? (
+          {playerLoading ? (
             <LoadingSpinner />
           ) : playerDetails ? (
             <div className="flex items-center gap-3 lg:gap-6 mt-4">

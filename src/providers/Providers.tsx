@@ -6,6 +6,7 @@ import { AuthProvider } from "@/context/AuthContext";
 import { ModalProvider } from "@/context/ModalContext";
 import { Provider } from "react-redux";
 import { store } from "@/store";
+import AuthPlayerLoading from "@/context/AuthPlayerLoading";
 
 const Toast = dynamic(() => import("@/components/ui/Toast"), {
   ssr: false,
@@ -15,6 +16,7 @@ export default function Providers({ children }: { children: ReactNode }) {
   return (
     <Provider store={store}>
       <AuthProvider>
+        <AuthPlayerLoading />
         <ModalProvider>
           {children}
           <Toast />

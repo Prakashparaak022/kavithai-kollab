@@ -6,21 +6,17 @@ import {
   useMemo,
   ReactNode,
   useCallback,
+  useEffect,
 } from "react";
 import { useRouter } from "next/navigation";
-import {
-  PlayerDetails,
-  setSessionStorage,
-  usePlayerDetails,
-} from "@/utils/UserSession";
+import { useAppDispatch } from "@/store";
+import { logoutAction } from "@/store/auth";
 
 /* ------------------------------
    Types
 --------------------------------*/
 
 type AuthContextType = {
-  playerDetails: PlayerDetails | null;
-  login: (userData: PlayerDetails) => void;
   logout: () => void;
 };
 
@@ -39,34 +35,14 @@ const AuthContext = createContext<AuthContextType | null>(null);
 --------------------------------*/
 
 export const AuthProvider = ({ children }: AuthProviderProps) => {
-  const { playerDetails } = usePlayerDetails();
+  const dispatch = useAppDispatch();
   const router = useRouter();
 
-  /* ------------------------------
-     Login / Logout
-  --------------------------------*/
-
-  const login = useCallback((userData: PlayerDetails) => {
-    if (!userData) return;
-
-    setSessionStorage("playerDetails", JSON.stringify(userData));
-
-    if (userData.accessToken) {
-      setSessionStorage("accessToken", userData.accessToken);
-    }
-  }, []);
-
   const logout = useCallback(() => {
+    dispatch(logoutAction());
     sessionStorage.clear();
-
-    window.dispatchEvent(
-      new CustomEvent("sessionStorageUpdated", {
-        detail: { key: "playerDetails" },
-      })
-    );
-
     router.push("/");
-  }, [router]);
+  }, [dispatch, router]);
 
   /* ------------------------------
      Memoized Value
@@ -74,11 +50,9 @@ export const AuthProvider = ({ children }: AuthProviderProps) => {
 
   const value = useMemo<AuthContextType>(
     () => ({
-      playerDetails,
-      login,
       logout,
     }),
-    [playerDetails, login, logout]
+    [logout],
   );
 
   return <AuthContext.Provider value={value}>{children}</AuthContext.Provider>;

@@ -1,17 +1,17 @@
 "use client";
 
 import Image from "next/image";
-import { useState } from "react";
 import { useForm } from "react-hook-form";
 import { toast } from "react-toastify";
 
 import Logo from "@/assets/img/logo-green.webp";
-import { useAuth } from "@/context/AuthContext";
 import { useModal } from "@/context/ModalContext";
-import { API_URLS } from "@/constants/apiUrls";
 import { formatErrorMessage } from "@/utils/errorMessage";
 import FormInput from "../form/FormInput";
 import SubmitButton from "../ui/SubmitButton";
+import { loginUser } from "@/store/auth";
+import { RootState, useAppDispatch } from "@/store";
+import { useSelector } from "react-redux";
 
 type LoginForm = {
   email: string;
@@ -23,11 +23,9 @@ type LoginContainerProps = {
 };
 
 const LoginContainer = ({ handleClose }: LoginContainerProps) => {
-  const { login } = useAuth();
   const { openRegister } = useModal();
-
-  const preLoginNumber = process.env.NEXT_PUBLIC_PRE_LOGIN_NUM;
-  const [loading, setLoading] = useState(false);
+  const dispatch = useAppDispatch();
+  const loading = useSelector((state: RootState) => state.auth.loading);
 
   const {
     control,
@@ -41,33 +39,19 @@ const LoginContainer = ({ handleClose }: LoginContainerProps) => {
 
   const handleLogin = async (data: LoginForm) => {
     try {
-      setLoading(true);
+      await dispatch(
+        loginUser({
+          email: data.email,
+          password: data.password,
+        }),
+      ).unwrap();
 
-      const reqPayload = { identifier: data.email, password: data.password };
-
-      const response = await fetch(API_URLS.LOGIN, {
-        method: "POST",
-        headers: {
-          "Content-Type": "application/json",
-        },
-        body: JSON.stringify(reqPayload),
-      });
-
-      if (response.ok) {
-        const res = await response.json();
-        login(res);
-        reset();
-        handleClose?.();
-        toast.success("Login successful");
-      } else {
-        const err = await response.text();
-        toast.error(formatErrorMessage(err, "Login failed"));
-      }
+      reset();
+      handleClose?.();
+      toast.success("Login successful");
     } catch (error) {
       console.error("An error occurred during login.", error);
-      toast.error("Unexpected error occurred");
-    } finally {
-      setLoading(false);
+      toast.error(formatErrorMessage(error as string));
     }
   };
 
