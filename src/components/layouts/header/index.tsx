@@ -19,6 +19,7 @@ import {
 } from "lucide-react";
 import LoadingSpinner from "../../ui/LoadingSpinner";
 import { usePlayerDetails } from "@/utils/UserSession";
+import { getUserImageSrc } from "@/utils/imageUtils";
 
 const Header = () => {
   const pathname = usePathname();
@@ -97,7 +98,15 @@ const Header = () => {
                     setMobileNavOpen(false);
                   }}
                   className="h-7 md:h-9 px-4 flex items-center gap-1 md:gap-2 text-sm text-green bg-primary rounded-full">
-                  <User size={16} />
+                  {playerDetails.authorImage ? (
+                    <img
+                      src={getUserImageSrc(playerDetails.authorImage)}
+                      alt={"profile image"}
+                      className="w-5 h-5 rounded-full object-cover shadow-md"
+                    />
+                  ) : (
+                    <User size={16} />
+                  )}
                   <span className="hidden md:inline">{displayName}</span>
                   <ChevronDown size={16} />
                 </button>
@@ -108,7 +117,15 @@ const Header = () => {
                       href="/profile"
                       onClick={() => setDropdownOpen(false)}
                       className="flex items-center gap-2 px-4 py-2 text-sm text-gray-200 hover:bg-primary rounded-t-lg">
-                      <User size={16} />
+                      {playerDetails.authorImage ? (
+                        <img
+                          src={getUserImageSrc(playerDetails.authorImage)}
+                          alt={"profile image"}
+                          className="w-5 h-5 rounded-full object-cover shadow-md"
+                        />
+                      ) : (
+                        <User size={16} />
+                      )}
                       Profile
                     </Link>
 
