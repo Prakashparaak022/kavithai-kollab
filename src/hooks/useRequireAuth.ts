@@ -1,9 +1,11 @@
 import { useModal } from "@/context/ModalContext";
-import { usePlayerDetails } from "@/utils/UserSession";
+import { selectPlayerDetails } from "@/store/selectors";
+import { useSelector } from "react-redux";
 
 const useRequireAuth = () => {
   const { openLogin } = useModal();
-  const { playerDetails } = usePlayerDetails();
+
+  const playerDetails = useSelector(selectPlayerDetails);
 
   const requireAuth = (e: React.MouseEvent) => {
     if (!playerDetails) {

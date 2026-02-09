@@ -3,7 +3,6 @@
 import { useEffect, useState } from "react";
 import { motion } from "framer-motion";
 import { Check, ChevronDown, X } from "lucide-react";
-import { usePlayerDetails } from "@/utils/UserSession";
 import { ApiCollaboration } from "@/types/api";
 import { getUserImageSrc } from "@/utils/imageUtils";
 import { RootState, useAppDispatch } from "@/store";

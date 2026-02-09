@@ -4,8 +4,6 @@ import { useState, useRef, useEffect } from "react";
 import { useForm } from "react-hook-form";
 import { Camera, X } from "lucide-react";
 import { toast } from "react-toastify";
-import { usePlayerDetails } from "@/utils/UserSession";
-import LoadingSpinner from "../ui/LoadingSpinner";
 import { createPoem } from "@/store/poems";
 import { RootState, useAppDispatch } from "@/store";
 import { useSelector } from "react-redux";
@@ -13,6 +11,7 @@ import { loadCategories, resetCategories } from "@/store/categories";
 import CategorySkeleton from "./CategorySkeleton";
 import InfiniteScroll from "../common/InfiniteScroll";
 import { useInfiniteLoader } from "@/hooks/useInfiniteLoader";
+import { selectPlayerDetails } from "@/store/selectors";
 
 const TAG_REGEX = /^#[a-z0-9]+$/;
 
@@ -32,7 +31,8 @@ const PAGE_SIZE = 15;
 
 export default function WriteKavidhai({ allowCollab, isPrivate }: Props) {
   const fileRef = useRef<HTMLInputElement | null>(null);
-  const { playerDetails, accessToken } = usePlayerDetails();
+
+  const playerDetails = useSelector(selectPlayerDetails);
 
   const {
     items: categories,

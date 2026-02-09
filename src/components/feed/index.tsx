@@ -5,8 +5,9 @@ import { Camera, SlidersHorizontal } from "lucide-react";
 import Link from "next/link";
 import useRequireAuth from "@/hooks/useRequireAuth";
 import AppBgLayout from "../layouts/AppBgLayout";
-import { usePlayerDetails } from "@/utils/UserSession";
 import ApiFeedCardList from "./ApiFeedCardList";
+import { useSelector } from "react-redux";
+import { selectPlayerDetails, selectPlayerLoading } from "@/store/selectors";
 
 export type FilterType = "all" | "liked" | "recent";
 export type FeedType = "private" | "public";
@@ -18,7 +19,8 @@ export type FilterItem = {
 
 const Feed = () => {
   const { requireAuth } = useRequireAuth();
-  const { playerDetails, loading } = usePlayerDetails();
+  const playerDetails = useSelector(selectPlayerDetails);
+  const playerLoading = useSelector(selectPlayerLoading);
   const [showFilters, setShowFilters] = useState(false);
   const [isPrivate, setIsPrivate] = useState<boolean>(false);
   const [filter, setFilter] = useState<FilterType>("all");
@@ -76,7 +78,7 @@ const Feed = () => {
           </Link>
 
           {/* Publish filter badges */}
-          {loading ? (
+          {playerLoading ? (
             <div className="flex gap-2 mb-4 animate-pulse">
               <div className="h-6 w-17 rounded-full bg-secondary" />
               <div className="h-6 w-17 rounded-full bg-gray-200" />

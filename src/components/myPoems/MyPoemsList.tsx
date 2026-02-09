@@ -3,7 +3,6 @@
 import useRequireAuth from "@/hooks/useRequireAuth";
 import { RootState, useAppDispatch } from "@/store";
 import { loadMyPoems, resetMyPoems, togglePoemLike } from "@/store/poems";
-import { usePlayerDetails } from "@/utils/UserSession";
 import { useEffect, useState } from "react";
 import { useSelector } from "react-redux";
 import PoemCard from "../common/PoemCard";
@@ -12,6 +11,7 @@ import { PoemCardSkeleton } from "../poem/PoemCardSkeleton";
 import CustomModal from "../ui/CustomModal";
 import InfiniteScroll from "../common/InfiniteScroll";
 import { useInfiniteLoader } from "@/hooks/useInfiniteLoader";
+import { selectPlayerDetails, selectPlayerLoading } from "@/store/selectors";
 
 type Props = {
   userId: number;
@@ -27,7 +27,10 @@ const MyPoemsList = ({ userId }: Props) => {
   } = useSelector((state: RootState) => state.poems);
 
   const { withAuth } = useRequireAuth();
-  const { playerDetails, loading: playerLoading } = usePlayerDetails();
+
+  const playerDetails = useSelector(selectPlayerDetails);
+  const playerLoading = useSelector(selectPlayerLoading);
+
   const [isPrivate, setIsPrivate] = useState<boolean>(false);
   const [activePoemId, setActivePoemId] = useState<number | null>(null);
   const [commentsOpen, setCommentsOpen] = useState(false);
@@ -42,7 +45,7 @@ const MyPoemsList = ({ userId }: Props) => {
         isPrivate: isPrivate,
         page: 0,
         size: PAGE_SIZE,
-      })
+      }),
     );
   }, [dispatch, userId, playerLoading, isPrivate]);
 
@@ -54,11 +57,11 @@ const MyPoemsList = ({ userId }: Props) => {
           isPrivate,
           page,
           size,
-        })
+        }),
       );
     },
     page,
-    PAGE_SIZE
+    PAGE_SIZE,
   );
 
   const handleLike = (id: number, isLiked: boolean) => {
@@ -71,7 +74,7 @@ const MyPoemsList = ({ userId }: Props) => {
         poemId: id,
         userId,
         isLiked: !isLiked,
-      })
+      }),
     );
   };
 

@@ -1,11 +1,13 @@
 "use client";
 import AboutPoem from "../poem/AboutPoem";
 import AppBgLayout from "../layouts/AppBgLayout";
-import { usePlayerDetails } from "@/utils/UserSession";
 import MyCollaborationsList from "./MyCollabList";
+import { useSelector } from "react-redux";
+import { selectDisplayName, selectPlayerDetails } from "@/store/selectors";
 
 const MyCollaborations = () => {
-  const { displayName, playerDetails } = usePlayerDetails();
+  const playerDetails = useSelector(selectPlayerDetails);
+  const displayName = useSelector(selectDisplayName);
 
   return (
     <AppBgLayout

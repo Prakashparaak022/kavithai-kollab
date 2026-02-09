@@ -6,10 +6,13 @@ import { useModal } from "@/context/ModalContext";
 import { fetchUserProfileById } from "@/services/api/userProfile.service";
 import Loader from "../ui/Loader";
 import { ApiUserProfile } from "@/types/api";
-import { usePlayerDetails } from "@/utils/UserSession";
+import { selectPlayerDetails, selectPlayerLoading } from "@/store/selectors";
+import { useSelector } from "react-redux";
 
 const Profile = () => {
-  const { playerDetails, loading: playerLoading } = usePlayerDetails();
+  const playerDetails = useSelector(selectPlayerDetails);
+  const playerLoading = useSelector(selectPlayerLoading);
+
   const { openLogin } = useModal();
   const [userProfile, setUserProfile] = useState<ApiUserProfile | null>(null);
   const [loading, setLoading] = useState(true);

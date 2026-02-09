@@ -7,3 +7,6 @@ export const selectDisplayName = (state: RootState) =>
   state.auth.playerDetails?.penName ||
   state.auth.playerDetails?.firstName ||
   "";
+
+export const selectPlayerLoading = (state: RootState) =>
+  state.auth.playerLoading;

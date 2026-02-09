@@ -11,9 +11,10 @@ import CollaborationsList from "./CollabList";
 import { useAppDispatch } from "@/store";
 import { updatePoem } from "@/store/poems";
 import { toast } from "react-toastify";
-import { usePlayerDetails } from "@/utils/UserSession";
 import Loader from "../ui/Loader";
 import { useModal } from "@/context/ModalContext";
+import { selectPlayerDetails, selectPlayerLoading } from "@/store/selectors";
+import { useSelector } from "react-redux";
 
 type Props = {
   poem: ApiPoem;
@@ -24,7 +25,9 @@ const Poem = ({ poem: initialPoem }: Props) => {
   const [poem, setPoem] = useState<ApiPoem>(initialPoem);
   const [showInviteModal, setShowInviteModal] = useState(false);
   const { openLogin } = useModal();
-  const { playerDetails, loading: playerLoading } = usePlayerDetails();
+
+  const playerDetails = useSelector(selectPlayerDetails);
+  const playerLoading = useSelector(selectPlayerLoading);
 
   const handlePublish = () => {
     const formData = new FormData();
@@ -35,7 +38,7 @@ const Poem = ({ poem: initialPoem }: Props) => {
       updatePoem({
         id: poem.id,
         formData,
-      })
+      }),
     )
       .unwrap()
       .then((updatedPoem) => {

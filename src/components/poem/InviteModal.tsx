@@ -10,11 +10,11 @@ import { loadUserProfiles } from "@/store/userProfile/userProfile.thunks";
 import { RootState, useAppDispatch } from "@/store";
 import { inviteCollab } from "@/store/collaborations";
 import { ApiPoem } from "@/types/api";
-import { usePlayerDetails } from "@/utils/UserSession";
 import { resetUserProfiles } from "@/store/userProfile";
 import { useDebounce } from "@/hooks/useDebounce";
 import InfiniteScroll from "../common/InfiniteScroll";
 import { useInfiniteLoader } from "@/hooks/useInfiniteLoader";
+import { selectPlayerDetails } from "@/store/selectors";
 
 type Props = {
   poem: ApiPoem;
@@ -25,7 +25,7 @@ const PAGE_SIZE = 25;
 
 const InviteModal = ({ poem, onClose }: Props) => {
   const dispatch = useAppDispatch();
-  const { playerDetails } = usePlayerDetails();
+  const playerDetails = useSelector(selectPlayerDetails);
 
   const {
     items: userProfiles,
@@ -49,7 +49,7 @@ const InviteModal = ({ poem, onClose }: Props) => {
         firstName: debouncedSearch,
         page: 0,
         size: PAGE_SIZE,
-      })
+      }),
     );
   }, [dispatch, debouncedSearch]);
 
@@ -62,11 +62,11 @@ const InviteModal = ({ poem, onClose }: Props) => {
           firstName: debouncedSearch,
           page,
           size,
-        })
+        }),
       );
     },
     page,
-    PAGE_SIZE
+    PAGE_SIZE,
   );
 
   const handleInvite = async (userId: number, name: string) => {
@@ -78,7 +78,7 @@ const InviteModal = ({ poem, onClose }: Props) => {
           postId: poem.id,
           ownerId: playerDetails.id,
           invitedUserId: userId,
-        })
+        }),
       ).unwrap();
 
       setInvited((prev) => new Set(prev).add(userId));

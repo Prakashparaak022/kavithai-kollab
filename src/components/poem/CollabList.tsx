@@ -2,7 +2,6 @@
 import { useEffect, useState } from "react";
 import { motion } from "framer-motion";
 import { Check, ChevronDown, UserRoundPlusIcon, X } from "lucide-react";
-import { usePlayerDetails } from "@/utils/UserSession";
 import useRequireAuth from "@/hooks/useRequireAuth";
 import { useSelector } from "react-redux";
 import { RootState, useAppDispatch } from "@/store";
@@ -21,6 +20,7 @@ import { fetchPoemById } from "@/services/api/poems.service";
 import InfiniteScroll from "../common/InfiniteScroll";
 import CollabSkeleton from "../myCollaborations/CollabsSkeleton";
 import { useInfiniteLoader } from "@/hooks/useInfiniteLoader";
+import { selectPlayerDetails } from "@/store/selectors";
 
 type Props = {
   poem: ApiPoem;
@@ -46,7 +46,7 @@ const CollaborationsList = ({ poem, onPoemRefresh, onInvite }: Props) => {
   } = useSelector((state: RootState) => state.collabs);
 
   const dispatch = useAppDispatch();
-  const { playerDetails } = usePlayerDetails();
+  const playerDetails = useSelector(selectPlayerDetails);
   const { withAuth } = useRequireAuth();
 
   // Initial load

@@ -4,7 +4,6 @@ import { RootState, useAppDispatch } from "@/store";
 import { addComment, loadComments, resetComments } from "@/store/comments";
 import { useEffect, useState } from "react";
 import { useSelector } from "react-redux";
-import { usePlayerDetails } from "@/utils/UserSession";
 import { toast } from "react-toastify";
 import { getUserImageSrc } from "@/utils/imageUtils";
 import { formatTimeAgo } from "@/utils";
@@ -12,6 +11,7 @@ import useRequireAuth from "@/hooks/useRequireAuth";
 import InfiniteScroll from "../common/InfiniteScroll";
 import CommentSkeleton from "../poem/CommentSkeleton";
 import { useInfiniteLoader } from "@/hooks/useInfiniteLoader";
+import { selectPlayerDetails } from "@/store/selectors";
 
 type Props = {
   postId: number;
@@ -27,7 +27,9 @@ const CommentsList = ({ postId }: Props) => {
   } = useSelector((state: RootState) => state.comments);
 
   const dispatch = useAppDispatch();
-  const { playerDetails } = usePlayerDetails();
+
+  const playerDetails = useSelector(selectPlayerDetails);
+
   const { withAuth } = useRequireAuth();
 
   // Initial load
@@ -38,7 +40,7 @@ const CommentsList = ({ postId }: Props) => {
         postId,
         page: 0,
         size: PAGE_SIZE,
-      })
+      }),
     );
   }, [dispatch, postId]);
 
@@ -47,7 +49,7 @@ const CommentsList = ({ postId }: Props) => {
       dispatch(loadComments({ postId, page, size }));
     },
     page,
-    PAGE_SIZE
+    PAGE_SIZE,
   );
 
   const handleAddComment = () => {
@@ -58,7 +60,7 @@ const CommentsList = ({ postId }: Props) => {
         postId,
         userId: playerDetails.id,
         content,
-      })
+      }),
     )
       .unwrap()
       .then(() => setContent(""))

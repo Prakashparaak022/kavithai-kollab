@@ -3,7 +3,6 @@
 import useRequireAuth from "@/hooks/useRequireAuth";
 import { RootState, useAppDispatch } from "@/store";
 import { loadPoems, resetPoems, togglePoemLike } from "@/store/poems";
-import { usePlayerDetails } from "@/utils/UserSession";
 import { useCallback, useEffect, useMemo, useState } from "react";
 import { useSelector } from "react-redux";
 import PoemCard from "../common/PoemCard";
@@ -13,6 +12,7 @@ import CommentsList from "../poem/CommentsList";
 import { FilterType } from "./index";
 import InfiniteScroll from "../common/InfiniteScroll";
 import { useInfiniteLoader } from "@/hooks/useInfiniteLoader";
+import { selectPlayerDetails } from "@/store/selectors";
 
 type Props = {
   filter: FilterType;
@@ -28,11 +28,10 @@ const ApiFeedCardList = ({ filter, isPrivate }: Props) => {
     likeLoading,
   } = useSelector((state: RootState) => state.poems);
   const { withAuth } = useRequireAuth();
-  const {
-    playerDetails,
-    loading: playerLoading,
-    displayName,
-  } = usePlayerDetails();
+  const playerDetails = useSelector(selectPlayerDetails);
+  const playerLoading = useSelector(
+    (state: RootState) => state.auth.playerLoading,
+  );
   const [activePoemId, setActivePoemId] = useState<number | null>(null);
   const [commentsOpen, setCommentsOpen] = useState(false);
 
@@ -46,24 +45,24 @@ const ApiFeedCardList = ({ filter, isPrivate }: Props) => {
         isPrivate: isPrivate,
         page: 0,
         size: PAGE_SIZE,
-      })
+      }),
     );
   }, [dispatch, playerDetails?.id, playerLoading, isPrivate]);
 
   const loadMorePoems = useInfiniteLoader(
-  (page, size) => {
-    dispatch(
-      loadPoems({
-        userId: playerDetails?.id,
-        isPrivate,
-        page,
-        size,
-      })
-    );
-  },
-  page,
-  PAGE_SIZE
-);
+    (page, size) => {
+      dispatch(
+        loadPoems({
+          userId: playerDetails?.id,
+          isPrivate,
+          page,
+          size,
+        }),
+      );
+    },
+    page,
+    PAGE_SIZE,
+  );
 
   const handleLike = (id: number, isLiked: boolean) => {
     if (!playerDetails?.id) return;
@@ -75,7 +74,7 @@ const ApiFeedCardList = ({ filter, isPrivate }: Props) => {
         poemId: id,
         userId: playerDetails.id,
         isLiked: !isLiked,
-      })
+      }),
     );
   };
 
@@ -89,7 +88,7 @@ const ApiFeedCardList = ({ filter, isPrivate }: Props) => {
     if (filter === "recent") {
       list.sort(
         (a, b) =>
-          new Date(b.createdAt).getTime() - new Date(a.createdAt).getTime()
+          new Date(b.createdAt).getTime() - new Date(a.createdAt).getTime(),
       );
     }
     return list;
