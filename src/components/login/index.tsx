@@ -23,7 +23,7 @@ type LoginContainerProps = {
 };
 
 const LoginContainer = ({ handleClose }: LoginContainerProps) => {
-  const { login, deviceDetails } = useAuth();
+  const { login } = useAuth();
   const { openRegister } = useModal();
 
   const preLoginNumber = process.env.NEXT_PUBLIC_PRE_LOGIN_NUM;

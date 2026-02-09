@@ -1,6 +1,5 @@
 "use client";
 import { useState } from "react";
-import FeedCardList from "./FeedCardList";
 import Filterbar from "./Filterbar";
 import { Camera, SlidersHorizontal } from "lucide-react";
 import Link from "next/link";

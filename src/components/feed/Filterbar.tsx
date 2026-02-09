@@ -1,5 +1,4 @@
 import { FilterItem, FilterType } from "./index";
-import { SlidersHorizontal } from "lucide-react";
 
 type Props = {
   filter: FilterType;

@@ -2,7 +2,6 @@
 import InviteModal from "@/components/poem/InviteModal";
 import PoemDetailCard from "@/components/poem/PoemDetailCard";
 import PoemMotion from "@/components/poem/PoemMotion";
-import type { Poem } from "@/types/poem";
 import { useState } from "react";
 import AboutPoem from "./AboutPoem";
 import AppBgLayout from "../layouts/AppBgLayout";

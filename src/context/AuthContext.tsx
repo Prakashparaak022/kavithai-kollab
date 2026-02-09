@@ -10,8 +10,6 @@ import {
   useCallback,
 } from "react";
 import { useRouter } from "next/navigation";
-
-import { getDeviceDetails } from "@/utils/getDeviceDetails";
 import {
   PlayerDetails,
   setSessionStorage,
@@ -24,7 +22,6 @@ import {
 
 type AuthContextType = {
   brandId: string | null;
-  deviceDetails: Record<string, unknown> | null;
   playerDetails: PlayerDetails | null;
   login: (userData: PlayerDetails) => void;
   logout: () => void;
@@ -47,11 +44,6 @@ const AuthContext = createContext<AuthContextType | null>(null);
 export const AuthProvider = ({ children }: AuthProviderProps) => {
   const { playerDetails } = usePlayerDetails();
   const router = useRouter();
-
-  const [deviceDetails, setDeviceDetails] = useState<Record<
-    string,
-    unknown
-  > | null>(null);
   const [brandId, setBrandId] = useState<string | null>(null);
 
   /* ------------------------------
@@ -81,31 +73,17 @@ export const AuthProvider = ({ children }: AuthProviderProps) => {
   }, [router]);
 
   /* ------------------------------
-     Brand + Device Setup
-  --------------------------------*/
-
-  useEffect(() => {
-    const fetchAllDetails = async () => {
-      const details = getDeviceDetails({}, "");
-      setDeviceDetails(details);
-    };
-
-    fetchAllDetails();
-  }, []);
-
-  /* ------------------------------
      Memoized Value
   --------------------------------*/
 
   const value = useMemo<AuthContextType>(
     () => ({
       brandId,
-      deviceDetails,
       playerDetails,
       login,
       logout,
     }),
-    [brandId, deviceDetails, playerDetails, login, logout]
+    [brandId, playerDetails, login, logout]
   );
 
   return <AuthContext.Provider value={value}>{children}</AuthContext.Provider>;

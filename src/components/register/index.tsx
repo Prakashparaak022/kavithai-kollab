@@ -51,7 +51,7 @@ const Register = ({ handleClose }: RegisterProps) => {
   const [loading, setLoading] = useState(false);
 
   const { REGISTER } = API_URLS;
-  const { login, brandId, deviceDetails } = useAuth();
+  const { login, brandId } = useAuth();
   const { data: isdCodeDetails, loading: isdCodeLoading } = useISDCode();
 
   const onSubmit = useCallback(
@@ -67,7 +67,6 @@ const Register = ({ handleClose }: RegisterProps) => {
           email: data.email,
           phoneNo: Number(data.mobileNumber),
           phoneCountryIsdcodeId: Number(data.countryId),
-          // deviceInfoRequest: deviceDetails,
         };
 
         const response = await fetch(REGISTER, {
@@ -98,7 +97,7 @@ const Register = ({ handleClose }: RegisterProps) => {
         setLoading(false);
       }
     },
-    [REGISTER, brandId, deviceDetails, login, handleClose]
+    [REGISTER, brandId, login, handleClose]
   );
 
   return (
