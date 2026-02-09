@@ -5,6 +5,7 @@ import {
   fetchAllPoems,
   fetchMyPoems,
   fetchPoemById,
+  updatePoemService,
 } from "@/services/api/poems.service";
 import { AddLikePayload } from "@/types/api";
 import { formatErrorMessage } from "@/utils/errorMessage";
@@ -13,7 +14,12 @@ import { PaginationProps } from "@/types/pagination";
 export const loadPoems = createAsyncThunk(
   "poems/loadPoems",
   async (
-    { userId, isPrivate, page, size }: PaginationProps<{ userId?: number, isPrivate?:boolean }>,
+    {
+      userId,
+      isPrivate,
+      page,
+      size,
+    }: PaginationProps<{ userId?: number; isPrivate?: boolean }>,
     { rejectWithValue }
   ) => {
     try {
@@ -56,6 +62,23 @@ export const createPoem = createAsyncThunk(
   }
 );
 
+export const updatePoem = createAsyncThunk(
+  "poems/updatePoem",
+  async (
+    { id, formData }: { id: number; formData: FormData },
+    { rejectWithValue }
+  ) => {
+    try {
+      const response = await updatePoemService(id, formData);
+      return response;
+    } catch (error: unknown) {
+      return rejectWithValue(
+        formatErrorMessage(error, "Failed to update poem")
+      );
+    }
+  }
+);
+
 export const togglePoemLike = createAsyncThunk(
   "poems/toggleLike",
   async ({ poemId, userId, isLiked }: AddLikePayload, { rejectWithValue }) => {
@@ -71,7 +94,12 @@ export const togglePoemLike = createAsyncThunk(
 export const loadMyPoems = createAsyncThunk(
   "poems/loadMyPoems",
   async (
-    { userId, isPrivate, page, size }: PaginationProps<{ userId: number, isPrivate?:boolean }>,
+    {
+      userId,
+      isPrivate,
+      page,
+      size,
+    }: PaginationProps<{ userId: number; isPrivate?: boolean }>,
     { rejectWithValue }
   ) => {
     try {

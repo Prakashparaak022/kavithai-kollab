@@ -6,6 +6,7 @@ import {
   loadPoemById,
   loadPoems,
   togglePoemLike,
+  updatePoem,
 } from "./poems.thunks";
 import { createPaginatedState, PaginatedState } from "@/types/pagination";
 
@@ -13,8 +14,13 @@ type PoemsState = {
   poems: PaginatedState<ApiPoem>;
   myPoems: PaginatedState<ApiPoem>;
   likeLoading: number | null;
+
   createLoading: boolean;
   createError: string | null;
+
+  updateLoading: boolean;
+  updateError: string | null;
+
   selectedPoem: ApiPoem | null;
   selectedPoemLoading: boolean;
 };
@@ -35,6 +41,9 @@ const initialState: PoemsState = {
 
   createLoading: false,
   createError: null,
+
+  updateLoading: false,
+  updateError: null,
 
   selectedPoem: null,
   selectedPoemLoading: false,
@@ -88,6 +97,34 @@ const poemsSlice = createSlice({
       .addCase(createPoem.rejected, (state, action) => {
         state.createLoading = false;
         state.createError = action.payload as string;
+      })
+      // UPDATE POEM
+      .addCase(updatePoem.pending, (state) => {
+        state.updateLoading = true;
+        state.updateError = null;
+      })
+      .addCase(updatePoem.fulfilled, (state, action) => {
+        const updatedPoem = action.payload;
+
+        const updateList = (list: ApiPoem[]) => {
+          const index = list.findIndex((p) => p.id === updatedPoem.id);
+          if (index !== -1) {
+            list[index] = updatedPoem;
+          }
+        };
+
+        updateList(state.poems.items);
+        updateList(state.myPoems.items);
+
+        if (state.selectedPoem?.id === updatedPoem.id) {
+          state.selectedPoem = updatedPoem;
+        }
+
+        state.updateLoading = false;
+      })
+      .addCase(updatePoem.rejected, (state, action) => {
+        state.updateLoading = false;
+        state.updateError = action.payload as string;
       })
       //LIKE POEM
       .addCase(togglePoemLike.pending, (state, action) => {

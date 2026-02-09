@@ -123,3 +123,20 @@ export const fetchMyPoems = async ({
 
   return res.json();
 };
+
+export const updatePoemService = async (
+  id: number,
+  formData: FormData
+): Promise<ApiPoem> => {
+  const res = await fetch(`${API_URLS.KAVITHAI_UPDATE}${id}`, {
+    method: "PUT",
+    headers: { Accept: "application/json" },
+    body: formData,
+  });
+
+  if (!res.ok) {
+    throw new Error("Failed to update poem");
+  }
+
+  return res.json();
+};
