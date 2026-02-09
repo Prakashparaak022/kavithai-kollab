@@ -4,6 +4,8 @@ import { ReactNode } from "react";
 import dynamic from "next/dynamic";
 import { AuthProvider } from "@/context/AuthContext";
 import { ModalProvider } from "@/context/ModalContext";
+import { Provider } from "react-redux";
+import { store } from "@/store";
 
 const Toast = dynamic(() => import("@/components/ui/Toast"), {
   ssr: false,
@@ -11,9 +13,13 @@ const Toast = dynamic(() => import("@/components/ui/Toast"), {
 
 export default function Providers({ children }: { children: ReactNode }) {
   return (
-    <AuthProvider>
-      <ModalProvider>{children}</ModalProvider>
-      <Toast />
-    </AuthProvider>
+    <Provider store={store}>
+      <AuthProvider>
+        <ModalProvider>
+          {children}
+          <Toast />
+        </ModalProvider>
+      </AuthProvider>
+    </Provider>
   );
 }

@@ -1,6 +1,3 @@
-"use client";
-import { useState } from "react";
-import { CustomSwitch } from "../ui/CustomSwitch";
 
 type InfoItem = {
   label: string;
@@ -14,8 +11,6 @@ type Props = {
 };
 
 const AboutPoem = ({ participants, poetName }: Props) => {
-  const [requireApproval, setRequireApproval] = useState(true);
-
   const infoList: InfoItem[] = [
     { label: "Poet", value: `@${poetName}` },
     { label: "Time Remaining", value: "11 hours", inline: true },
